@@ -6,7 +6,9 @@ import {
   clearSelection,
   createInitialState,
   enter,
+  follow,
   forward,
+  moveToAncestor,
   openConcept,
   openConceptDirect,
   openConceptsDirect,
@@ -98,7 +100,17 @@ function system(id: string, configurationId: string): ReferenceSystem {
             parentId: 'node-bank',
           },
         },
-        connections: {},
+        connections: {
+          bridge: {
+            id: 'bridge',
+            name: 'Node-bank peer path',
+            relationshipType: 'data_communication_path',
+            endpointIds: ['node-bank', 'peer-bank'],
+            directionality: 'bidirectional',
+            evidence: {status: 'documented', sourceIds: []},
+            properties: {},
+          },
+        },
         conceptOccurrences: [
           {
             conceptId: 'latency',
@@ -158,6 +170,68 @@ describe('semantic state engine', () => {
     const next = enter(index, state, state.explore.structuralLocation);
     expect(next).toBe(state);
     expect(next.appHistory).toHaveLength(1);
+  });
+
+  it('preserves a meaningful deeper Selection when moving outward to an ancestor', () => {
+    let state = createInitialState(index, 'a');
+    const node = {
+      kind: 'entity',
+      systemId: 'a',
+      configurationId: 'a-cfg',
+      entityId: 'node-bank',
+    } as const;
+    state = enter(index, state, node);
+    const gpu = {
+      kind: 'entity',
+      systemId: 'a',
+      configurationId: 'a-cfg',
+      entityId: 'gpu-template',
+    } as const;
+    state = select(state, gpu);
+    state = moveToAncestor(index, state, {
+      kind: 'entity',
+      systemId: 'a',
+      configurationId: 'a-cfg',
+      entityId: 'root',
+    });
+    expect(state.explore.selection).toEqual(gpu);
+    expect(state.explore.structuralLocation).toMatchObject({entityId: 'root'});
+    expect(state.explore.structuralHistory).toHaveLength(3);
+  });
+
+  it('records both the physical origin and relationship for Follow and restores it on Forward replay', () => {
+    let state = createInitialState(index, 'a');
+    state = enter(index, state, {
+      kind: 'entity',
+      systemId: 'a',
+      configurationId: 'a-cfg',
+      entityId: 'node-bank',
+    });
+    const connection = {
+      kind: 'connection',
+      systemId: 'a',
+      configurationId: 'a-cfg',
+      connectionId: 'bridge',
+    } as const;
+    state = select(state, connection);
+    state = follow(
+      index,
+      state,
+      {
+        kind: 'entity',
+        systemId: 'a',
+        configurationId: 'a-cfg',
+        entityId: 'peer-bank',
+      },
+      connection,
+    );
+    expect(state.explore.traversalContext?.origin).toMatchObject({entityId: 'node-bank'});
+    expect(state.explore.traversalContext?.via).toEqual(connection);
+    state = back(index, state);
+    expect(state.explore.traversalContext).toBeUndefined();
+    state = forward(index, state);
+    expect(state.explore.traversalContext?.origin).toMatchObject({entityId: 'node-bank'});
+    expect(state.explore.traversalContext?.via).toEqual(connection);
   });
 
   it('does not add scenario, query, or selection changes to history', () => {

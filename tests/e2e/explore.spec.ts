@@ -126,6 +126,48 @@ test('cross-tier relationships remain discoverable and semantic outline mirrors 
   await expect(page.getByText('Intra-node NVLink/NVSwitch fabric').first()).toBeVisible();
 });
 
+test('moving outward by breadcrumb preserves a meaningful deeper Selection and marks its visible ancestor', async ({page}) => {
+  await page.goto('./');
+  await selectH100Gpu(page);
+  await page.getByRole('button', {name: 'Scalable Unit (representative)'}).click();
+  await expect(page.getByRole('heading', {name: 'NVIDIA H100 GPUs'})).toBeVisible();
+  await expect(page.getByRole('button', {name: 'Clear selection'})).toBeVisible();
+  const aggregate = page.locator('.semantic-outline button').filter({hasText: 'DGX H100 compute node'}).first();
+  await expect(aggregate).toContainText('Contains current selection');
+});
+
+test('Follow retains the physical origin and relationship as traversal context', async ({page}) => {
+  await page.goto('./');
+  await enterRepresentativeH100Node(page);
+  const relationship = page.locator('.connection-cards button').filter({hasText: 'DGX node to compute fabric'}).first();
+  await relationship.click();
+  await page.getByRole('button', {name: 'Follow to Compute-fabric InfiniBand switches'}).click();
+  await expect(page.getByText('Traversal context')).toBeVisible();
+  await expect(page.getByText('Representative Compute node')).toBeVisible();
+  await expect(page.getByText('DGX node to compute fabric')).toBeVisible();
+});
+
+test('nested representative breadcrumbs retain exemplar terminology', async ({page}) => {
+  await page.goto('./');
+  await selectH100Gpu(page);
+  await page.getByRole('button', {name: 'Explore representative member'}).click();
+  await expect(page.getByRole('heading', {name: 'Representative GPU'})).toBeVisible();
+  await expect(page.locator('.breadcrumbs')).toContainText('Representative GPU');
+});
+
+test('Concept search includes explanatory Markdown at lower weight', async ({page}) => {
+  await page.goto('./');
+  await page.getByRole('button', {name: 'Concepts'}).click();
+  await page.getByLabel('Search concepts').fill('asynchronous queue-based communication');
+  await expect(page.getByRole('button', {name: /^Remote Direct Memory Access/})).toBeVisible();
+});
+
+test('root Current Location Detail surfaces authored scope and modeling limitations', async ({page}) => {
+  await page.goto('./');
+  await expect(page.getByLabel('Detail')).toContainText('Initial educational model');
+  await expect(page.getByLabel('Detail')).toContainText('Rack placement');
+});
+
 test('friendly labels replace raw IDs in Concept occurrences', async ({page}) => {
   await page.goto('./');
   await page.getByRole('button', {name: 'Concepts'}).click();

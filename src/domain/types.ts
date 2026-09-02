@@ -173,6 +173,11 @@ export interface PropertyRegistry {
   properties: Record<Id, PropertyDefinition>;
 }
 
+export interface TraversalContext {
+  origin: ContextLocator;
+  via: ContextLocator;
+}
+
 export interface ExploreState {
   systemId: Id;
   configurationId: Id;
@@ -181,7 +186,7 @@ export interface ExploreState {
   selection?: ContextLocator;
   preview?: ContextLocator;
   structuralHistory: ContextLocator[];
-  traversalOrigin?: ContextLocator;
+  traversalContext?: TraversalContext;
   detailVisible: boolean;
 }
 
@@ -192,7 +197,7 @@ export interface ConceptsState {
 }
 
 export type HistoryDestination =
-  | {view: 'explore'; locator: ContextLocator}
+  | {view: 'explore'; locator: ContextLocator; traversalContext?: TraversalContext}
   | {
       view: 'concepts';
       locator: ContextLocator;
@@ -209,6 +214,7 @@ export type ReturnContext =
       structuralLocation: ContextLocator;
       structuralPath: Id[];
       selection?: ContextLocator;
+      traversalContext?: TraversalContext;
       sourceConceptId: Id;
       label: string;
     }

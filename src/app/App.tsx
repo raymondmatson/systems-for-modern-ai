@@ -41,6 +41,7 @@ import {
   forward,
   goToHistoryIndex,
   inspect,
+  moveToAncestor,
   openConcept,
   openConceptDirect,
   openConceptsDirect,
@@ -322,7 +323,7 @@ function App({boot}: {boot: BootContent}) {
               <span key={`${crumb.kind}-${crumb.label}-${crumbIndex}`}>
                 {crumbIndex > 0 && <span aria-hidden="true"> › </span>}
                 {crumb.locator && !crumb.current ? (
-                  <button onClick={() => apply(enter(index, state, crumb.locator!))}>
+                  <button onClick={() => apply(moveToAncestor(index, state, crumb.locator!))}>
                     {crumb.label}
                   </button>
                 ) : (
@@ -538,6 +539,7 @@ function NodeGlyph({
   const stateDescription = [
     node.location ? 'current location' : undefined,
     node.selected ? 'selected' : undefined,
+    node.containsSelection ? 'contains current selection' : undefined,
     node.scenarioEmphasized ? 'affected by active scenario' : undefined,
     node.locator.kind === 'representative_member' ? 'representative context' : undefined,
   ]
@@ -550,7 +552,9 @@ function NodeGlyph({
       transform={`translate(${node.x} ${node.y})`}
       className={`node ${node.selected ? 'selected ' : ''}${node.previewed ? 'previewed ' : ''}${
         node.location ? 'location ' : ''
-      }${node.scenarioEmphasized ? 'scenario-emphasized ' : ''}`}
+      }${node.containsSelection ? 'contains-selection ' : ''}${
+        node.scenarioEmphasized ? 'scenario-emphasized ' : ''
+      }`}
       tabIndex={0}
       role="button"
       aria-pressed={node.selected}
@@ -694,10 +698,11 @@ function SemanticExploreOutline({
           >
             <strong>{node.entity.name}</strong>
             <span>{entityTypeLabel(node.entity.entityType)}</span>
-            {(node.scenarioEmphasized || node.locator.kind === 'representative_member') && (
+            {(node.scenarioEmphasized || node.containsSelection || node.locator.kind === 'representative_member') && (
               <small>
                 {[
                   node.locator.kind === 'representative_member' ? 'Representative' : undefined,
+                  node.containsSelection ? 'Contains current selection' : undefined,
                   node.scenarioEmphasized ? 'Scenario affected' : undefined,
                 ]
                   .filter(Boolean)
@@ -757,7 +762,11 @@ function Detail({
       return;
     }
 
-    if (action.kind === 'follow' && action.target && state.explore.selection) {
+    if (
+      action.kind === 'follow' &&
+      action.target &&
+      state.explore.selection?.kind === 'connection'
+    ) {
       apply(follow(index, state, action.target, state.explore.selection));
       return;
     }
@@ -792,6 +801,10 @@ function Detail({
 
       {section('overview') && detail.identity.length > 0 && (
         <DetailPairs title="Identity and context" rows={detail.identity} />
+      )}
+
+      {detail.traversal.length > 0 && (
+        <DetailPairs title="Traversal context" rows={detail.traversal} />
       )}
 
       {section('properties') && detail.properties.length > 0 && (
@@ -921,10 +934,11 @@ function Concepts({
     () =>
       new Fuse(Object.values(boot.concepts), {
         keys: [
-          {name: 'name', weight: 0.5},
-          {name: 'aliases', weight: 0.3},
+          {name: 'name', weight: 0.45},
+          {name: 'aliases', weight: 0.25},
           {name: 'summary', weight: 0.15},
-          {name: 'tags', weight: 0.05},
+          {name: 'tags', weight: 0.1},
+          {name: 'markdown', weight: 0.05},
         ],
         threshold: 0.35,
       }),
@@ -1074,9 +1088,10 @@ function containmentBreadcrumbs(
     });
     locator.path.slice(1).forEach((id, indexInPath) => {
       const path = locator.path.slice(0, indexInPath + 2);
+      const representativeEntity = configuration.entities[id];
       output.push({
         kind: 'representative',
-        label: configuration.entities[id]?.name ?? id,
+        label: representativeEntity ? representativeEntityLabel(representativeEntity) : id,
         locator: {...locator, path},
         current: indexInPath === locator.path.slice(1).length - 1,
       });

@@ -7,6 +7,7 @@ import type {
   Entity,
   ReferenceSystem,
   ReturnContext,
+  TraversalContext,
 } from '../domain/types';
 
 export interface DomainIndex {
@@ -48,6 +49,112 @@ const containmentPath = (configuration: Configuration, locator: ContextLocator) 
   }
   return output;
 };
+
+function structuralEntityId(locator: ContextLocator): Id | undefined {
+  if (locator.kind === 'entity') return locator.entityId;
+  if (locator.kind === 'representative_member') {
+    return locator.path.at(-1) ?? locator.aggregateId;
+  }
+  return undefined;
+}
+
+function isDescendantOrSelf(
+  configuration: Configuration,
+  entityId: Id,
+  ancestorId: Id,
+): boolean {
+  let current: Entity | undefined = configuration.entities[entityId];
+  while (current) {
+    if (current.id === ancestorId) return true;
+    current = current.parentId ? configuration.entities[current.parentId] : undefined;
+  }
+  return false;
+}
+
+function pathStartsWith(path: readonly Id[], prefix: readonly Id[]) {
+  return prefix.length <= path.length && prefix.every((id, index) => path[index] === id);
+}
+
+function isStructuralAncestor(
+  configuration: Configuration,
+  ancestor: ContextLocator,
+  current: ContextLocator,
+) {
+  if (ancestor.kind === 'representative_member') {
+    return (
+      current.kind === 'representative_member' &&
+      ancestor.aggregateId === current.aggregateId &&
+      pathStartsWith(current.path, ancestor.path)
+    );
+  }
+  if (ancestor.kind !== 'entity') return false;
+  const currentId = structuralEntityId(current);
+  return currentId ? isDescendantOrSelf(configuration, currentId, ancestor.entityId) : false;
+}
+
+function selectionBelongsWithin(
+  configuration: Configuration,
+  selection: ContextLocator | undefined,
+  structuralContext: ContextLocator,
+): boolean {
+  if (!selection) return false;
+  if (
+    'systemId' in selection &&
+    'systemId' in structuralContext &&
+    (selection.systemId !== structuralContext.systemId ||
+      selection.configurationId !== structuralContext.configurationId)
+  ) {
+    return false;
+  }
+
+  if (structuralContext.kind === 'representative_member') {
+    if (selection.kind === 'representative_member') {
+      return (
+        selection.aggregateId === structuralContext.aggregateId &&
+        pathStartsWith(selection.path, structuralContext.path)
+      );
+    }
+    const contextId = structuralEntityId(structuralContext);
+    if (!contextId) return false;
+    if (selection.kind === 'entity') {
+      return isDescendantOrSelf(configuration, selection.entityId, contextId);
+    }
+    if (selection.kind === 'connection') {
+      return configuration.connections[selection.connectionId]?.endpointIds.some((id) =>
+        isDescendantOrSelf(configuration, id, contextId),
+      ) ?? false;
+    }
+    return false;
+  }
+
+  if (structuralContext.kind !== 'entity') return false;
+  if (selection.kind === 'entity') {
+    return isDescendantOrSelf(configuration, selection.entityId, structuralContext.entityId);
+  }
+  if (selection.kind === 'representative_member') {
+    const selectedId = structuralEntityId(selection);
+    return selectedId
+      ? isDescendantOrSelf(configuration, selectedId, structuralContext.entityId)
+      : false;
+  }
+  if (selection.kind === 'connection') {
+    return configuration.connections[selection.connectionId]?.endpointIds.some((id) =>
+      isDescendantOrSelf(configuration, id, structuralContext.entityId),
+    ) ?? false;
+  }
+  return false;
+}
+
+function validTraversalContext(
+  configuration: Configuration,
+  traversalContext: TraversalContext | undefined,
+): TraversalContext | undefined {
+  if (!traversalContext) return undefined;
+  return locatorExists(configuration, traversalContext.origin) &&
+    locatorExists(configuration, traversalContext.via)
+    ? traversalContext
+    : undefined;
+}
 
 function pushDestination(state: AppState, destination: HistoryDestination): AppState {
   const history = state.appHistory.slice(0, state.historyIndex + 1);
@@ -158,7 +265,46 @@ export function enter(
       selection: undefined,
       preview: undefined,
       structuralHistory: [...state.explore.structuralHistory, target],
-      traversalOrigin: undefined,
+      traversalContext: undefined,
+    },
+  };
+  return pushDestination(next, {view: 'explore', locator: target});
+}
+
+export function moveToAncestor(
+  index: DomainIndex,
+  state: AppState,
+  target: ContextLocator,
+): AppState {
+  if (target.kind !== 'entity' && target.kind !== 'representative_member') {
+    throw new Error('Ancestor movement requires a structural target');
+  }
+  const configuration = configurationFor(index, target.systemId, target.configurationId);
+  if (!configuration || !locatorExists(configuration, target)) {
+    throw new Error('Ancestor destination unavailable');
+  }
+  if (
+    target.systemId !== state.explore.systemId ||
+    target.configurationId !== state.explore.configurationId ||
+    !isStructuralAncestor(configuration, target, state.explore.structuralLocation)
+  ) {
+    throw new Error('Ancestor movement requires a current containment ancestor');
+  }
+  if (same(state.explore.structuralLocation, target)) return state;
+
+  const selection = selectionBelongsWithin(configuration, state.explore.selection, target)
+    ? state.explore.selection
+    : undefined;
+  const next: AppState = {
+    ...state,
+    view: 'explore',
+    explore: {
+      ...state.explore,
+      structuralLocation: target,
+      selection,
+      preview: undefined,
+      structuralHistory: [...state.explore.structuralHistory, target],
+      traversalContext: undefined,
     },
   };
   return pushDestination(next, {view: 'explore', locator: target});
@@ -168,11 +314,24 @@ export function follow(
   index: DomainIndex,
   state: AppState,
   destination: ContextLocator,
-  origin: ContextLocator,
+  via: ContextLocator,
 ): AppState {
+  const traversalContext: TraversalContext = {
+    origin: state.explore.structuralLocation,
+    via,
+  };
   const next = enter(index, state, destination);
   if (next === state) return state;
-  return {...next, explore: {...next.explore, traversalOrigin: origin}};
+  const appHistory = [...next.appHistory];
+  const last = appHistory.at(-1);
+  if (last?.view === 'explore') {
+    appHistory[appHistory.length - 1] = {...last, traversalContext};
+  }
+  return {
+    ...next,
+    appHistory,
+    explore: {...next.explore, traversalContext},
+  };
 }
 
 export function changeScenario(index: DomainIndex, state: AppState, id: Id) {
@@ -201,7 +360,7 @@ export function switchConfiguration(
       selection: undefined,
       preview: undefined,
       structuralHistory: [root],
-      traversalOrigin: undefined,
+      traversalContext: undefined,
     },
   };
   return pushDestination(
@@ -241,6 +400,7 @@ export function openConcept(
       structuralLocation: state.explore.structuralLocation,
       structuralPath: containmentPath(configuration, state.explore.structuralLocation),
       selection: state.explore.selection,
+      traversalContext: state.explore.traversalContext,
       sourceConceptId: conceptId,
       label: `Return to ${sourceLabel}`,
     } satisfies ReturnContext;
@@ -395,7 +555,7 @@ export function conceptToExploreOccurrence(
       selection,
       preview: undefined,
       structuralHistory,
-      traversalOrigin: undefined,
+      traversalContext: undefined,
     },
     returnContext: {
       kind: 'concept_origin',
@@ -461,6 +621,7 @@ export function returnToOrigin(index: DomainIndex, state: AppState) {
       structuralHistory: same(state.explore.structuralLocation, destination)
         ? state.explore.structuralHistory
         : [...state.explore.structuralHistory, destination],
+      traversalContext: validTraversalContext(configuration, returnContext.traversalContext),
     },
     returnContext: undefined,
   };
@@ -502,6 +663,7 @@ function replay(index: DomainIndex, state: AppState, destination: HistoryDestina
         selection: crossConfiguration ? undefined : state.explore.selection,
         preview: undefined,
         structuralHistory: crossConfiguration ? [root] : state.explore.structuralHistory,
+        traversalContext: crossConfiguration ? undefined : state.explore.traversalContext,
       },
     };
   }
@@ -538,6 +700,7 @@ function replay(index: DomainIndex, state: AppState, destination: HistoryDestina
               return same(root, locator) ? [root] : [root, locator];
             })()
           : state.explore.structuralHistory,
+        traversalContext: validTraversalContext(configuration, destination.traversalContext),
       },
     };
   }

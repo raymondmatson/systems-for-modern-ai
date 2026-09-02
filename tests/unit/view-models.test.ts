@@ -15,8 +15,8 @@ const configuration: Configuration = {
   status: 'baseline',
   rootEntityId: 'root',
   defaultScenarioId: 'baseline',
-  scopeNotes: '',
-  modelingNotes: [],
+  scopeNotes: 'Fixture scope explains the modeled learning boundary.',
+  modelingNotes: ['Fixture modeling note preserves an explicit simplification.'],
   entities: {
     root: entity('root', 'System', 'compute_cluster', 1, undefined, ['rack-a', 'fabric', 'orphan']),
     'rack-a': entity('rack-a', 'Rack A', 'rack', 2, 'root', ['node-bank']),
@@ -138,6 +138,19 @@ describe('Explore and Detail view models', () => {
     expect(scene.nodes.find((node) => node.entity.id === 'rack-a')?.scenarioEmphasized).toBe(true);
   });
 
+  it('marks the visible ancestor that contains a deeper persistent Selection', () => {
+    const selectedState: AppState = {
+      ...state,
+      explore: {
+        ...state.explore,
+        selection: {kind: 'entity', systemId: 'system', configurationId: 'cfg', entityId: 'gpu'},
+      },
+    };
+    const scene = buildExploreScene(selectedState, configuration);
+    expect(scene.nodes.find((node) => node.entity.id === 'rack-a')?.containsSelection).toBe(true);
+    expect(scene.nodes.find((node) => node.entity.id === 'fabric')?.containsSelection).toBe(false);
+  });
+
   it('uses structured population, property semantics, concept names, and capability-driven actions in Detail', () => {
     const selectedState: AppState = {
       ...state,
@@ -170,6 +183,45 @@ describe('Explore and Detail view models', () => {
     const detail = buildDetailVM(representativeState, configuration, {capabilities, propertyRegistry, concepts});
     expect(detail.scenarioState).toContainEqual(['Parent aggregate Health', 'Degraded']);
     expect(detail.scenarioState).toContainEqual(['Representative member', 'Individual state not specified']);
+  });
+
+  it('keeps aggregate Scenario state conservative at the root Representative Member Context too', () => {
+    const representativeState: AppState = {
+      ...state,
+      explore: {
+        ...state.explore,
+        structuralLocation: {
+          kind: 'representative_member',
+          systemId: 'system',
+          configurationId: 'cfg',
+          aggregateId: 'node-bank',
+          path: ['node-bank'],
+        },
+      },
+    };
+    const detail = buildDetailVM(representativeState, configuration, {capabilities, propertyRegistry, concepts});
+    expect(detail.scenarioState).toContainEqual(['Parent aggregate Health', 'Degraded']);
+    expect(detail.scenarioState).toContainEqual(['Representative member', 'Individual state not specified']);
+  });
+
+  it('surfaces authored root scope/modeling context and traversal orientation in Current Location Detail', () => {
+    const traversedState: AppState = {
+      ...state,
+      explore: {
+        ...state.explore,
+        traversalContext: {
+          origin: {kind: 'entity', systemId: 'system', configurationId: 'cfg', entityId: 'rack-a'},
+          via: {kind: 'connection', systemId: 'system', configurationId: 'cfg', connectionId: 'backend-path'},
+        },
+      },
+    };
+    const detail = buildDetailVM(traversedState, configuration, {capabilities, propertyRegistry, concepts});
+    expect(detail.summary).toContain('Fixture scope explains the modeled learning boundary.');
+    expect(detail.evidence).toContainEqual(['Modeling note', 'Fixture modeling note preserves an explicit simplification.']);
+    expect(detail.traversal).toEqual([
+      ['Arrived from', 'Rack A'],
+      ['Via relationship', 'Backend accelerator path'],
+    ]);
   });
 
   it('does not expose Enter for a leaf with no deeper structure or architectural relationship', () => {

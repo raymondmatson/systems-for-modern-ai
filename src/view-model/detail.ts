@@ -52,6 +52,7 @@ export interface DetailVM {
   scenarioState: Array<[string, string]>;
   containment: Array<[string, string]>;
   connections: DetailConnection[];
+  traversal: Array<[string, string]>;
   evidence: Array<[string, string]>;
   actions: DetailAction[];
   peerActions: DetailAction[];
@@ -124,6 +125,26 @@ function scenarioStateForTarget(
 ): Array<[string, string]> {
   const scenario = configuration.scenarios[state.explore.scenarioId];
   if (!scenario) return [];
+
+  if (target.kind === 'representative_member') {
+    const modeledIds = [...target.path].reverse();
+    if (!modeledIds.includes(target.aggregateId)) modeledIds.push(target.aggregateId);
+    const contextualEffect = scenario.effects.find(
+      (candidate) =>
+        candidate.target.type === 'entity' && modeledIds.includes(candidate.target.id),
+    );
+    if (!contextualEffect) return [];
+    const contextEntity = configuration.entities[contextualEffect.target.id];
+    const prefix = contextEntity?.population ? 'Parent aggregate' : 'Modeled context';
+    return [
+      ...Object.entries(contextualEffect.state).map(([key, value]) => [
+        `${prefix} ${formatMetadataValue(key)}`,
+        typeof value === 'string' ? formatMetadataValue(value) : JSON.stringify(value),
+      ] as [string, string]),
+      ['Representative member', 'Individual state not specified'],
+    ];
+  }
+
   const entityId = entityIdForLocator(target);
   const targetType = target.kind === 'connection' ? 'connection' : entityId ? 'entity' : undefined;
   const targetId = target.kind === 'connection' ? target.connectionId : entityId;
@@ -133,29 +154,27 @@ function scenarioStateForTarget(
     (candidate) =>
       candidate.target.type === targetType && candidate.target.id === targetId,
   );
-  const rows: Array<[string, string]> = effect
+  return effect
     ? Object.entries(effect.state).map(([key, value]) => [
         formatMetadataValue(key),
         typeof value === 'string' ? formatMetadataValue(value) : JSON.stringify(value),
       ])
     : [];
+}
 
-  if (target.kind === 'representative_member' && target.path.length > 1) {
-    const aggregateEffect = scenario.effects.find(
-      (candidate) =>
-        candidate.target.type === 'entity' && candidate.target.id === target.aggregateId,
-    );
-    if (aggregateEffect) {
-      for (const [key, value] of Object.entries(aggregateEffect.state)) {
-        rows.push([
-          `Parent aggregate ${formatMetadataValue(key)}`,
-          typeof value === 'string' ? formatMetadataValue(value) : JSON.stringify(value),
-        ]);
-      }
-      if (!effect) rows.push(['Representative member', 'Individual state not specified']);
-    }
+function locatorLabel(configuration: Configuration, locator: ContextLocator): string {
+  if (locator.kind === 'entity') {
+    return configuration.entities[locator.entityId]?.name ?? locator.entityId;
   }
-  return rows;
+  if (locator.kind === 'connection') {
+    return configuration.connections[locator.connectionId]?.name ?? locator.connectionId;
+  }
+  if (locator.kind === 'representative_member') {
+    const entity = configuration.entities[locator.path.at(-1) ?? locator.aggregateId];
+    return entity ? representativeEntityLabel(entity) : 'Representative member';
+  }
+  if (locator.kind === 'concept') return locator.conceptId;
+  return 'Concept Library';
 }
 
 function capabilityFor(resources: DetailResources, entity: Entity) {
@@ -263,6 +282,12 @@ export function buildDetailVM(
   let properties: DetailProperty[] = [];
   let containment: Array<[string, string]> = [];
   let connections: DetailConnection[] = [];
+  const traversal: Array<[string, string]> = state.explore.traversalContext
+    ? [
+        ['Arrived from', locatorLabel(configuration, state.explore.traversalContext.origin)],
+        ['Via relationship', locatorLabel(configuration, state.explore.traversalContext.via)],
+      ]
+    : [];
   let evidence: Array<[string, string]> = [];
   const actions: DetailAction[] = [];
   let sections = ['overview', 'properties', 'scenario', 'containment', 'connections', 'concepts', 'evidence', 'actions'];
@@ -276,12 +301,18 @@ export function buildDetailVM(
       if ((entity.childIds.length > 0 || entity.population) && !sections.includes('containment')) sections.push('containment');
       title = representative ? representativeEntityLabel(entity) : entity.name;
       subtitle = entityTypeLabel(entity.entityType);
-      summary = representative
+      const explanatorySummary = representative
         ? 'Educational exemplar of a modeled repeated population; this context is not a numbered physical instance.'
         : entity.representation === 'black_box'
           ? 'Known architectural boundary; deeper internals are intentionally not modeled.'
-          : `Tier ${entity.exploreTier} ${formatMetadataValue(entity.representation)} architectural entity.`;
-      if (isCurrentLocationSummary) summary = `Current location. ${summary}`;
+          : entity.evidence.note ||
+            `Tier ${entity.exploreTier} ${formatMetadataValue(entity.representation)} architectural entity.`;
+      summary =
+        isCurrentLocationSummary && entity.id === configuration.rootEntityId && configuration.scopeNotes
+          ? `Current location. ${configuration.scopeNotes}`
+          : isCurrentLocationSummary
+            ? `Current location. ${explanatorySummary}`
+            : explanatorySummary;
 
       identity = [
         ['Representation', formatMetadataValue(entity.representation)],
@@ -339,6 +370,16 @@ export function buildDetailVM(
           : []),
         ...(entity.evidence.note
           ? [['Evidence note', entity.evidence.note] as [string, string]]
+          : []),
+        ...(entity.id === configuration.rootEntityId
+          ? configuration.modelingNotes.map(
+              (note, index) => [
+                configuration.modelingNotes.length === 1
+                  ? 'Modeling note'
+                  : `Modeling note ${index + 1}`,
+                note,
+              ] as [string, string],
+            )
           : []),
       ];
 
@@ -416,6 +457,7 @@ export function buildDetailVM(
     scenarioState: scenarioStateForTarget(state, configuration, target),
     containment,
     connections,
+    traversal,
     evidence,
     actions,
     peerActions: peerActions(state, configuration),

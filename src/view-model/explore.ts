@@ -19,6 +19,7 @@ export interface SceneNode {
   width: number;
   height: number;
   selected: boolean;
+  containsSelection: boolean;
   previewed: boolean;
   location: boolean;
   scenarioEmphasized: boolean;
@@ -102,6 +103,40 @@ function isDescendantOrSelf(
   return false;
 }
 
+function pathStartsWith(path: readonly string[], prefix: readonly string[]) {
+  return prefix.length <= path.length && prefix.every((id, index) => path[index] === id);
+}
+
+function nodeContainsSelection(
+  configuration: Configuration,
+  nodeEntity: Entity,
+  nodeLocator: ContextLocator,
+  selection: ContextLocator | undefined,
+): boolean {
+  if (!selection || sameLocator(selection, nodeLocator)) return false;
+
+  if (selection.kind === 'entity') {
+    return isDescendantOrSelf(configuration, selection.entityId, nodeEntity.id);
+  }
+  if (selection.kind === 'representative_member') {
+    if (nodeLocator.kind === 'representative_member') {
+      return (
+        selection.aggregateId === nodeLocator.aggregateId &&
+        pathStartsWith(selection.path, nodeLocator.path) &&
+        selection.path.length > nodeLocator.path.length
+      );
+    }
+    const selectionEntityId = entityIdForRepresentative(selection);
+    return isDescendantOrSelf(configuration, selectionEntityId, nodeEntity.id);
+  }
+  if (selection.kind === 'connection') {
+    return configuration.connections[selection.connectionId]?.endpointIds.some((endpointId) =>
+      isDescendantOrSelf(configuration, endpointId, nodeEntity.id),
+    ) ?? false;
+  }
+  return false;
+}
+
 function projectEndpointToVisible(
   configuration: Configuration,
   endpointId: string,
@@ -124,15 +159,28 @@ function scenarioStateSummary(
 ): string | undefined {
   const scenario = configuration.scenarios[state.explore.scenarioId];
   if (!scenario) return undefined;
+  if (locator.kind === 'representative_member') {
+    const modeledIds = [...locator.path].reverse();
+    if (!modeledIds.includes(locator.aggregateId)) modeledIds.push(locator.aggregateId);
+    const effect = scenario.effects.find(
+      (candidate) =>
+        candidate.target.type === 'entity' && modeledIds.includes(candidate.target.id),
+    );
+    if (!effect) return undefined;
+    const stateText = Object.entries(effect.state)
+      .slice(0, 1)
+      .map(([key, value]) => `${key.replaceAll('_', ' ')}: ${String(value)}`)
+      .join(' · ');
+    return `${stateText} (modeled aggregate/context; representative member state not specified)`;
+  }
+
   const targetType = locator.kind === 'connection' ? 'connection' : 'entity';
   const targetId =
     locator.kind === 'connection'
       ? locator.connectionId
       : locator.kind === 'entity'
         ? locator.entityId
-        : locator.kind === 'representative_member'
-          ? entityIdForRepresentative(locator)
-          : undefined;
+        : undefined;
   if (!targetId) return undefined;
   const effect = scenario.effects.find(
     (candidate) =>
@@ -243,6 +291,12 @@ export function buildExploreScene(state: AppState, configuration: Configuration)
       entity,
       locator,
       selected: sameLocator(state.explore.selection, locator),
+      containsSelection: nodeContainsSelection(
+        configuration,
+        entity,
+        locator,
+        state.explore.selection,
+      ),
       previewed: sameLocator(state.explore.preview, locator),
       location: sameLocator(state.explore.structuralLocation, locator),
       scenarioEmphasized: emphasizedVisibleEntities.has(entity.id),
