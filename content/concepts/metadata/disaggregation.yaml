@@ -1,0 +1,14 @@
+schema_version: 1.0.0
+concept_id: disaggregation
+name: Disaggregation
+concept_kind: principle
+summary: A systems design principle that separates resources that are conventionally colocated so they can be pooled, scaled, or accessed independently.
+content_file: ../content/disaggregation.md
+inventory_mappings:
+- category: Cross-cutting systems concepts
+  item: Disaggregation
+  primary: true
+tags:
+- architecture
+- memory
+- resource-pooling

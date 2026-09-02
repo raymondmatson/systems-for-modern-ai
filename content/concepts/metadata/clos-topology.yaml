@@ -1,0 +1,18 @@
+schema_version: 1.0.0
+concept_id: clos-topology
+name: Clos Topology
+concept_kind: topology
+summary: 'A multistage switching topology that provides many parallel paths between endpoints and is widely adapted for scalable data-center networks.
+
+  '
+content_file: ../content/clos-topology.md
+aliases:
+- Clos
+inventory_mappings:
+- category: Network topologies
+  item: Clos
+  primary: true
+tags:
+- networking
+- topology
+- scale-out

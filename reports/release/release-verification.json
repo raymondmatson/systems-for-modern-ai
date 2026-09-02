@@ -1,0 +1,22 @@
+{
+  "release_date": "2026-08-28",
+  "canonical_rsc_validation": "pass",
+  "canonical_concept_validation": "pass",
+  "concept_validator_tests": "pass_8_of_8",
+  "initial_five_v1_validation": "pass",
+  "runtime_generation": "pass",
+  "runtime_determinism": "pass_37_files",
+  "runtime_integrity": "pass",
+  "property_conformance": "pass_5_of_5",
+  "content_readiness": "pass",
+  "typescript_fallback_parser_check": "pass",
+  "npm_install": "environment_blocked_registry_dns",
+  "playwright_browser_install": "environment_blocked_by_npm_install",
+  "pinned_typescript_check": "environment_blocked_by_npm_install",
+  "vitest": "environment_blocked_by_npm_install",
+  "vite_build": "environment_blocked_by_npm_install",
+  "playwright_three_engine": "environment_blocked_by_npm_install",
+  "fresh_archive_python_generation_validation": "pass",
+  "fresh_archive_npm_install": "environment_blocked_registry_dns",
+  "documentation_confidence_evidence": "unavailable_in_shared_sources"
+}

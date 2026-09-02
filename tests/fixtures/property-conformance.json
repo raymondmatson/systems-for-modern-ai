@@ -1,0 +1,7 @@
+[
+  {"id":"gb-to-mb","number":"44","factor":"1000","expected":"44000"},
+  {"id":"gib-to-mib","number":"192","factor":"1024","expected":"196608"},
+  {"id":"terabit-to-gigabit","number":"3.2","factor":"1000","expected":"3200"},
+  {"id":"fractional","number":"0.1","factor":"3","expected":"0.3"},
+  {"id":"large-count","number":"900000","factor":"64","expected":"57600000"}
+]

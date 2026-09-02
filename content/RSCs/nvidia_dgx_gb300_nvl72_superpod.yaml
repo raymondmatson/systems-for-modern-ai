@@ -1,0 +1,503 @@
+schema_version: 1.3.0
+reference_system:
+  id: nvidia-dgx-gb300-nvl72-superpod
+  name: NVIDIA DGX GB300 NVL72 / SuperPOD
+  vendor_operator: NVIDIA
+  planning_status: recommended_initial
+  introduction:
+    date_or_year: 2025
+    lifecycle: new
+  summary: Rack-scale Blackwell Ultra architecture in which 72 GPUs form one tightly coupled NVLink domain and multiple racks scale out over high-performance networking.
+  learning_value:
+  - Rack-scale scale-up architecture
+  - Compute-tray and switch-tray organization
+  - Modern liquid-cooled AI-factory design
+  source_ids:
+  - nv-gb300
+  - nv-gb300-components
+  - nv-gb300-network
+  - nv-gb300-node
+sources:
+- id: nv-gb300
+  title: NVIDIA GB300 NVL72
+  publisher: NVIDIA
+  url: https://www.nvidia.com/en-us/data-center/gb300-nvl72/
+  accessed: '2026-08-19'
+- id: nv-gb300-components
+  title: System Hardware & Components — NVIDIA NVL72 AI Factory
+  publisher: NVIDIA
+  url: https://docs.nvidia.com/enterprise-reference-architectures/nvl72-ai-factory/latest/components.html
+  accessed: '2026-08-19'
+- id: nv-gb300-network
+  title: Network Logical Architecture — NVIDIA NVL72 AI Factory
+  publisher: NVIDIA
+  url: https://docs.nvidia.com/enterprise-reference-architectures/nvl72-ai-factory/latest/network-logical-architecture.html
+  accessed: '2026-08-19'
+- id: nv-gb300-node
+  title: Appendix B — Node Configurations
+  publisher: NVIDIA
+  url: https://docs.nvidia.com/enterprise-reference-architectures/nvl72-ai-factory/latest/appendix-node-configurations.html
+  accessed: '2026-08-19'
+configurations:
+- id: gb300-nvl72-superpod-reference
+  name: GB300 NVL72 rack-scale reference with scale-out fabric
+  configuration_status: baseline
+  default_scenario:
+    id: baseline-normal-operation
+    name: Baseline / normal operation
+    description: Normal/baseline operation with no deliberately injected fault or bottleneck.
+  scope_notes: Models one GB300 NVL72 rack as the core scale-up unit and an aggregate scale-out fabric. Exact multi-rack SuperPOD size is intentionally not fixed.
+  modeling_notes:
+  - Compute and switch trays use canonical inventory items because they recur in rack-scale AI systems.
+  - Facility-level power/cooling distribution beyond the rack is intentionally simplified.
+  source_ids:
+  - nv-gb300
+  - nv-gb300-components
+  - nv-gb300-network
+  - nv-gb300-node
+  hierarchy:
+    root:
+      id: gb300-superpod
+      name: DGX GB300 NVL72 / SuperPOD reference
+      entity_type: compute_cluster
+      explore_tier: 1
+      inventory:
+        category: Physical infrastructure hierarchy
+        item: Compute clusters
+        status: existing
+      representation: explicit
+      evidence:
+        status: simplified
+        source_ids:
+        - nv-gb300-network
+        note: System-level model centered on repeatable GB300 NVL72 scalable units.
+      properties: {}
+      children:
+      - id: gb300-nvl72-rack
+        name: GB300 NVL72 rack / scalable unit
+        entity_type: rack_scale_system
+        product_identity:
+          manufacturer: NVIDIA
+          product_family: NVL72
+          model: GB300 NVL72
+          architecture: Blackwell Ultra
+        explore_tier: 2
+        inventory:
+          category: Physical infrastructure hierarchy
+          item: Racks
+          status: existing
+        representation: explicit
+        evidence:
+          status: documented
+          source_ids:
+          - nv-gb300
+          note: Each rack integrates 72 Blackwell Ultra GPUs and 36 Grace CPUs.
+        properties:
+          gpus:
+            status: known
+            value:
+              form: scalar
+              number: 72
+              approximate: false
+            basis: advertised
+          grace_cpus:
+            status: known
+            value:
+              form: scalar
+              number: 36
+              approximate: false
+            basis: advertised
+          cooling:
+            status: known
+            value:
+              form: text
+              text: liquid
+        children:
+        - id: gb300-compute-trays
+          name: Compute trays
+          entity_type: compute_tray
+          product_identity:
+            manufacturer: NVIDIA
+            product_family: GB300 NVL72
+            model: GB300 NVL Compute Tray
+          explore_tier: 3
+          inventory:
+            category: Physical infrastructure hierarchy
+            item: Compute trays / accelerator trays
+            status: existing
+          representation: aggregate
+          evidence:
+            status: documented
+            source_ids:
+            - nv-gb300-network
+            - nv-gb300-node
+            note: GB300 rack contains 18 compute trays; each tray contains 4 GPUs and 2 Grace CPUs.
+          properties:
+            quantity_per_rack:
+              status: known
+              value:
+                form: scalar
+                number: 18
+                approximate: false
+              basis: advertised
+              scope: per_rack
+          children:
+          - id: gb300-gpus
+            name: Blackwell Ultra GPUs
+            entity_type: gpu
+            product_identity:
+              manufacturer: NVIDIA
+              model: B300
+              architecture: Blackwell Ultra
+            explore_tier: 4
+            inventory:
+              category: Server-level hardware
+              item: GPUs
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - nv-gb300-node
+              note: Four GPUs per compute tray.
+            properties:
+              quantity_per_tray:
+                status: known
+                value:
+                  form: scalar
+                  number: 4
+                  approximate: false
+                basis: advertised
+                scope: per_device
+            children: []
+            population:
+              count:
+                value: 4
+                form: scalar
+                basis: documented_fixed
+              expansion_mode: representative_member
+              individually_addressable: false
+              member_entity_type: gpu
+          - id: gb300-cpus
+            name: Grace CPUs
+            entity_type: cpu
+            product_identity:
+              manufacturer: NVIDIA
+              product_family: Grace
+              model: Grace CPU
+            explore_tier: 4
+            inventory:
+              category: Server-level hardware
+              item: CPUs
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - nv-gb300-node
+              note: Two Grace CPUs per compute tray.
+            properties:
+              quantity_per_tray:
+                status: known
+                value:
+                  form: scalar
+                  number: 2
+                  approximate: false
+                basis: advertised
+                scope: per_device
+            children: []
+            population:
+              count:
+                value: 2
+                form: scalar
+                basis: documented_fixed
+              expansion_mode: representative_member
+              individually_addressable: false
+              member_entity_type: cpu
+          - id: gb300-cx8
+            name: ConnectX-8 NICs
+            entity_type: nic
+            product_identity:
+              manufacturer: NVIDIA
+              product_family: ConnectX
+              model: ConnectX-8
+            explore_tier: 4
+            inventory:
+              category: Server-level hardware
+              item: NICs
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - nv-gb300-node
+              note: Compute trays include ConnectX-8 networking; represented as an aggregate.
+            properties: {}
+            children: []
+          - id: gb300-cache
+            name: E1.S data-cache SSDs
+            entity_type: local_storage
+            explore_tier: 4
+            inventory:
+              category: Server-level hardware
+              item: NVMe SSDs
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - nv-gb300-node
+              note: Eight E1.S data-cache SSDs per tray are documented.
+            properties:
+              quantity_per_tray:
+                status: known
+                value:
+                  form: scalar
+                  number: 8
+                  approximate: false
+                basis: advertised
+                scope: per_device
+            children: []
+            population:
+              count:
+                value: 8
+                form: scalar
+                basis: documented_fixed
+              expansion_mode: representative_member
+              individually_addressable: false
+              member_entity_type: local_storage
+          population:
+            count:
+              value: 18
+              form: scalar
+              basis: documented_fixed
+            expansion_mode: representative_member
+            individually_addressable: false
+            member_entity_type: compute_tray
+        - id: gb300-switch-trays
+          name: NVLink switch trays
+          entity_type: switch_tray
+          product_identity:
+            manufacturer: NVIDIA
+            product_family: NVLink Switch
+            model: NVLink Switch Tray
+            generation: 5th generation
+          explore_tier: 3
+          inventory:
+            category: Physical infrastructure hierarchy
+            item: Switch trays / fabric switch trays
+            status: existing
+          representation: aggregate
+          evidence:
+            status: documented
+            source_ids:
+            - nv-gb300-components
+            note: Nine NVLink switch trays per rack, two NVSwitch ASICs per tray.
+          properties:
+            quantity_per_rack:
+              status: known
+              value:
+                form: scalar
+                number: 9
+                approximate: false
+              basis: advertised
+              scope: per_rack
+          children:
+          - id: gb300-nvswitch
+            name: NVSwitch ASICs
+            entity_type: switch_asic
+            product_identity:
+              manufacturer: NVIDIA
+              product_family: NVSwitch
+            explore_tier: 4
+            inventory:
+              category: Network hardware
+              item: Switch ASICs
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - nv-gb300-components
+              note: Two NVSwitch ASICs per switch tray.
+            properties:
+              quantity_per_switch_tray:
+                status: known
+                value:
+                  form: scalar
+                  number: 2
+                  approximate: false
+                basis: advertised
+                scope: per_device
+            children: []
+            population:
+              count:
+                value: 2
+                form: scalar
+                basis: documented_fixed
+              expansion_mode: representative_member
+              individually_addressable: false
+              member_entity_type: switch_asic
+          population:
+            count:
+              value: 9
+              form: scalar
+              basis: documented_fixed
+            expansion_mode: representative_member
+            individually_addressable: false
+            member_entity_type: switch_tray
+      - id: gb300-scaleout-switches
+        name: Scale-out Ethernet switches
+        entity_type: network_switch
+        product_identity:
+          manufacturer: NVIDIA
+          product_family: Spectrum-X
+          model: SN5600
+        explore_tier: 3
+        inventory:
+          category: Physical infrastructure hierarchy
+          item: Network switches
+          status: existing
+        representation: aggregate
+        evidence:
+          status: documented
+          source_ids:
+          - nv-gb300-network
+          note: Spectrum-X reference design uses SN5600 switching; exact SuperPOD scale varies.
+        properties:
+          topology:
+            status: known
+            value:
+              form: text
+              text: rail-optimized non-blocking Ethernet reference fabric
+        children: []
+      - id: gb300-cooling
+        name: Rack-scale liquid-cooling infrastructure
+        entity_type: cooling_system
+        explore_tier: 2
+        inventory:
+          category: Physical infrastructure hierarchy
+          item: Cooling infrastructure
+          status: existing
+        representation: aggregate
+        evidence:
+          status: documented
+          source_ids:
+          - nv-gb300
+          note: GB300 NVL72 is fully liquid-cooled.
+        properties: {}
+        children: []
+  connections:
+  - id: gb300-nvlink
+    name: Rack-scale NVLink domain
+    relationship_type: physical_connectivity
+    endpoints:
+    - gb300-gpus
+    - gb300-nvswitch
+    directionality: undirected
+    inventory:
+      category: Local server interconnects
+      item: NVLink
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - nv-gb300-components
+      note: All 72 GPUs form one in-rack NVLink domain through NVSwitch.
+    properties: {}
+  - id: gb300-scaleout
+    name: Compute trays to scale-out Ethernet
+    relationship_type: physical_connectivity
+    endpoints:
+    - gb300-cx8
+    - gb300-scaleout-switches
+    directionality: undirected
+    inventory:
+      category: Network organization and fabrics
+      item: Scale-out networks
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - nv-gb300-network
+      note: Spectrum-X Ethernet provides the scale-out fabric in this reference design.
+    properties: {}
+  - id: gb300-cooling-dependency
+    name: Rack cooling dependency
+    relationship_type: dependency_service
+    endpoints:
+    - gb300-cooling
+    - gb300-nvl72-rack
+    directionality: source_to_target
+    inventory:
+      category: Thermal management
+      item: Liquid cooling
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - nv-gb300
+      note: Rack is liquid-cooled.
+    properties: {}
+  functional_groups:
+  - id: gb300-scaleup-group
+    name: 72-GPU NVLink scale-up domain
+    category: scale_up_domain
+    member_ids:
+    - gb300-gpus
+    - gb300-nvswitch
+    evidence:
+      status: documented
+      source_ids:
+      - nv-gb300-components
+      note: One 72-GPU in-rack scale-up domain.
+  - id: gb300-scaleout-group
+    name: Spectrum-X scale-out domain
+    category: scale_out_domain
+    member_ids:
+    - gb300-cx8
+    - gb300-scaleout-switches
+    evidence:
+      status: documented
+      source_ids:
+      - nv-gb300-network
+      note: Scale-out Ethernet reference fabric.
+  concept_links:
+  - concept_id: scale-up-versus-scale-out
+    role: illustrates
+    target:
+      type: entity
+      id: gb300-nvl72-rack
+    note: ''
+  - concept_id: scale-up-versus-scale-out
+    role: illustrates
+    target:
+      type: entity
+      id: gb300-gpus
+    note: ''
+  - concept_id: scale-up-versus-scale-out
+    role: illustrates
+    target:
+      type: entity
+      id: gb300-nvswitch
+    note: ''
+  - concept_id: liquid-cooling
+    role: uses
+    target:
+      type: entity
+      id: gb300-cooling
+    note: ''
+  - concept_id: liquid-cooling
+    role: uses
+    target:
+      type: entity
+      id: gb300-nvl72-rack
+    note: ''
+  unknowns:
+  - description: Exact deployment-wide number of NVL72 racks and facility infrastructure is installation-specific.
+    treatment: omitted
+    affected_entity_ids:
+    - gb300-superpod
+  scenario_catalog:
+    path: scenarios/gb300-nvl72-superpod-reference.yaml
+    default_scenario_id: baseline-normal-operation

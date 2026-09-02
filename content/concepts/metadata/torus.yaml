@@ -1,0 +1,13 @@
+schema_version: 1.0.0
+concept_id: torus
+name: Torus topology
+concept_kind: topology
+summary: A multidimensional topology in which nodes connect to neighbors with wraparound links, providing regular paths and scalable local connectivity.
+content_file: ../content/torus.md
+inventory_mappings:
+- category: Network topologies
+  item: Torus
+  primary: true
+tags:
+- networking
+- topology

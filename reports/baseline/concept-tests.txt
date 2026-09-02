@@ -1,0 +1,13 @@
+test_canonical_library_passes (test_validate_concepts.ConceptValidationTests.test_canonical_library_passes) ... ok
+test_filename_mismatch_is_rejected (test_validate_concepts.ConceptValidationTests.test_filename_mismatch_is_rejected) ... ok
+test_invalid_concept_kind_is_rejected_by_schema (test_validate_concepts.ConceptValidationTests.test_invalid_concept_kind_is_rejected_by_schema) ... ok
+test_invalid_inventory_mapping_is_rejected (test_validate_concepts.ConceptValidationTests.test_invalid_inventory_mapping_is_rejected) ... ok
+test_missing_content_file_is_rejected (test_validate_concepts.ConceptValidationTests.test_missing_content_file_is_rejected) ... ok
+test_orphan_markdown_is_rejected (test_validate_concepts.ConceptValidationTests.test_orphan_markdown_is_rejected) ... ok
+test_prerequisite_cycle_is_rejected (test_validate_concepts.ConceptValidationTests.test_prerequisite_cycle_is_rejected) ... ok
+test_self_relationship_is_rejected (test_validate_concepts.ConceptValidationTests.test_self_relationship_is_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.110s
+
+OK

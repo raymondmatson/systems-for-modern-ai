@@ -1,0 +1,19 @@
+amd_helios.yaml: PASS
+aws_trainium2_rainier.yaml: PASS
+aws_trainium3_ultraserver.yaml: PASS
+cerebras_cs3_condor_galaxy3.yaml: PASS
+coreweave_gb200_nvl72.yaml: PASS
+google_tpu7x_ironwood.yaml: PASS
+google_tpu8_family.yaml: PASS
+groq_lpu_groqcloud.yaml: PASS
+llnl_el_capitan.yaml: PASS
+meta_h100_roce_24k.yaml: PASS
+microsoft_maia200.yaml: PASS
+nvidia_dgx_gb300_nvl72_superpod.yaml: PASS
+nvidia_dgx_h100_superpod.yaml: PASS
+nvidia_vera_rubin.yaml: PASS
+oci_gb200_gb300_supercluster.yaml: PASS
+xai_colossus1.yaml: PASS
+reference_system.template.yaml: PASS
+manifest.yaml: PASS
+SUMMARY: systems=16, yaml_documents=18, inventory_categories=45, schema_version=1.2.0, result=PASS

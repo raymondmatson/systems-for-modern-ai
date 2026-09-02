@@ -1,0 +1,234 @@
+schema_version: 1.2.0
+reference_system:
+  id: microsoft-maia200
+  name: Microsoft Azure Maia 200 Inference System
+  vendor_operator: Microsoft Azure
+  planning_status: worth_considering_later
+  introduction:
+    date_or_year: 2026
+    lifecycle: new
+  summary: Purpose-built inference accelerator system organized around four-accelerator trays and an Ethernet-based 
+    two-tier scale-up network.
+  learning_value:
+  - Inference-specialized custom accelerator
+  - Direct intra-tray links plus multi-tier scale-up
+  - On-chip SRAM and data-movement emphasis
+  source_ids:
+  - ms-maia200
+sources:
+- id: ms-maia200
+  title: 'Maia 200: The AI accelerator built for inference'
+  publisher: Microsoft
+  url: https://blogs.microsoft.com/blog/2026/01/26/maia-200-the-ai-accelerator-built-for-inference/
+  accessed: '2026-08-19'
+configurations:
+- id: maia200-inference-cluster
+  name: Maia 200 inference cluster
+  configuration_status: emerging
+  default_scenario:
+    id: baseline-normal-operation
+    name: Baseline / normal operation
+    description: Baseline inference-serving state with normal request load and no injected bottleneck.
+  scope_notes: Models the documented four-accelerator tray and two-tier Ethernet-based scale-up architecture; host and 
+    switch details remain black-boxed.
+  modeling_notes:
+  - The network is intentionally represented as a black box beyond documented protocol/topology behavior.
+  source_ids:
+  - ms-maia200
+  hierarchy:
+    root:
+      id: maia200-cluster
+      name: Azure Maia 200 inference cluster
+      entity_type: compute_cluster
+      explore_tier: 1
+      inventory:
+        category: Physical infrastructure hierarchy
+        item: Compute clusters
+        status: existing
+      representation: explicit
+      evidence:
+        status: documented
+        source_ids:
+        - ms-maia200
+        note: Architecture supports collective operations across clusters up to 6,144 accelerators.
+      properties:
+        max_accelerators: 6144
+      children:
+      - id: maia200-trays
+        name: Maia accelerator trays
+        entity_type: compute_tray
+        explore_tier: 3
+        inventory:
+          category: Physical infrastructure hierarchy
+          item: Compute trays / accelerator trays
+          status: existing
+        representation: aggregate
+        evidence:
+          status: documented
+          source_ids:
+          - ms-maia200
+          note: Each tray contains four fully connected Maia accelerators.
+        properties:
+          accelerators_per_tray: 4
+        children:
+        - id: maia200-chip
+          name: Maia 200 accelerators
+          entity_type: ai_accelerator
+          product_identity:
+            manufacturer: Microsoft
+            product_family: Maia
+            model: Maia 200
+          explore_tier: 4
+          inventory:
+            category: Server-level hardware
+            item: Other AI accelerators
+            status: existing
+          representation: aggregate
+          evidence:
+            status: documented
+            source_ids:
+            - ms-maia200
+            note: Four accelerators per tray.
+          properties:
+            hbm3e_gb: 216
+          children:
+          - id: maia200-sram
+            name: On-die SRAM
+            entity_type: on_chip_memory
+            explore_tier: 5
+            inventory:
+              category: Accelerator internals
+              item: On-chip SRAM
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - ms-maia200
+              note: On-die SRAM is part of the memory subsystem.
+            properties:
+              capacity_mb: 272
+            children: []
+          - id: maia200-dma
+            name: DMA / data-movement engines
+            entity_type: dma_engine
+            explore_tier: 5
+            inventory:
+              category: Accelerator internals
+              item: DMA engines
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - ms-maia200
+              note: Specialized DMA engine and NoC support data movement.
+            properties: {}
+            children: []
+      - id: maia200-scaleup-network
+        name: Two-tier Maia scale-up network
+        entity_type: network_fabric
+        explore_tier: 2
+        inventory:
+          category: Network organization and fabrics
+          item: Scale-up networks
+          status: existing
+        representation: black_box
+        evidence:
+          status: documented
+          source_ids:
+          - ms-maia200
+          note: Two-tier scale-up network uses standard Ethernet plus custom transport; detailed switch/rack composition
+            is not published in this source.
+        properties:
+          transport: Maia AI transport over Ethernet
+        children: []
+      - id: maia200-cooling
+        name: Liquid-cooling infrastructure
+        entity_type: cooling_system
+        explore_tier: 2
+        inventory:
+          category: Physical infrastructure hierarchy
+          item: Cooling infrastructure
+          status: existing
+        representation: aggregate
+        evidence:
+          status: documented
+          source_ids:
+          - ms-maia200
+          note: Microsoft describes a second-generation closed-loop heat exchanger unit for liquid cooling.
+        properties: {}
+        children: []
+  connections:
+  - id: maia-tray-links
+    name: Direct non-switched intra-tray links
+    relationship_type: physical_connectivity
+    endpoints:
+    - maia200-chip
+    - maia200-trays
+    directionality: undirected
+    inventory:
+      category: Network topologies
+      item: Point-to-point
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - ms-maia200
+      note: Four Maia accelerators in a tray are fully connected by direct non-switched links.
+    properties: {}
+  - id: maia-scaleup
+    name: Maia Ethernet scale-up fabric
+    relationship_type: physical_connectivity
+    endpoints:
+    - maia200-trays
+    - maia200-scaleup-network
+    directionality: undirected
+    inventory:
+      category: Network organization and fabrics
+      item: Scale-up networks
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - ms-maia200
+      note: Same communication protocols extend intra-rack/inter-rack via custom transport over Ethernet.
+    properties: {}
+  functional_groups:
+  - id: maia-scaleup-domain
+    name: Maia scale-up domain
+    category: scale_up_domain
+    member_ids:
+    - maia200-chip
+    - maia200-trays
+    - maia200-scaleup-network
+    evidence:
+      status: documented
+      source_ids:
+      - ms-maia200
+      note: Two-tier scale-up architecture across as many as 6,144 accelerators.
+  concept_links:
+  - name: Model serving
+    inventory:
+      category: Inference systems
+      item: Model serving
+      status: existing
+    entity_ids:
+    - maia200-cluster
+    - maia200-chip
+    note: ''
+  - name: Direct data movement
+    inventory:
+      category: Direct data movement and GPU I/O
+      item: DMA
+      status: existing
+    entity_ids:
+    - maia200-dma
+    - maia200-chip
+    note: ''
+  unknowns:
+  - description: Host CPU, rack population, and detailed switching implementation are not disclosed in the public 
+      overview used here.
+    treatment: black_box
+    affected_entity_ids:
+    - maia200-scaleup-network

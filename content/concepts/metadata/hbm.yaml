@@ -1,0 +1,24 @@
+schema_version: 1.0.0
+concept_id: hbm
+name: High Bandwidth Memory
+concept_kind: hardware_technology
+summary: 'A stacked high-bandwidth memory technology placed close to accelerators to provide much greater memory bandwidth than conventional off-package DRAM.
+
+  '
+content_file: ../content/hbm.md
+aliases:
+- HBM
+inventory_mappings:
+- category: Memory hierarchy
+  item: GPU HBM
+  primary: false
+- category: Server-level hardware
+  item: HBM
+  primary: true
+- category: Accelerator internals
+  item: HBM stacks
+  primary: false
+tags:
+- memory
+- accelerator
+- packaging

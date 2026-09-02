@@ -1,0 +1,14 @@
+schema_version: 1.0.0
+concept_id: open-rack-standards-form-factors
+name: Open rack standards and form factors
+concept_kind: hardware_technology
+summary: Open rack and chassis form-factor conventions that shape how compute, storage, power, and serviceable hardware are physically organized in a rack.
+content_file: ../content/open-rack-standards-form-factors.md
+inventory_mappings:
+- category: Physical infrastructure hierarchy
+  item: Open rack standards / form factors
+  primary: true
+tags:
+- rack
+- form-factor
+- physical-infrastructure

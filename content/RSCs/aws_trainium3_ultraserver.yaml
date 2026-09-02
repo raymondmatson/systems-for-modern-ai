@@ -1,0 +1,270 @@
+schema_version: 1.2.0
+reference_system:
+  id: aws-trainium3-ultraserver
+  name: AWS Trainium3 UltraServer / EC2 UltraCluster 3.0
+  vendor_operator: AWS
+  planning_status: worth_considering_later
+  introduction:
+    date_or_year: 2025
+    lifecycle: new
+  summary: AWS custom-accelerator architecture that expands the tightly coupled scale-up domain to as many as 144 
+    Trainium3 chips using NeuronSwitch-v1 and NeuronLink-v4.
+  learning_value:
+  - Alternative custom accelerator ecosystem
+  - Large all-to-all scale-up domain
+  - Dedicated collective communication hardware
+  source_ids:
+  - aws-trn3
+  - aws-trn3-news
+  - aws-neuron-arch
+sources:
+- id: aws-trn3
+  title: Amazon EC2 Trn3 UltraServers
+  publisher: AWS
+  url: https://aws.amazon.com/ec2/instance-types/trn3/
+  accessed: '2026-08-19'
+- id: aws-trn3-news
+  title: Announcing Amazon EC2 Trn3 UltraServers
+  publisher: AWS
+  url: https://aws.amazon.com/about-aws/whats-new/2025/12/amazon-ec2-trn3-ultraservers/
+  accessed: '2026-08-19'
+- id: aws-neuron-arch
+  title: AWS Neuron architecture guides
+  publisher: AWS
+  url: https://awsdocs-neuron.readthedocs-hosted.com/en/v2.27.0/about-neuron/arch/
+  accessed: '2026-08-22'
+configurations:
+- id: trn3-ultraserver-ultracluster3
+  name: Trainium3 UltraServer in EC2 UltraCluster 3.0
+  configuration_status: emerging
+  default_scenario:
+    id: baseline-normal-operation
+    name: Baseline / normal operation
+    description: Normal/baseline operation with no deliberately injected fault or bottleneck.
+  scope_notes: Centers the model on the documented 144-chip UltraServer and leaves the larger UltraCluster physical 
+    switch/rack composition as a black box.
+  modeling_notes:
+  - Rack placement and host CPU details are omitted because the public source used here does not establish them.
+  source_ids:
+  - aws-trn3
+  - aws-trn3-news
+  - aws-neuron-arch
+  hierarchy:
+    root:
+      id: trn3-ultracluster
+      name: EC2 UltraCluster 3.0
+      entity_type: compute_cluster
+      explore_tier: 1
+      inventory:
+        category: Physical infrastructure hierarchy
+        item: Compute clusters
+        status: existing
+      representation: explicit
+      evidence:
+        status: documented
+        source_ids:
+        - aws-trn3
+        note: UltraClusters 3.0 scale Trn3 UltraServers to hundreds of thousands of chips.
+      properties: {}
+      children:
+      - id: trn3-ultraserver
+        name: Trn3 UltraServer
+        entity_type: compute_assembly
+        product_identity:
+          manufacturer: AWS
+          product_family: EC2 Trn3
+          model: Trn3 UltraServer
+        explore_tier: 3
+        inventory:
+          category: Physical infrastructure hierarchy
+          item: Servers / compute nodes
+          status: existing
+        representation: aggregate
+        evidence:
+          status: documented
+          source_ids:
+          - aws-trn3
+          note: UltraServer scales to 144 Trainium3 chips.
+        properties:
+          max_trainium3_chips: 144
+        children:
+        - id: trn3-chips
+          name: Trainium3 chips
+          entity_type: ai_accelerator
+          product_identity:
+            manufacturer: AWS
+            product_family: Trainium
+            model: Trainium3
+            generation: 3rd generation
+          explore_tier: 4
+          inventory:
+            category: Server-level hardware
+            item: Other AI accelerators
+            status: existing
+          representation: aggregate
+          evidence:
+            status: documented
+            source_ids:
+            - aws-trn3
+            - aws-neuron-arch
+            note: Up to 144 Trainium3 chips per fully configured UltraServer; AWS Neuron documentation identifies Trainium3 as the third-generation Trainium training accelerator.
+          properties:
+            quantity_max: 144
+          children:
+          - id: trn3-neuroncores
+            name: NeuronCore-v4 cores
+            entity_type: compute_core
+            product_identity:
+              manufacturer: AWS
+              product_family: NeuronCore
+              model: NeuronCore-v4
+            explore_tier: 5
+            inventory:
+              category: Accelerator internals
+              item: Compute cores
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - aws-trn3
+              note: Trainium3 uses NeuronCore-v4; core-level quantity is not asserted in this initial model.
+            properties: {}
+            children: []
+          - id: trn3-collective-cores
+            name: Dedicated collective communication cores
+            entity_type: collective_engine
+            explore_tier: 5
+            inventory:
+              category: Accelerator internals
+              item: Dedicated collective communication engines / cores
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - aws-trn3
+              note: Trainium3 architecture includes dedicated collective communication capability; exact representation 
+                is simplified.
+            properties: {}
+            children: []
+          - id: trn3-hbm
+            name: HBM3e
+            entity_type: hbm
+            explore_tier: 5
+            inventory:
+              category: Accelerator internals
+              item: HBM stacks
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - aws-trn3-news
+              note: UltraServer aggregate HBM3e capacity is published; physical stack details are not modeled.
+            properties:
+              ultraserver_aggregate_tb: 20.7
+            children: []
+        - id: trn3-neuronswitch
+          name: NeuronSwitch-v1 fabric
+          entity_type: scale_up_switch
+          product_identity:
+            manufacturer: AWS
+            product_family: NeuronSwitch
+            model: NeuronSwitch-v1
+          explore_tier: 4
+          inventory:
+            category: Network hardware
+            item: Switch ASICs
+            status: existing
+          representation: aggregate
+          evidence:
+            status: documented
+            source_ids:
+            - aws-trn3
+            note: All-to-all fabric using NeuronLink-v4.
+          properties: {}
+          children: []
+      - id: trn3-scaleout
+        name: UltraCluster scale-out network
+        entity_type: network_fabric
+        explore_tier: 2
+        inventory:
+          category: Network organization and fabrics
+          item: Scale-out networks
+          status: existing
+        representation: black_box
+        evidence:
+          status: documented
+          source_ids:
+          - aws-trn3
+          note: UltraCluster 3.0 is described as scaling to hundreds of thousands of chips; detailed physical fabric 
+            composition is not specified on this source page.
+        properties: {}
+        children: []
+  connections:
+  - id: trn3-neuronlink
+    name: NeuronLink-v4 scale-up connectivity
+    relationship_type: physical_connectivity
+    endpoints:
+    - trn3-chips
+    - trn3-neuronswitch
+    directionality: undirected
+    inventory:
+      category: Local server interconnects
+      item: NeuronLink
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - aws-trn3
+      note: NeuronSwitch-v1 uses NeuronLink-v4 for all-to-all chip connectivity.
+    properties: {}
+  functional_groups:
+  - id: trn3-scaleup-domain
+    name: Trainium3 UltraServer scale-up domain
+    category: scale_up_domain
+    member_ids:
+    - trn3-chips
+    - trn3-neuronswitch
+    evidence:
+      status: documented
+      source_ids:
+      - aws-trn3
+      note: Up to 144 chips in one scale-up system.
+  - id: trn3-scaleout-domain
+    name: UltraCluster 3.0 scale-out domain
+    category: scale_out_domain
+    member_ids:
+    - trn3-ultraserver
+    - trn3-scaleout
+    evidence:
+      status: documented
+      source_ids:
+      - aws-trn3
+      note: Larger cluster fabric is represented at aggregate level.
+  concept_links:
+  - name: Collective offload
+    inventory:
+      category: Collective communication
+      item: Collective offload
+      status: existing
+    entity_ids:
+    - trn3-collective-cores
+    - trn3-chips
+    note: ''
+  - name: Scale-up versus scale-out
+    inventory:
+      category: Scale-up versus scale-out
+      item: Scale-up
+      status: existing
+    entity_ids:
+    - trn3-ultraserver
+    - trn3-neuronswitch
+    note: ''
+  unknowns:
+  - description: The detailed rack, host, and UltraCluster 3.0 switching layout is not sufficiently specified in the 
+      public high-level sources used here.
+    treatment: black_box
+    affected_entity_ids:
+    - trn3-scaleout

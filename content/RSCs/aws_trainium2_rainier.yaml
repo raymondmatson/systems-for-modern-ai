@@ -1,0 +1,315 @@
+schema_version: 1.2.0
+reference_system:
+  id: aws-trainium2-rainier
+  name: AWS Trainium2 / Project Rainier
+  vendor_operator: AWS / Anthropic
+  planning_status: worth_considering_later
+  introduction:
+    date_or_year: 2024
+    lifecycle: current
+  summary: Trainium2 architecture spanning 16-chip instances, 64-chip UltraServers, and very-large EFA-connected Project
+    Rainier deployment.
+  learning_value:
+  - Nested scale-up hierarchy before scale-out
+  - Custom chip + cloud-network co-design
+  - Very large production training system
+  source_ids:
+  - aws-trn2
+  - aws-trn2-blog
+  - aws-rainier
+sources:
+- id: aws-trn2
+  title: Amazon EC2 Trn2 instances and UltraServers
+  publisher: AWS
+  url: https://aws.amazon.com/ec2/instance-types/trn2/
+  accessed: '2026-08-19'
+- id: aws-trn2-blog
+  title: Amazon EC2 Trn2 Instances and UltraServers
+  publisher: AWS
+  url: 
+    https://aws.amazon.com/blogs/aws/amazon-ec2-trn2-instances-and-trn2-ultraservers-for-aiml-training-and-inference-is-now-available/
+  accessed: '2026-08-19'
+- id: aws-rainier
+  title: AWS activates Project Rainier
+  publisher: Amazon
+  url: https://www.aboutamazon.com/news/aws/aws-project-rainier-ai-trainium-chips-compute-cluster
+  accessed: '2026-08-19'
+configurations:
+- id: project-rainier-trainium2
+  name: Project Rainier Trainium2 architecture
+  configuration_status: baseline
+  default_scenario:
+    id: baseline-normal-operation
+    name: Baseline / normal operation
+    description: Baseline frontier-model training/serving state.
+  scope_notes: Models the published Trn2 instance → UltraServer hierarchy and EFA scale-out while leaving Rainier 
+    facility/network-switch details black-boxed.
+  modeling_notes:
+  - Project Rainier reported chip count has grown; this file records scale descriptively instead of freezing an obsolete
+    exact total.
+  source_ids:
+  - aws-trn2
+  - aws-trn2-blog
+  - aws-rainier
+  hierarchy:
+    root:
+      id: rainier
+      name: Project Rainier
+      entity_type: compute_cluster
+      explore_tier: 1
+      inventory:
+        category: Physical infrastructure hierarchy
+        item: Compute clusters
+        status: existing
+      representation: explicit
+      evidence:
+        status: documented
+        source_ids:
+        - aws-rainier
+        note: Project Rainier is an operational very-large Trainium2 cluster; scale has expanded over time.
+      properties:
+        reported_scale_note: Launched with nearly half a million Trainium2 chips; later AWS materials report expansion 
+          beyond that.
+      children:
+      - id: rainier-ultraserver
+        name: Trn2 UltraServers
+        entity_type: compute_group
+        product_identity:
+          manufacturer: AWS
+          product_family: EC2 Trn2
+          model: Trn2 UltraServer
+        explore_tier: 2
+        inventory:
+          category: Physical infrastructure hierarchy
+          item: Pods / superpods
+          status: existing
+        representation: aggregate
+        evidence:
+          status: documented
+          source_ids:
+          - aws-trn2
+          note: UltraServer combines four Trn2 instances and 64 Trainium2 chips.
+        properties:
+          trainium2_chips_per_ultraserver: 64
+        children:
+        - id: rainier-trn2-instance
+          name: Trn2 instances
+          entity_type: compute_node
+          product_identity:
+            manufacturer: AWS
+            product_family: EC2 Trn2
+            model: trn2u.48xlarge
+          explore_tier: 3
+          inventory:
+            category: Physical infrastructure hierarchy
+            item: Servers / compute nodes
+            status: existing
+          representation: aggregate
+          evidence:
+            status: documented
+            source_ids:
+            - aws-trn2-blog
+            note: Four Trn2 instances per UltraServer; 16 Trainium2 chips per instance.
+          properties:
+            instances_per_ultraserver: 4
+          children:
+          - id: rainier-trainium2
+            name: Trainium2 chips
+            entity_type: ai_accelerator
+            product_identity:
+              manufacturer: AWS
+              product_family: Trainium
+              model: Trainium2
+              generation: 2nd generation
+            explore_tier: 4
+            inventory:
+              category: Server-level hardware
+              item: Other AI accelerators
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - aws-trn2
+              note: 16 chips per Trn2 instance.
+            properties:
+              quantity_per_instance: 16
+              hbm_gib_per_chip: 96
+            children:
+            - id: rainier-neuroncores
+              name: NeuronCores
+              entity_type: compute_core
+              product_identity:
+                manufacturer: AWS
+                product_family: NeuronCore
+                generation: 3rd generation
+              explore_tier: 5
+              inventory:
+                category: Accelerator internals
+                item: Compute cores
+                status: existing
+              representation: aggregate
+              evidence:
+                status: documented
+                source_ids:
+                - aws-trn2-blog
+                note: Eight NeuronCores per Trainium2 chip.
+              properties:
+                quantity_per_chip: 8
+              children: []
+          - id: rainier-efa
+            name: Elastic Fabric Adapter interfaces
+            entity_type: nic
+            product_identity:
+              manufacturer: AWS
+              product_family: Elastic Fabric Adapter
+              model: EFAv3
+            explore_tier: 4
+            inventory:
+              category: Network hardware
+              item: Elastic Fabric Adapter (EFA)
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - aws-trn2
+              note: EFAv3 provides scale-out networking.
+            properties: {}
+            children: []
+          - id: rainier-nvme
+            name: Local NVMe
+            entity_type: local_storage
+            explore_tier: 4
+            inventory:
+              category: Server-level hardware
+              item: NVMe SSDs
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - aws-trn2
+              note: Trn2 instances provide local NVMe storage.
+            properties: {}
+            children: []
+      - id: rainier-efa-fabric
+        name: Project Rainier EFA scale-out fabric
+        entity_type: network_fabric
+        explore_tier: 2
+        inventory:
+          category: Network organization and fabrics
+          item: Scale-out networks
+          status: existing
+        representation: black_box
+        evidence:
+          status: documented
+          source_ids:
+          - aws-rainier
+          - aws-trn2
+          note: Project Rainier scales Trn2 UltraServers over EFA; detailed physical switching layout is not published 
+            in the selected sources.
+        properties: {}
+        children: []
+  connections:
+  - id: rainier-neuronlink-intra
+    name: NeuronLink 2D torus inside Trn2 instance
+    relationship_type: physical_connectivity
+    endpoints:
+    - rainier-trainium2
+    - rainier-trn2-instance
+    directionality: undirected
+    inventory:
+      category: Local server interconnects
+      item: NeuronLink
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - aws-trn2-blog
+      note: Trainium2 chips are connected by NeuronLink in a 2D torus.
+    properties: {}
+  - id: rainier-neuronlink-ultra
+    name: NeuronLink UltraServer connectivity
+    relationship_type: physical_connectivity
+    endpoints:
+    - rainier-trn2-instance
+    - rainier-ultraserver
+    directionality: undirected
+    inventory:
+      category: Local server interconnects
+      item: NeuronLink
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - aws-trn2-blog
+      note: Corresponding positions across four instances are connected in a ring.
+    properties: {}
+  - id: rainier-efa-scaleout
+    name: EFA scale-out
+    relationship_type: physical_connectivity
+    endpoints:
+    - rainier-efa
+    - rainier-efa-fabric
+    directionality: undirected
+    inventory:
+      category: Network hardware
+      item: Elastic Fabric Adapter (EFA)
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - aws-trn2
+      - aws-rainier
+      note: EFA provides the large-scale network.
+    properties: {}
+  functional_groups:
+  - id: rainier-scaleup
+    name: Trn2 UltraServer scale-up domain
+    category: scale_up_domain
+    member_ids:
+    - rainier-trainium2
+    - rainier-trn2-instance
+    - rainier-ultraserver
+    evidence:
+      status: documented
+      source_ids:
+      - aws-trn2-blog
+      note: 64-chip UltraServer.
+  - id: rainier-scaleout
+    name: Project Rainier EFA domain
+    category: scale_out_domain
+    member_ids:
+    - rainier-ultraserver
+    - rainier-efa
+    - rainier-efa-fabric
+    evidence:
+      status: documented
+      source_ids:
+      - aws-rainier
+      note: Very-large-scale EFA cluster.
+  concept_links:
+  - name: Torus
+    inventory:
+      category: Network topologies
+      item: Torus
+      status: existing
+    entity_ids:
+    - rainier-trn2-instance
+    - rainier-trainium2
+    note: ''
+  - name: RDMA
+    inventory:
+      category: Networking protocols
+      item: RDMA
+      status: existing
+    entity_ids:
+    - rainier-efa
+    - rainier-efa-fabric
+    note: ''
+  unknowns:
+  - description: Project Rainier switch/rack/facility topology is not sufficiently public in the selected sources.
+    treatment: black_box
+    affected_entity_ids:
+    - rainier-efa-fabric

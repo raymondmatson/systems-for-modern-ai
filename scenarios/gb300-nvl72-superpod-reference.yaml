@@ -1,0 +1,24 @@
+schema_version: 1.0.0
+configuration_id: gb300-nvl72-superpod-reference
+scenarios:
+- id: baseline-normal-operation
+  name: Baseline / normal operation
+  description: Normal/baseline operation with no deliberately injected fault or bottleneck.
+  default: true
+  scenario_types:
+  - baseline
+  effects: []
+- id: rack-cooling-degradation
+  name: Rack cooling degradation
+  description: Reduced cooling headroom emphasizes rack-scale thermal dependency.
+  default: false
+  scenario_types:
+  - failure_degradation
+  effects:
+  - target:
+      type: entity
+      id: gb300-cooling
+    state:
+      health: degraded
+      emphasis: thermal
+      note: Reduced cooling headroom emphasizes rack-scale thermal dependency.

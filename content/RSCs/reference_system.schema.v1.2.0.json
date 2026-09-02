@@ -1,0 +1,731 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/systems-modern-ai/reference-system.schema.json",
+  "title": "Systems for Modern AI — Reference System Configuration",
+  "description": "Schema for human-authored YAML reference-system files. YAML content is intentionally JSON-compatible. Optional product_identity metadata identifies real products across configurations without changing physical entity identity, entity behavior, or inventory classification.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "reference_system",
+    "sources",
+    "configurations"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.2.0"
+    },
+    "reference_system": {
+      "$ref": "#/$defs/referenceSystem"
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/source"
+      }
+    },
+    "configurations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/configuration"
+      }
+    }
+  },
+  "$defs": {
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]*$"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "title",
+        "publisher",
+        "url",
+        "accessed"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/slug"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "publisher": {
+          "type": "string",
+          "minLength": 1
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "accessed": {
+          "type": "string",
+          "format": "date"
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "introduction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "date_or_year",
+        "lifecycle"
+      ],
+      "properties": {
+        "date_or_year": {
+          "type": [
+            "string",
+            "integer"
+          ]
+        },
+        "lifecycle": {
+          "enum": [
+            "historical",
+            "mature",
+            "current",
+            "new",
+            "emerging"
+          ]
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "referenceSystem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "vendor_operator",
+        "planning_status",
+        "introduction",
+        "summary",
+        "learning_value",
+        "source_ids"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/slug"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "vendor_operator": {
+          "type": "string",
+          "minLength": 1
+        },
+        "planning_status": {
+          "enum": [
+            "recommended_initial",
+            "worth_considering_later"
+          ]
+        },
+        "introduction": {
+          "$ref": "#/$defs/introduction"
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "learning_value": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/slug"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      }
+    },
+    "scenario": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "description"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/slug"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "inventory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "category",
+        "item",
+        "status"
+      ],
+      "properties": {
+        "category": {
+          "type": "string",
+          "minLength": 1,
+          "examples": [
+            "Physical infrastructure hierarchy",
+            "Server-level hardware",
+            "Accelerator internals",
+            "Local server interconnects",
+            "Network hardware",
+            "Network organization and fabrics",
+            "Network topologies"
+          ]
+        },
+        "item": {
+          "type": "string",
+          "minLength": 1,
+          "examples": [
+            "Compute trays / accelerator trays",
+            "Switch trays / fabric switch trays",
+            "Open rack standards / form factors",
+            "APUs / unified CPU–GPU accelerator packages",
+            "Sparse / embedding accelerator cores",
+            "Dedicated collective communication engines / cores",
+            "TPU Inter-Chip Interconnect (ICI)",
+            "NeuronLink",
+            "Elastic Fabric Adapter (EFA)",
+            "Boardfly topology",
+            "HPE Slingshot fabric"
+          ]
+        },
+        "status": {
+          "enum": [
+            "existing",
+            "proposed_addition"
+          ]
+        },
+        "note": {
+          "type": "string"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "proposed_addition"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "required": [
+              "note"
+            ],
+            "properties": {
+              "note": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "source_ids",
+        "note"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "documented",
+            "inferred",
+            "simplified",
+            "unknown",
+            "proprietary"
+          ]
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/slug"
+          },
+          "uniqueItems": true
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "entity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "entity_type",
+        "explore_tier",
+        "inventory",
+        "representation",
+        "evidence",
+        "properties",
+        "children"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/slug"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "entity_type": {
+          "enum": [
+            "accelerator_die",
+            "ai_accelerator",
+            "apu",
+            "collective_engine",
+            "compute_assembly",
+            "compute_cluster",
+            "compute_core",
+            "compute_group",
+            "compute_node",
+            "compute_tray",
+            "cooling_system",
+            "cpu",
+            "cpu_die",
+            "dma_engine",
+            "dpu",
+            "fabric_appliance",
+            "gpu",
+            "hbm",
+            "hpc_ai_system",
+            "inference_system",
+            "local_storage",
+            "management_node",
+            "memory_appliance",
+            "network_fabric",
+            "network_switch",
+            "nic",
+            "on_chip_memory",
+            "optical_network",
+            "pod_group",
+            "preprocess_server",
+            "rack",
+            "rack_group",
+            "rack_scale_system",
+            "rack_topology_domain",
+            "scale_up_switch",
+            "smartnic",
+            "sparse_core",
+            "storage_group",
+            "storage_server",
+            "storage_system",
+            "switch_asic",
+            "switch_tray",
+            "tensor_core",
+            "topology_group",
+            "tpu"
+          ]
+        },
+        "product_identity": {
+          "$ref": "#/$defs/productIdentity"
+        },
+        "explore_tier": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "inventory": {
+          "$ref": "#/$defs/inventory"
+        },
+        "representation": {
+          "enum": [
+            "explicit",
+            "aggregate",
+            "black_box"
+          ]
+        },
+        "evidence": {
+          "$ref": "#/$defs/evidence"
+        },
+        "properties": {
+          "type": "object"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/entity"
+          }
+        }
+      }
+    },
+    "connection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "relationship_type",
+        "endpoints",
+        "directionality",
+        "inventory",
+        "evidence",
+        "properties"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/slug"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "relationship_type": {
+          "enum": [
+            "physical_connectivity",
+            "data_communication_path",
+            "dependency_service",
+            "affinity_locality",
+            "shared_resource_membership",
+            "redundancy_protection",
+            "control_management"
+          ]
+        },
+        "endpoints": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "$ref": "#/$defs/slug"
+          },
+          "uniqueItems": true
+        },
+        "directionality": {
+          "enum": [
+            "undirected",
+            "source_to_target",
+            "bidirectional"
+          ]
+        },
+        "inventory": {
+          "$ref": "#/$defs/inventory"
+        },
+        "evidence": {
+          "$ref": "#/$defs/evidence"
+        },
+        "properties": {
+          "type": "object"
+        }
+      }
+    },
+    "functionalGroup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "category",
+        "member_ids",
+        "evidence"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/slug"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "category": {
+          "enum": [
+            "compute_fabric",
+            "storage_fabric",
+            "management_network",
+            "scale_up_domain",
+            "scale_out_domain",
+            "power_domain",
+            "cooling_domain",
+            "other"
+          ]
+        },
+        "member_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/slug"
+          },
+          "uniqueItems": true
+        },
+        "evidence": {
+          "$ref": "#/$defs/evidence"
+        }
+      }
+    },
+    "conceptLink": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "inventory",
+        "entity_ids",
+        "note"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "inventory": {
+          "$ref": "#/$defs/inventory"
+        },
+        "entity_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/slug"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "unknown": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "description",
+        "treatment",
+        "affected_entity_ids"
+      ],
+      "properties": {
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "treatment": {
+          "enum": [
+            "omitted",
+            "black_box",
+            "simplified"
+          ]
+        },
+        "affected_entity_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/slug"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      }
+    },
+    "configuration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "configuration_status",
+        "default_scenario",
+        "scope_notes",
+        "modeling_notes",
+        "source_ids",
+        "hierarchy",
+        "connections",
+        "functional_groups",
+        "concept_links",
+        "unknowns"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/slug"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "configuration_status": {
+          "enum": [
+            "baseline",
+            "alternative",
+            "historical",
+            "emerging"
+          ]
+        },
+        "default_scenario": {
+          "$ref": "#/$defs/scenario"
+        },
+        "scope_notes": {
+          "type": "string",
+          "minLength": 1
+        },
+        "modeling_notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "source_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/slug"
+          },
+          "uniqueItems": true
+        },
+        "hierarchy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "root"
+          ],
+          "properties": {
+            "root": {
+              "$ref": "#/$defs/entity"
+            }
+          }
+        },
+        "connections": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/connection"
+          }
+        },
+        "functional_groups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/functionalGroup"
+          }
+        },
+        "concept_links": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/conceptLink"
+          }
+        },
+        "unknowns": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/unknown"
+          }
+        }
+      }
+    },
+    "productIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Optional product metadata. Omit unsupported fields instead of using placeholders. Product identity supports comparison/search and does not establish shared physical identity or control behavior.",
+      "required": [
+        "manufacturer"
+      ],
+      "properties": {
+        "manufacturer": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*",
+          "description": "Organization that manufactures or owns the identified product line."
+        },
+        "product_family": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*",
+          "description": "Named product family or line when it adds useful grouping beyond the model."
+        },
+        "model": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*",
+          "description": "Specific marketed or documented product/model name."
+        },
+        "variant": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*",
+          "description": "Specific variant, SKU, or form factor only when needed to disambiguate the modeled product."
+        },
+        "generation": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*",
+          "description": "Named or ordinal product generation when documented and nonredundant."
+        },
+        "architecture": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*",
+          "description": "Named hardware architecture when it materially aids cross-configuration comparison."
+        },
+        "codename": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*",
+          "description": "Officially documented codename when useful and nonredundant."
+        }
+      },
+      "anyOf": [
+        {
+          "required": [
+            "product_family"
+          ]
+        },
+        {
+          "required": [
+            "model"
+          ]
+        },
+        {
+          "required": [
+            "variant"
+          ]
+        },
+        {
+          "required": [
+            "generation"
+          ]
+        },
+        {
+          "required": [
+            "architecture"
+          ]
+        },
+        {
+          "required": [
+            "codename"
+          ]
+        }
+      ]
+    }
+  },
+  "$comment": "The JSON Schema validates document structure and local value constraints. Cross-file inventory membership, source-reference integrity, entity-reference integrity, tier monotonicity, and manifest consistency require validate_configs.py."
+}

@@ -1,0 +1,24 @@
+schema_version: 1.0.0
+configuration_id: meta-24576-h100-roce
+scenarios:
+- id: baseline-normal-operation
+  name: Baseline / normal operation
+  description: Normal/baseline operation with no deliberately injected fault or bottleneck.
+  default: true
+  scenario_types:
+  - baseline
+  effects: []
+- id: roce-congestion
+  name: RoCE congestion
+  description: Congestion on the RoCE fabric highlights topology and transport sensitivity.
+  default: false
+  scenario_types:
+  - performance_bottleneck
+  effects:
+  - target:
+      type: entity
+      id: meta-roce-switches
+    state:
+      health: degraded
+      emphasis: congestion
+      note: Congestion on the RoCE fabric highlights topology and transport sensitivity.

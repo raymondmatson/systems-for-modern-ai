@@ -1,0 +1,23 @@
+schema_version: 1.0.0
+concept_id: roce
+name: RDMA over Converged Ethernet
+concept_kind: protocol_standard
+summary: 'An Ethernet-based networking approach that carries RDMA semantics over an Ethernet fabric, commonly used for high-performance cluster communication.
+
+  '
+content_file: ../content/roce.md
+aliases:
+- RoCE
+inventory_mappings:
+- category: Networking protocols
+  item: RoCE
+  primary: true
+relationships:
+  prerequisites:
+  - rdma
+  specializes:
+  - rdma
+tags:
+- networking
+- ethernet
+- rdma

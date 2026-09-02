@@ -1,0 +1,14 @@
+schema_version: 1.0.0
+concept_id: in-network-aggregation
+name: In-network aggregation
+concept_kind: mechanism
+summary: A collective-communication technique in which network or fabric elements perform part of a reduction or aggregation operation while data is in transit.
+content_file: ../content/in-network-aggregation.md
+inventory_mappings:
+- category: Collective communication
+  item: In-network aggregation
+  primary: true
+tags:
+- collectives
+- networking
+- offload

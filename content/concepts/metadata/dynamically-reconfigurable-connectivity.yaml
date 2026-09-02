@@ -1,0 +1,14 @@
+schema_version: 1.0.0
+concept_id: dynamically-reconfigurable-connectivity
+name: Dynamically reconfigurable connectivity
+concept_kind: mechanism
+summary: A connectivity model in which physical or circuit-level paths can be changed under control software instead of remaining statically wired.
+content_file: ../content/dynamically-reconfigurable-connectivity.md
+inventory_mappings:
+- category: Network topologies
+  item: Dynamically reconfigurable connectivity
+  primary: true
+tags:
+- optical
+- topology
+- reconfiguration

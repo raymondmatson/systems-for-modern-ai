@@ -1,0 +1,302 @@
+schema_version: 1.2.0
+reference_system:
+  id: llnl-el-capitan
+  name: LLNL El Capitan
+  vendor_operator: Lawrence Livermore National Laboratory / HPE / AMD
+  planning_status: worth_considering_later
+  introduction:
+    date_or_year: 2024
+    lifecycle: current
+  summary: Exascale HPC/AI system built from MI300A APUs, compute cabinets, and HPE Slingshot networking in a Dragonfly 
+    topology.
+  learning_value:
+  - Unified CPU-GPU APU architecture
+  - HPC/AI convergence
+  - Dragonfly high-radix scale-out fabric
+  source_ids:
+  - llnl-elcap
+  - llnl-compute-platforms
+sources:
+- id: llnl-elcap
+  title: 'Using El Capitan Systems: Hardware Overview'
+  publisher: Lawrence Livermore National Laboratory
+  url: https://hpc.llnl.gov/documentation/user-guides/using-el-capitan-systems/hardware-overview
+  accessed: '2026-08-19'
+- id: llnl-compute-platforms
+  title: Compute Platforms
+  publisher: Lawrence Livermore National Laboratory
+  url: https://hpc.llnl.gov/hardware/compute-platforms
+  accessed: '2026-08-22'
+configurations:
+- id: el-capitan-production
+  name: El Capitan production architecture
+  configuration_status: baseline
+  default_scenario:
+    id: baseline-normal-operation
+    name: Baseline / normal operation
+    description: Baseline HPC/AI compute operation with healthy nodes and normal filesystem/network service.
+  scope_notes: Models the published cabinet → node → MI300A APU hierarchy and Slingshot/Dragonfly scale-out network.
+  modeling_notes:
+  - The filesystem is intentionally aggregated.
+  - MI300A is modeled as an APU rather than incorrectly split into separate CPU and GPU devices.
+  source_ids:
+  - llnl-elcap
+  - llnl-compute-platforms
+  hierarchy:
+    root:
+      id: elcapitan
+      name: El Capitan
+      entity_type: hpc_ai_system
+      explore_tier: 1
+      inventory:
+        category: Physical infrastructure hierarchy
+        item: Compute clusters
+        status: existing
+      representation: explicit
+      evidence:
+        status: documented
+        source_ids:
+        - llnl-elcap
+        note: 11,520 compute nodes in 90 compute cabinets.
+      properties:
+        compute_nodes: 11520
+        compute_cabinets: 90
+      children:
+      - id: elcap-cabinets
+        name: Compute cabinets
+        entity_type: rack_group
+        explore_tier: 2
+        inventory:
+          category: Physical infrastructure hierarchy
+          item: Racks
+          status: existing
+        representation: aggregate
+        evidence:
+          status: documented
+          source_ids:
+          - llnl-elcap
+          note: 90 compute cabinets.
+        properties:
+          quantity: 90
+        children:
+        - id: elcap-node
+          name: Compute nodes
+          entity_type: compute_node
+          explore_tier: 3
+          inventory:
+            category: Physical infrastructure hierarchy
+            item: Servers / compute nodes
+            status: existing
+          representation: aggregate
+          evidence:
+            status: documented
+            source_ids:
+            - llnl-elcap
+            note: 11,520 nodes, each with four MI300A APUs.
+          properties:
+            quantity_total: 11520
+          children:
+          - id: elcap-mi300a
+            name: AMD MI300A APUs
+            entity_type: apu
+            product_identity:
+              manufacturer: AMD
+              product_family: Instinct MI300 Series
+              model: MI300A
+              architecture: CDNA 3 + Zen 4
+            explore_tier: 4
+            inventory:
+              category: Server-level hardware
+              item: APUs / unified CPU–GPU accelerator packages
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - llnl-elcap
+              note: Four MI300A APUs per node.
+            properties:
+              quantity_per_node: 4
+              hbm3_gb_per_apu: 128
+            children:
+            - id: elcap-xcd
+              name: Accelerator Complex Dies (XCD)
+              entity_type: accelerator_die
+              explore_tier: 5
+              inventory:
+                category: Accelerator internals
+                item: GPU / accelerator dies
+                status: existing
+              representation: aggregate
+              evidence:
+                status: documented
+                source_ids:
+                - llnl-elcap
+                note: Six XCDs per MI300A.
+              properties:
+                quantity_per_apu: 6
+              children: []
+            - id: elcap-ccd
+              name: CPU Complex Dies (CCD)
+              entity_type: cpu_die
+              explore_tier: 5
+              inventory:
+                category: Semiconductor and packaging concepts
+                item: Chiplets
+                status: existing
+              representation: aggregate
+              evidence:
+                status: documented
+                source_ids:
+                - llnl-elcap
+                note: Three CPU complex dies per MI300A.
+              properties:
+                quantity_per_apu: 3
+              children: []
+            - id: elcap-hbm
+              name: HBM3 stacks
+              entity_type: hbm
+              explore_tier: 5
+              inventory:
+                category: Accelerator internals
+                item: HBM stacks
+                status: existing
+              representation: aggregate
+              evidence:
+                status: documented
+                source_ids:
+                - llnl-elcap
+                note: Eight HBM3 stacks per MI300A.
+              properties:
+                quantity_per_apu: 8
+              children: []
+          - id: elcap-slingshot-if
+            name: Slingshot network interfaces
+            entity_type: nic
+            explore_tier: 4
+            inventory:
+              category: Server-level hardware
+              item: NICs
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - llnl-elcap
+              note: Four 200-GbE Slingshot interfaces per node.
+            properties:
+              quantity_per_node: 4
+              gbps_per_interface: 200
+            children: []
+      - id: elcap-slingshot
+        name: HPE Slingshot switch fabric
+        entity_type: network_switch
+        product_identity:
+          manufacturer: HPE
+          product_family: Slingshot
+          model: Slingshot 11
+        explore_tier: 3
+        inventory:
+          category: Physical infrastructure hierarchy
+          item: Network switches
+          status: existing
+        representation: aggregate
+        evidence:
+          status: documented
+          source_ids:
+          - llnl-elcap
+          - llnl-compute-platforms
+          note: LLNL identifies El Capitan's interconnect as HPE Slingshot 11; the hardware overview documents its high-radix Dragonfly topology.
+        properties:
+          topology: Dragonfly
+          switch_ports: 64
+        children: []
+      - id: elcap-filesystem
+        name: Parallel filesystem
+        entity_type: storage_system
+        explore_tier: 2
+        inventory:
+          category: Storage
+          item: Parallel file systems
+          status: existing
+        representation: aggregate
+        evidence:
+          status: simplified
+          source_ids:
+          - llnl-elcap
+          note: File system is a major system building block; detailed storage topology is not modeled in this initial 
+            file.
+        properties: {}
+        children: []
+  connections:
+  - id: elcap-infinity
+    name: MI300A Infinity Fabric
+    relationship_type: physical_connectivity
+    endpoints:
+    - elcap-xcd
+    - elcap-ccd
+    - elcap-hbm
+    directionality: undirected
+    inventory:
+      category: Local server interconnects
+      item: Infinity Fabric
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - llnl-elcap
+      note: Infinity Fabric connects CPU/GPU dies and HBM within the package.
+    properties: {}
+  - id: elcap-slingshot-link
+    name: Node-to-Slingshot connectivity
+    relationship_type: physical_connectivity
+    endpoints:
+    - elcap-slingshot-if
+    - elcap-slingshot
+    directionality: undirected
+    inventory:
+      category: Network organization and fabrics
+      item: HPE Slingshot fabric
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - llnl-elcap
+      note: Four Slingshot interfaces per node connect to the Dragonfly fabric.
+    properties: {}
+  functional_groups:
+  - id: elcap-scaleout-domain
+    name: Slingshot Dragonfly fabric
+    category: scale_out_domain
+    member_ids:
+    - elcap-slingshot-if
+    - elcap-slingshot
+    evidence:
+      status: documented
+      source_ids:
+      - llnl-elcap
+      note: System interconnect.
+  concept_links:
+  - name: Dragonfly
+    inventory:
+      category: Network topologies
+      item: Dragonfly
+      status: existing
+    entity_ids:
+    - elcap-slingshot
+    note: ''
+  - name: Unified / coherent memory
+    inventory:
+      category: Memory hierarchy
+      item: Unified / coherent memory
+      status: existing
+    entity_ids:
+    - elcap-mi300a
+    - elcap-hbm
+    note: ''
+  unknowns:
+  - description: Detailed parallel-filesystem appliance/rack layout is outside the selected public hardware overview and
+      is aggregated here.
+    treatment: simplified
+    affected_entity_ids:
+    - elcap-filesystem

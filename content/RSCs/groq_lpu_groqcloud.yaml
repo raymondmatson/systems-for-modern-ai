@@ -1,0 +1,182 @@
+schema_version: 1.2.0
+reference_system:
+  id: groq-lpu-groqcloud
+  name: Groq LPU Rack / GroqCloud Infrastructure
+  vendor_operator: Groq
+  planning_status: worth_considering_later
+  introduction:
+    date_or_year: 2024
+    lifecycle: current
+  summary: Inference-oriented LPU rack architecture emphasizing large aggregate on-chip SRAM and deterministic 
+    accelerator serving, with many physical internals left proprietary.
+  learning_value:
+  - SRAM-centric inference architecture
+  - Example of responsible black-box modeling
+  - Specialized inference cloud
+  source_ids:
+  - groq-platform
+sources:
+- id: groq-platform
+  title: Groq Platform
+  publisher: Groq
+  url: https://groq.com/platform
+  accessed: '2026-08-19'
+configurations:
+- id: groq-256-lpu-rack
+  name: Groq 256-LPU rack reference
+  configuration_status: baseline
+  default_scenario:
+    id: baseline-normal-operation
+    name: Baseline / normal operation
+    description: Baseline inference-serving state with normal load.
+  scope_notes: Deliberately minimal physical model because the public source clearly documents rack-level LPU count and 
+    SRAM but not the internal server/tray/network hierarchy.
+  modeling_notes:
+  - The hierarchy continues through an explicit black-box assembly so users can see that lower-level organization is 
+    unavailable rather than invented.
+  source_ids:
+  - groq-platform
+  hierarchy:
+    root:
+      id: groq-rack-system
+      name: Groq LPU rack / GroqCloud serving unit
+      entity_type: inference_system
+      explore_tier: 1
+      inventory:
+        category: Inference systems
+        item: Inference servers
+        status: existing
+      representation: explicit
+      evidence:
+        status: simplified
+        source_ids:
+        - groq-platform
+        note: Initial model uses one documented 256-LPU rack as the physical reference unit.
+      properties:
+        deployment_context: GroqCloud multi-data-center inference service
+      children:
+      - id: groq-rack
+        name: Groq LPU rack
+        entity_type: rack
+        explore_tier: 2
+        inventory:
+          category: Physical infrastructure hierarchy
+          item: Racks
+          status: existing
+        representation: explicit
+        evidence:
+          status: documented
+          source_ids:
+          - groq-platform
+          note: Platform lists 256 LPUs per rack.
+        properties:
+          lpu_count: 256
+          on_chip_sram_per_rack_gb: 128
+        children:
+        - id: groq-rack-internals
+          name: Undocumented rack-internal host/tray organization
+          entity_type: compute_assembly
+          explore_tier: 3
+          inventory:
+            category: Physical infrastructure hierarchy
+            item: Servers / compute nodes
+            status: existing
+          representation: black_box
+          evidence:
+            status: unknown
+            source_ids:
+            - groq-platform
+            note: Public platform page does not establish the server/tray containment used for the 256 LPUs.
+          properties: {}
+          children:
+          - id: groq-lpus
+            name: Groq LPUs
+            entity_type: ai_accelerator
+            product_identity:
+              manufacturer: Groq
+              product_family: LPU
+            explore_tier: 4
+            inventory:
+              category: Server-level hardware
+              item: Other AI accelerators
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - groq-platform
+              note: 256 LPUs per rack.
+            properties:
+              quantity_per_rack: 256
+            children:
+            - id: groq-sram
+              name: On-chip SRAM
+              entity_type: on_chip_memory
+              explore_tier: 5
+              inventory:
+                category: Accelerator internals
+                item: On-chip SRAM
+                status: existing
+              representation: aggregate
+              evidence:
+                status: documented
+                source_ids:
+                - groq-platform
+                note: Rack-level aggregate on-chip SRAM is 128 GB; per-LPU partition is not inferred.
+              properties:
+                rack_aggregate_gb: 128
+              children: []
+        - id: groq-network-blackbox
+          name: Rack / data-center networking boundary
+          entity_type: network_fabric
+          explore_tier: 3
+          inventory:
+            category: Network organization and fabrics
+            item: Frontend networks
+            status: existing
+          representation: black_box
+          evidence:
+            status: unknown
+            source_ids:
+            - groq-platform
+            note: Detailed network architecture is not given on the public platform page used here.
+          properties: {}
+          children: []
+  connections: []
+  functional_groups:
+  - id: groq-serving-domain
+    name: Rack-level inference compute domain
+    category: other
+    member_ids:
+    - groq-rack
+    - groq-lpus
+    evidence:
+      status: documented
+      source_ids:
+      - groq-platform
+      note: 256-LPU rack is the published physical unit.
+  concept_links:
+  - name: Model serving
+    inventory:
+      category: Inference systems
+      item: Model serving
+      status: existing
+    entity_ids:
+    - groq-rack-system
+    - groq-lpus
+    note: ''
+  - name: On-chip SRAM
+    inventory:
+      category: Memory hierarchy
+      item: On-chip SRAM
+      status: existing
+    entity_ids:
+    - groq-sram
+    note: ''
+  unknowns:
+  - description: Internal server/tray organization and detailed interconnect/network topology are not publicly 
+      established by the selected Groq source.
+    treatment: black_box
+    affected_entity_ids:
+    - groq-rack-internals
+    - groq-network-blackbox

@@ -1,0 +1,41 @@
+{
+  "name": "systems-for-modern-ai",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {"node": ">=22.12.0", "npm": ">=10.0.0"},
+  "scripts": {
+    "content:generate": "python scripts/content/build_runtime.py",
+    "content:validate": "python scripts/content/validate_all.py",
+    "typecheck": "tsc --noEmit",
+    "dev": "vite",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:e2e:install": "playwright install chromium firefox webkit",
+    "build": "npm run content:generate && npm run content:validate && npm run typecheck && vite build",
+    "preview": "vite preview",
+    "verify": "npm run content:generate && npm run content:validate && npm run typecheck && npm test && npm run build && npm run test:e2e"
+  },
+  "dependencies": {
+    "@reduxjs/toolkit": "2.12.0",
+    "decimal.js": "10.6.0",
+    "elkjs": "0.12.0",
+    "fuse.js": "7.5.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "react-markdown": "10.1.0",
+    "react-redux": "9.3.0",
+    "remark-gfm": "4.0.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.62.1",
+    "@types/node": "26.2.0",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.5",
+    "@vitejs/plugin-react": "6.1.0",
+    "typescript": "7.0.2",
+    "vite": "8.2.2",
+    "vitest": "4.1.11"
+  }
+}

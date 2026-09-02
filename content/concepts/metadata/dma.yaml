@@ -1,0 +1,29 @@
+schema_version: 1.0.0
+concept_id: dma
+name: Direct Memory Access
+concept_kind: mechanism
+summary: 'A data-movement mechanism in which a device transfers data to or from memory with limited CPU involvement in the bulk transfer path.
+
+  '
+content_file: ../content/dma.md
+aliases:
+- DMA
+inventory_mappings:
+- category: CPU architecture
+  item: DMA
+  primary: false
+- category: Local server interconnects
+  item: DMA
+  primary: false
+- category: Direct data movement and GPU I/O
+  item: DMA
+  primary: true
+tags:
+- data-movement
+- memory
+- io
+sources:
+- source_id: linux-dma-api-howto
+  title: Dynamic DMA mapping Guide
+  publisher: Linux kernel documentation
+  url: https://docs.kernel.org/core-api/dma-api-howto.html

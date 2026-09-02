@@ -1,0 +1,25 @@
+Systems for Modern AI — clean archive verification
+Date: 2026-08-28
+
+Archive extracted to a new temporary directory with 195 files and no node_modules, dist, .venv, __pycache__, Playwright reports, browser binaries, or test-result directories.
+
+PASS  python scripts/content/build_runtime.py
+PASS  python scripts/content/validate_all.py
+      - 16 Reference Systems / 18 configurations
+      - schema versions: 11 x 1.2.0, 5 x 1.3.0
+      - 15 canonical Concepts, 0 canonical warnings/errors
+      - 8/8 Concept validator tests
+      - 27 expected legacy Concept-link warnings on later-candidate systems, 0 errors
+      - initial-five V1 validation: 5 systems, 15 Concepts, 36 properties, 0 errors
+      - deterministic runtime: 37 files
+      - runtime integrity: 0 errors
+      - property fixtures: 5/5
+      - content readiness: PASS, 0 content errors
+PASS  fallback TypeScript parser check (global TypeScript 5.8.3, --noCheck)
+
+BLOCKED  npm install
+Reason: assembly sandbox cannot resolve registry.npmjs.org; the fresh-copy npm install attempt timed out after 20 seconds and produced no node_modules directory.
+
+DEPENDENCY-BLOCKED: pinned TypeScript check, Vitest, Vite production build/preview, and Playwright Chromium/Firefox/WebKit execution require the npm installation above.
+
+External evidence still unavailable: the shared source set does not contain the candidate-comparison ratings artifact needed to reproduce Documentation Confidence >= 3.

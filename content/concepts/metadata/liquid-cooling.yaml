@@ -1,0 +1,14 @@
+schema_version: 1.0.0
+concept_id: liquid-cooling
+name: Liquid cooling
+concept_kind: hardware_technology
+summary: A thermal-management approach that transfers heat using a liquid coolant path close to high-power compute components or racks.
+content_file: ../content/liquid-cooling.md
+inventory_mappings:
+- category: Thermal management
+  item: Liquid cooling
+  primary: true
+tags:
+- cooling
+- thermal
+- rack-scale

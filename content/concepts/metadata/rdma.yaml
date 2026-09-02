@@ -1,0 +1,34 @@
+schema_version: 1.0.0
+concept_id: rdma
+name: Remote Direct Memory Access
+concept_kind: mechanism
+summary: 'A network data-transfer mechanism that allows direct access to registered memory on another system with minimal CPU involvement in the data path.
+
+  '
+content_file: ../content/rdma.md
+aliases:
+- RDMA
+- Remote DMA
+inventory_mappings:
+- category: Networking protocols
+  item: RDMA
+  primary: true
+- category: Communication stack
+  item: RDMA
+  primary: false
+- category: Direct data movement and GPU I/O
+  item: RDMA
+  primary: false
+relationships:
+  prerequisites:
+  - dma
+tags:
+- networking
+- data-movement
+- distributed-computing
+sources:
+- source_id: rfc-5040
+  title: A Remote Direct Memory Access Protocol Specification
+  publisher: RFC Editor
+  url: https://www.rfc-editor.org/rfc/rfc5040
+  year: 2007

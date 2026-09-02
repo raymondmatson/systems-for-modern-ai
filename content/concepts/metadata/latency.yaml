@@ -1,0 +1,18 @@
+schema_version: 1.0.0
+concept_id: latency
+name: Latency
+concept_kind: metric
+summary: 'The time required for an operation, transfer, or response to progress from a defined start point to a defined completion point.
+
+  '
+content_file: ../content/latency.md
+inventory_mappings:
+- category: Performance and bottlenecks
+  item: Latency
+  primary: true
+- category: Memory hierarchy
+  item: Latency
+  primary: false
+tags:
+- performance
+- timing

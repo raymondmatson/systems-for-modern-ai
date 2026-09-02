@@ -1,0 +1,406 @@
+schema_version: 1.3.0
+reference_system:
+  id: google-tpu7x-ironwood
+  name: Google Cloud TPU7x (Ironwood) Pod / Superpod
+  vendor_operator: Google Cloud
+  planning_status: recommended_initial
+  introduction:
+    date_or_year: 2025
+    lifecycle: new
+  summary: Custom-accelerator pod architecture organized around four-chip hosts, 64-chip rack/cubes, 3D-torus ICI, and optical circuit switching between cubes.
+  learning_value:
+  - Custom accelerator alternative to GPUs
+  - 3D torus plus optical reconfiguration
+  - Specialized TensorCore/SparseCore internals
+  source_ids:
+  - gcp-tpu7x
+  - gcp-ironwood-stack
+sources:
+- id: gcp-tpu7x
+  title: TPU7x (Ironwood)
+  publisher: Google Cloud
+  url: https://docs.cloud.google.com/tpu/docs/tpu7x
+  accessed: '2026-08-19'
+- id: gcp-ironwood-stack
+  title: Inside the Ironwood TPU codesigned AI stack
+  publisher: Google Cloud
+  url: https://cloud.google.com/blog/products/compute/inside-the-ironwood-tpu-codesigned-ai-stack
+  accessed: '2026-08-19'
+configurations:
+- id: tpu7x-9216-chip-superpod
+  name: TPU7x 9,216-chip Ironwood Superpod
+  configuration_status: baseline
+  default_scenario:
+    id: baseline-normal-operation
+    name: Baseline / normal operation
+    description: Normal/baseline operation with no deliberately injected fault or bottleneck.
+  scope_notes: Represents the published host → cube/rack → superpod organization and the distinction between direct ICI inside cubes and OCS connectivity between cubes.
+  modeling_notes:
+  - The exact physical form of the OCS network is aggregated.
+  - HBM stack count is not inferred from capacity.
+  source_ids:
+  - gcp-tpu7x
+  - gcp-ironwood-stack
+  hierarchy:
+    root:
+      id: ironwood-superpod
+      name: Ironwood TPU7x Superpod
+      entity_type: compute_cluster
+      explore_tier: 1
+      inventory:
+        category: Physical infrastructure hierarchy
+        item: Pods / superpods
+        status: existing
+      representation: explicit
+      evidence:
+        status: documented
+        source_ids:
+        - gcp-ironwood-stack
+        note: Full superpod contains 9,216 TPU chips organized as 144 cubes.
+      properties:
+        tpu_chips:
+          status: known
+          value:
+            form: scalar
+            number: 9216
+            approximate: false
+          basis: advertised
+        cubes:
+          status: known
+          value:
+            form: scalar
+            number: 144
+            approximate: false
+          basis: advertised
+      children:
+      - id: ironwood-cube
+        name: Ironwood cube / rack
+        entity_type: rack_topology_domain
+        explore_tier: 2
+        inventory:
+          category: Physical infrastructure hierarchy
+          item: Racks
+          status: existing
+        representation: aggregate
+        evidence:
+          status: documented
+          source_ids:
+          - gcp-ironwood-stack
+          note: One rack of hosts contains 64 chips and forms one cube.
+        properties:
+          chips_per_cube:
+            status: known
+            value:
+              form: scalar
+              number: 64
+              approximate: false
+            basis: advertised
+          hosts_per_cube:
+            status: known
+            value:
+              form: scalar
+              number: 16
+              approximate: false
+            basis: advertised
+        children:
+        - id: ironwood-host
+          name: Physical TPU host
+          entity_type: compute_node
+          explore_tier: 3
+          inventory:
+            category: Physical infrastructure hierarchy
+            item: Servers / compute nodes
+            status: existing
+          representation: aggregate
+          evidence:
+            status: documented
+            source_ids:
+            - gcp-ironwood-stack
+            note: Each physical host has four TPU chips.
+          properties:
+            tpu_chips_per_host:
+              status: known
+              value:
+                form: scalar
+                number: 4
+                approximate: false
+              basis: advertised
+              scope: per_node
+          children:
+          - id: ironwood-tpu
+            name: TPU7x chip
+            entity_type: tpu
+            product_identity:
+              manufacturer: Google
+              product_family: Ironwood
+              model: TPU7x
+              generation: 7th generation
+            explore_tier: 4
+            inventory:
+              category: Server-level hardware
+              item: TPUs
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - gcp-tpu7x
+              note: Each TPU7x chip contains two TensorCores, four SparseCores, and 192 GiB HBM.
+            properties:
+              quantity_per_host:
+                status: known
+                value:
+                  form: scalar
+                  number: 4
+                  approximate: false
+                basis: advertised
+                scope: per_node
+              hbm_gib_per_chip:
+                status: known
+                value:
+                  form: scalar
+                  number: 192
+                  approximate: false
+                basis: advertised
+                scope: per_device
+            children:
+            - id: ironwood-tensorcores
+              name: TensorCores
+              entity_type: tensor_core
+              explore_tier: 5
+              inventory:
+                category: Accelerator internals
+                item: Tensor cores
+                status: existing
+              representation: aggregate
+              evidence:
+                status: documented
+                source_ids:
+                - gcp-tpu7x
+                note: Two TensorCores per TPU chip.
+              properties:
+                quantity_per_chip:
+                  status: known
+                  value:
+                    form: scalar
+                    number: 2
+                    approximate: false
+                  basis: advertised
+                  scope: per_device
+              children: []
+              population:
+                count:
+                  value: 2
+                  form: scalar
+                  basis: documented_fixed
+                expansion_mode: representative_member
+                individually_addressable: false
+                member_entity_type: tensor_core
+            - id: ironwood-sparsecores
+              name: SparseCores
+              entity_type: sparse_core
+              explore_tier: 5
+              inventory:
+                category: Accelerator internals
+                item: Sparse / embedding accelerator cores
+                status: existing
+              representation: aggregate
+              evidence:
+                status: documented
+                source_ids:
+                - gcp-tpu7x
+                note: Four SparseCores per TPU chip.
+              properties:
+                quantity_per_chip:
+                  status: known
+                  value:
+                    form: scalar
+                    number: 4
+                    approximate: false
+                  basis: advertised
+                  scope: per_device
+              children: []
+              population:
+                count:
+                  value: 4
+                  form: scalar
+                  basis: documented_fixed
+                expansion_mode: representative_member
+                individually_addressable: false
+                member_entity_type: sparse_core
+            - id: ironwood-hbm
+              name: HBM
+              entity_type: hbm
+              explore_tier: 5
+              inventory:
+                category: Accelerator internals
+                item: HBM stacks
+                status: existing
+              representation: aggregate
+              evidence:
+                status: simplified
+                source_ids:
+                - gcp-tpu7x
+                note: HBM capacity is documented; stack count is not asserted here.
+              properties:
+                capacity_gib_per_chip:
+                  status: known
+                  value:
+                    form: scalar
+                    number: 192
+                    approximate: false
+                  basis: advertised
+                  scope: per_device
+              children: []
+            population:
+              count:
+                value: 4
+                form: scalar
+                basis: documented_fixed
+              expansion_mode: representative_member
+              individually_addressable: false
+              member_entity_type: tpu
+      - id: ironwood-ocs
+        name: Optical Circuit Switch network
+        entity_type: optical_network
+        explore_tier: 3
+        inventory:
+          category: Optical networking
+          item: Optical circuit switches
+          status: existing
+        representation: aggregate
+        evidence:
+          status: documented
+          source_ids:
+          - gcp-ironwood-stack
+          note: Multiple cubes are connected by an OCS network.
+        properties:
+          switching:
+            status: known
+            value:
+              form: text
+              text: optical circuit switching
+        children: []
+      - id: ironwood-dcn
+        name: Data-center network
+        entity_type: network_fabric
+        explore_tier: 2
+        inventory:
+          category: Network organization and fabrics
+          item: Scale-out networks
+          status: existing
+        representation: aggregate
+        evidence:
+          status: documented
+          source_ids:
+          - gcp-ironwood-stack
+          note: Standard DCN connects superpods at larger scale.
+        properties: {}
+        children: []
+      - id: ironwood-cooling
+        name: Liquid-cooling infrastructure
+        entity_type: cooling_system
+        explore_tier: 2
+        inventory:
+          category: Physical infrastructure hierarchy
+          item: Cooling infrastructure
+          status: existing
+        representation: aggregate
+        evidence:
+          status: documented
+          source_ids:
+          - gcp-ironwood-stack
+          note: Ironwood infrastructure uses liquid cooling.
+        properties: {}
+        children: []
+  connections:
+  - id: ironwood-ici
+    name: Inter-Chip Interconnect within cube
+    relationship_type: physical_connectivity
+    endpoints:
+    - ironwood-tpu
+    - ironwood-cube
+    directionality: undirected
+    inventory:
+      category: Local server interconnects
+      item: TPU Inter-Chip Interconnect (ICI)
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - gcp-ironwood-stack
+      note: ICI directly connects chips in a 3D torus within a cube.
+    properties: {}
+  - id: ironwood-ocs-link
+    name: Cube-to-cube optical connectivity
+    relationship_type: physical_connectivity
+    endpoints:
+    - ironwood-cube
+    - ironwood-ocs
+    directionality: undirected
+    inventory:
+      category: Network topologies
+      item: Optical circuit switches
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - gcp-ironwood-stack
+      note: OCS connects cubes into larger pods/superpods.
+    properties: {}
+  functional_groups:
+  - id: ironwood-scaleup
+    name: ICI cube scale-up domain
+    category: scale_up_domain
+    member_ids:
+    - ironwood-tpu
+    - ironwood-cube
+    evidence:
+      status: documented
+      source_ids:
+      - gcp-ironwood-stack
+      note: 64-chip 3D torus cube.
+  - id: ironwood-optical-scale
+    name: OCS inter-cube fabric
+    category: scale_out_domain
+    member_ids:
+    - ironwood-cube
+    - ironwood-ocs
+    evidence:
+      status: documented
+      source_ids:
+      - gcp-ironwood-stack
+      note: Reconfigurable inter-cube connectivity.
+  concept_links:
+  - concept_id: torus
+    role: illustrates
+    target:
+      type: entity
+      id: ironwood-cube
+    note: ''
+  - concept_id: torus
+    role: illustrates
+    target:
+      type: entity
+      id: ironwood-tpu
+    note: ''
+  - concept_id: dynamically-reconfigurable-connectivity
+    role: illustrates
+    target:
+      type: entity
+      id: ironwood-ocs
+    note: ''
+  - concept_id: dynamically-reconfigurable-connectivity
+    role: illustrates
+    target:
+      type: entity
+      id: ironwood-cube
+    note: ''
+  unknowns:
+  - description: OCS cabinet-level composition and facility deployment details are not specified in the high-level public material used here.
+    treatment: black_box
+    affected_entity_ids:
+    - ironwood-ocs
+  scenario_catalog:
+    path: scenarios/tpu7x-9216-chip-superpod.yaml
+    default_scenario_id: baseline-normal-operation

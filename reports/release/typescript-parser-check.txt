@@ -1,0 +1,4 @@
+Fallback TypeScript source parser check
+Compiler: Version 5.8.3
+Command: tsc --noEmit --noCheck --target ES2022 --module ESNext --moduleResolution Bundler --jsx react-jsx <project sources>
+RESULT: PASS

@@ -1,0 +1,24 @@
+schema_version: 1.0.0
+configuration_id: condor-galaxy-3-64-cs3
+scenarios:
+- id: baseline-normal-operation
+  name: Baseline / normal operation
+  description: Normal/baseline operation with no deliberately injected fault or bottleneck.
+  default: true
+  scenario_types:
+  - baseline
+  effects: []
+- id: swarmx-degradation
+  name: SwarmX degradation
+  description: A degraded collective fabric highlights dependency on broadcast/reduction infrastructure.
+  default: false
+  scenario_types:
+  - failure_degradation
+  effects:
+  - target:
+      type: entity
+      id: cg3-swarmx
+    state:
+      health: degraded
+      emphasis: collective_path
+      note: A degraded collective fabric highlights dependency on broadcast/reduction infrastructure.

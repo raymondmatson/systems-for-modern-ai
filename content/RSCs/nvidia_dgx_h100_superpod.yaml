@@ -1,0 +1,495 @@
+schema_version: 1.3.0
+reference_system:
+  id: nvidia-dgx-h100-superpod
+  name: NVIDIA DGX H100 SuperPOD
+  vendor_operator: NVIDIA
+  planning_status: recommended_initial
+  introduction:
+    date_or_year: 2022
+    lifecycle: mature
+  summary: Server-centered Hopper GPU cluster reference architecture using DGX H100 nodes, NVLink/NVSwitch scale-up, InfiniBand scale-out, management fabrics, and certified storage.
+  learning_value:
+  - Baseline server-centered GPU cluster
+  - Clear scale-up versus scale-out boundary
+  - Rail-optimized InfiniBand fabric
+  source_ids:
+  - nv-h100-ra
+  - nv-h100-fabrics
+  - nv-dgx-h100
+sources:
+- id: nv-h100-ra
+  title: DGX SuperPOD Architecture
+  publisher: NVIDIA
+  url: https://docs.nvidia.com/dgx-superpod/reference-architecture-scalable-infrastructure-h100/latest/dgx-superpod-architecture.html
+  accessed: '2026-08-19'
+- id: nv-h100-fabrics
+  title: Network Fabrics — DGX SuperPOD
+  publisher: NVIDIA
+  url: https://docs.nvidia.com/dgx-superpod/reference-architecture-scalable-infrastructure-h100/latest/network-fabrics.html
+  accessed: '2026-08-19'
+- id: nv-dgx-h100
+  title: Introduction to NVIDIA DGX H100/H200 Systems
+  publisher: NVIDIA
+  url: https://docs.nvidia.com/dgx/dgxh100-user-guide/introduction-to-dgxh100.html
+  accessed: '2026-08-19'
+configurations:
+- id: h100-superpod-4su-reference
+  name: H100 SuperPOD 4-SU reference architecture
+  configuration_status: baseline
+  default_scenario:
+    id: baseline-normal-operation
+    name: Baseline / normal operation
+    description: Normal/baseline operation with no deliberately injected fault or bottleneck.
+  scope_notes: Initial educational model of the documented H100 SuperPOD reference architecture. Rack placement is intentionally not fixed because NVIDIA permits rack-layout variation for power/cooling constraints.
+  modeling_notes:
+  - Physical rack placement is simplified; the SU is modeled as the stable Tier-2 grouping.
+  - Storage partner internals remain a black box.
+  source_ids:
+  - nv-h100-ra
+  - nv-h100-fabrics
+  - nv-dgx-h100
+  hierarchy:
+    root:
+      id: h100-superpod
+      name: DGX H100 SuperPOD
+      entity_type: compute_cluster
+      explore_tier: 1
+      inventory:
+        category: Physical infrastructure hierarchy
+        item: Compute clusters
+        status: existing
+      representation: explicit
+      evidence:
+        status: documented
+        source_ids:
+        - nv-h100-ra
+        note: Reference architecture is built from scalable units (SUs).
+      properties:
+        reference_architecture_scale:
+          status: known
+          value:
+            form: text
+            text: 4 SUs; nominally 128 DGX nodes, with 127 active DGX nodes in the documented UFM deployment pattern
+      children:
+      - id: h100-su
+        name: Scalable Unit (representative)
+        entity_type: pod_group
+        explore_tier: 2
+        inventory:
+          category: Physical infrastructure hierarchy
+          item: Pods / superpods
+          status: existing
+        representation: aggregate
+        evidence:
+          status: documented
+          source_ids:
+          - nv-h100-ra
+          note: NVIDIA SU is a modular group of up to 32 DGX H100 systems.
+        properties:
+          nominal_dgx_systems_per_su:
+            status: known
+            value:
+              form: scalar
+              number: 32
+              approximate: false
+            basis: advertised
+        children:
+        - id: dgx-h100-node
+          name: DGX H100 compute node
+          entity_type: compute_node
+          product_identity:
+            manufacturer: NVIDIA
+            product_family: DGX
+            model: DGX H100
+            generation: 4th generation
+          explore_tier: 3
+          inventory:
+            category: Physical infrastructure hierarchy
+            item: Servers / compute nodes
+            status: existing
+          representation: aggregate
+          evidence:
+            status: documented
+            source_ids:
+            - nv-dgx-h100
+            note: Representative repeated node.
+          properties:
+            quantity_per_nominal_su:
+              status: known
+              value:
+                form: scalar
+                number: 32
+                approximate: false
+              basis: advertised
+          children:
+          - id: h100-gpus
+            name: NVIDIA H100 GPUs
+            entity_type: gpu
+            product_identity:
+              manufacturer: NVIDIA
+              model: H100
+              architecture: Hopper
+            explore_tier: 4
+            inventory:
+              category: Server-level hardware
+              item: GPUs
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - nv-dgx-h100
+              note: DGX H100 contains 8 H100 GPUs.
+            properties:
+              quantity_per_node:
+                status: known
+                value:
+                  form: scalar
+                  number: 8
+                  approximate: false
+                basis: advertised
+                scope: per_node
+              aggregate_hbm_gb:
+                status: known
+                value:
+                  form: scalar
+                  number: 640
+                  approximate: false
+                  unit: GB
+                basis: advertised
+                scope: aggregate
+            children: []
+            population:
+              count:
+                value: 8
+                form: scalar
+                basis: documented_fixed
+              expansion_mode: representative_member
+              individually_addressable: false
+              member_entity_type: gpu
+          - id: h100-cpus
+            name: Intel Xeon 8480C CPUs
+            entity_type: cpu
+            product_identity:
+              manufacturer: Intel
+              product_family: Xeon Platinum
+              model: 8480C
+              generation: 4th Gen Intel Xeon Scalable
+            explore_tier: 4
+            inventory:
+              category: Server-level hardware
+              item: CPUs
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - nv-dgx-h100
+              note: DGX H100 contains two CPUs.
+            properties:
+              quantity_per_node:
+                status: known
+                value:
+                  form: scalar
+                  number: 2
+                  approximate: false
+                basis: advertised
+                scope: per_node
+            children: []
+            population:
+              count:
+                value: 2
+                form: scalar
+                basis: documented_fixed
+              expansion_mode: representative_member
+              individually_addressable: false
+              member_entity_type: cpu
+          - id: h100-nvswitch
+            name: NVSwitch devices
+            entity_type: scale_up_switch
+            product_identity:
+              manufacturer: NVIDIA
+              product_family: NVSwitch
+              generation: 3rd generation
+            explore_tier: 4
+            inventory:
+              category: Local server interconnects
+              item: NVSwitch
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - nv-dgx-h100
+              note: DGX H100 contains four NVSwitch devices.
+            properties:
+              quantity_per_node:
+                status: known
+                value:
+                  form: scalar
+                  number: 4
+                  approximate: false
+                basis: advertised
+                scope: per_node
+            children: []
+            population:
+              count:
+                value: 4
+                form: scalar
+                basis: documented_fixed
+              expansion_mode: representative_member
+              individually_addressable: false
+              member_entity_type: scale_up_switch
+          - id: h100-cx7
+            name: ConnectX-7 network interfaces
+            entity_type: nic
+            product_identity:
+              manufacturer: NVIDIA
+              product_family: ConnectX
+              model: ConnectX-7
+            explore_tier: 4
+            inventory:
+              category: Server-level hardware
+              item: NICs
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - nv-dgx-h100
+              note: DGX H100 exposes multiple ConnectX-7 interfaces; this configuration aggregates them.
+            properties:
+              quantity_per_node:
+                status: known
+                value:
+                  form: scalar
+                  number: 10
+                  approximate: false
+                basis: advertised
+                scope: per_node
+              max_link_gbps:
+                status: known
+                value:
+                  form: scalar
+                  number: 400
+                  approximate: false
+                  unit: Gb/s
+                basis: advertised
+                scope: per_link
+            children: []
+            population:
+              count:
+                value: 10
+                form: scalar
+                basis: documented_fixed
+              expansion_mode: representative_member
+              individually_addressable: false
+              member_entity_type: nic
+          - id: h100-local-nvme
+            name: Local NVMe storage
+            entity_type: local_storage
+            explore_tier: 4
+            inventory:
+              category: Server-level hardware
+              item: NVMe SSDs
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - nv-dgx-h100
+              note: OS and internal NVMe devices are documented; represented as one aggregate.
+            properties: {}
+            children: []
+          population:
+            count:
+              value: 32
+              form: scalar
+              basis: documented_fixed
+            expansion_mode: representative_member
+            individually_addressable: false
+            member_entity_type: compute_node
+      - id: h100-compute-switches
+        name: Compute-fabric InfiniBand switches
+        entity_type: network_switch
+        product_identity:
+          manufacturer: NVIDIA
+          product_family: Quantum
+          model: QM9700
+        explore_tier: 3
+        inventory:
+          category: Physical infrastructure hierarchy
+          item: Network switches
+          status: existing
+        representation: aggregate
+        evidence:
+          status: documented
+          source_ids:
+          - nv-h100-fabrics
+          note: Four-SU compute fabric uses leaf and spine switches in a rail-aligned design.
+        properties:
+          topology:
+            status: known
+            value:
+              form: text
+              text: rail-optimized fat tree
+          four_su_leaf_switches:
+            status: known
+            value:
+              form: scalar
+              number: 32
+              approximate: false
+            basis: advertised
+          four_su_spine_switches:
+            status: known
+            value:
+              form: scalar
+              number: 16
+              approximate: false
+            basis: advertised
+        children: []
+      - id: h100-management
+        name: Management / UFM infrastructure
+        entity_type: management_node
+        explore_tier: 3
+        inventory:
+          category: Physical infrastructure hierarchy
+          item: Management / head / login nodes
+          status: existing
+        representation: aggregate
+        evidence:
+          status: documented
+          source_ids:
+          - nv-h100-ra
+          note: Management nodes and UFM appliances are part of the reference architecture.
+        properties: {}
+        children: []
+      - id: h100-storage
+        name: Certified storage subsystem
+        entity_type: storage_system
+        explore_tier: 2
+        inventory:
+          category: Storage
+          item: Distributed storage
+          status: existing
+        representation: black_box
+        evidence:
+          status: documented
+          source_ids:
+          - nv-h100-ra
+          note: Storage is required but vendor-specific certified storage details vary by deployment.
+        properties:
+          treatment:
+            status: known
+            value:
+              form: text
+              text: partner-dependent black box
+        children: []
+  connections:
+  - id: h100-nvlink-domain
+    name: Intra-node NVLink/NVSwitch fabric
+    relationship_type: physical_connectivity
+    endpoints:
+    - h100-gpus
+    - h100-nvswitch
+    directionality: undirected
+    inventory:
+      category: Local server interconnects
+      item: NVLink
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - nv-dgx-h100
+      note: Eight H100 GPUs are interconnected through NVLink/NVSwitch.
+    properties: {}
+  - id: h100-scaleout-link
+    name: DGX node to compute fabric
+    relationship_type: physical_connectivity
+    endpoints:
+    - h100-cx7
+    - h100-compute-switches
+    directionality: undirected
+    inventory:
+      category: Network organization and fabrics
+      item: Backend / accelerator networks
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - nv-h100-fabrics
+      note: Compute network uses InfiniBand and rail alignment.
+    properties: {}
+  - id: h100-storage-path
+    name: Compute to storage
+    relationship_type: data_communication_path
+    endpoints:
+    - dgx-h100-node
+    - h100-storage
+    directionality: bidirectional
+    inventory:
+      category: Storage
+      item: Distributed storage
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - nv-h100-ra
+      note: SuperPOD includes dedicated storage connectivity.
+    properties: {}
+  functional_groups:
+  - id: h100-compute-fabric-group
+    name: InfiniBand compute fabric
+    category: compute_fabric
+    member_ids:
+    - h100-cx7
+    - h100-compute-switches
+    evidence:
+      status: documented
+      source_ids:
+      - nv-h100-fabrics
+      note: Rail-optimized compute fabric.
+  - id: h100-management-group
+    name: Management plane
+    category: management_network
+    member_ids:
+    - h100-management
+    - dgx-h100-node
+    evidence:
+      status: documented
+      source_ids:
+      - nv-h100-ra
+      note: In-band and out-of-band management exist; summarized here.
+  concept_links:
+  - concept_id: scale-up-versus-scale-out
+    role: illustrates
+    target:
+      type: entity
+      id: h100-gpus
+    note: NVLink/NVSwitch demonstrates node-local scale-up; InfiniBand demonstrates scale-out.
+  - concept_id: scale-up-versus-scale-out
+    role: illustrates
+    target:
+      type: entity
+      id: h100-nvswitch
+    note: NVLink/NVSwitch demonstrates node-local scale-up; InfiniBand demonstrates scale-out.
+  - concept_id: rail-optimized-fabrics
+    role: illustrates
+    target:
+      type: entity
+      id: h100-compute-switches
+    note: ''
+  - concept_id: rail-optimized-fabrics
+    role: illustrates
+    target:
+      type: entity
+      id: h100-cx7
+    note: ''
+  unknowns:
+  - description: Certified storage-vendor internals differ by installation and are not fixed by the reference architecture.
+    treatment: black_box
+    affected_entity_ids:
+    - h100-storage
+  scenario_catalog:
+    path: scenarios/h100-superpod-4su-reference.yaml
+    default_scenario_id: baseline-normal-operation

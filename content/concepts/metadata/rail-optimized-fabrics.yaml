@@ -1,0 +1,14 @@
+schema_version: 1.0.0
+concept_id: rail-optimized-fabrics
+name: Rail-optimized fabrics
+concept_kind: topology
+summary: A fabric organization that aligns accelerator or NIC connectivity into repeated rails so communication can exploit locality and predictable paths.
+content_file: ../content/rail-optimized-fabrics.md
+inventory_mappings:
+- category: Network organization and fabrics
+  item: Rail-optimized fabrics
+  primary: true
+tags:
+- networking
+- topology
+- scale-out

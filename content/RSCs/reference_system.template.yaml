@@ -1,0 +1,182 @@
+schema_version: 1.3.0
+reference_system:
+  id: example-system
+  name: Example Reference System
+  vendor_operator: Example organization
+  planning_status: worth_considering_later
+  introduction:
+    date_or_year: 2026
+    lifecycle: emerging
+  summary: Replace with a concise system-level description.
+  learning_value:
+  - Replace with a learning goal
+  source_ids:
+  - example-source
+sources:
+- id: example-source
+  title: Primary architecture source
+  publisher: Example organization
+  url: https://example.invalid/architecture
+  accessed: '2026-08-22'
+  note: Replace with a primary or otherwise authoritative source.
+configurations:
+- id: example-baseline
+  name: Example baseline configuration
+  configuration_status: baseline
+  default_scenario:
+    id: baseline-normal-operation
+    name: Baseline / normal operation
+    description: Normal/baseline operation with no deliberately injected fault or bottleneck.
+  scope_notes: Define what this configuration models and intentionally omits.
+  modeling_notes:
+  - Use documented facts where possible; black-box or omit unavailable details.
+  - The rack/tray structure below is illustrative. Remove or replace it when the real system uses a different hierarchy.
+  source_ids:
+  - example-source
+  hierarchy:
+    root:
+      id: example-root
+      name: Example system root
+      entity_type: compute_cluster
+      explore_tier: 1
+      inventory:
+        category: Physical infrastructure hierarchy
+        item: Compute clusters
+        status: existing
+      representation: explicit
+      evidence:
+        status: documented
+        source_ids:
+        - example-source
+        note: Replace with evidence for the system-level boundary.
+      properties: {}
+      children:
+      - id: example-rack
+        name: Example rack
+        entity_type: rack
+        explore_tier: 2
+        inventory:
+          category: Physical infrastructure hierarchy
+          item: Racks
+          status: existing
+        representation: explicit
+        evidence:
+          status: simplified
+          source_ids:
+          - example-source
+          note: Replace with the documented rack or Tier-2 grouping; this example uses a rack for illustration.
+        properties: {}
+        children:
+        - id: example-compute-tray
+          name: Example compute tray
+          entity_type: compute_tray
+          explore_tier: 3
+          inventory:
+            category: Physical infrastructure hierarchy
+            item: Compute trays / accelerator trays
+            status: existing
+          representation: aggregate
+          evidence:
+            status: simplified
+            source_ids:
+            - example-source
+            note: Include a compute/accelerator tray only when it is a real, meaningful assembly in the system.
+          properties: {}
+          children:
+          - id: example-accelerator
+            name: Example accelerator
+            entity_type: ai_accelerator
+            product_identity:
+              manufacturer: Example Silicon Company
+              product_family: Example Accelerator
+              model: Example X1
+              architecture: Example Architecture
+            explore_tier: 4
+            inventory:
+              category: Server-level hardware
+              item: Other AI accelerators
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - example-source
+              note: Replace with the actual accelerator type and evidence.
+            properties: {}
+            children:
+            - id: example-compute-core
+              name: Example compute cores
+              entity_type: compute_core
+              explore_tier: 5
+              inventory:
+                category: Accelerator internals
+                item: Compute cores
+                status: existing
+              representation: aggregate
+              evidence:
+                status: simplified
+                source_ids:
+                - example-source
+                note: Expand accelerator internals only when they materially aid learning and are supportable.
+              properties: {}
+              children: []
+        - id: example-switch-tray
+          name: Example switch tray
+          entity_type: switch_tray
+          explore_tier: 3
+          inventory:
+            category: Physical infrastructure hierarchy
+            item: Switch trays / fabric switch trays
+            status: existing
+          representation: black_box
+          evidence:
+            status: unknown
+            source_ids:
+            - example-source
+            note: This example demonstrates a known assembly whose internal implementation is unavailable.
+          properties: {}
+          children: []
+  connections:
+  - id: example-scaleup-link
+    name: Example scale-up connectivity
+    relationship_type: physical_connectivity
+    endpoints:
+    - example-accelerator
+    - example-switch-tray
+    directionality: undirected
+    inventory:
+      category: Local server interconnects
+      item: UALink / emerging scale-up fabrics
+      status: existing
+    evidence:
+      status: simplified
+      source_ids:
+      - example-source
+      note: Replace with the actual documented interconnect; do not assume UALink for systems that use another fabric.
+    properties: {}
+  functional_groups:
+  - id: example-scaleup-domain
+    name: Example scale-up domain
+    category: scale_up_domain
+    member_ids:
+    - example-accelerator
+    - example-switch-tray
+    evidence:
+      status: simplified
+      source_ids:
+      - example-source
+      note: Replace with a real functional grouping when one is meaningful.
+  concept_links:
+  - concept_id: latency
+    role: illustrates
+    target:
+      type: entity
+      id: example-accelerator
+  unknowns:
+  - description: Example switch-tray internals are intentionally unavailable in this template.
+    treatment: black_box
+    affected_entity_ids:
+    - example-switch-tray
+  scenario_catalog:
+    path: scenarios/example-baseline.yaml
+    default_scenario_id: baseline-normal-operation

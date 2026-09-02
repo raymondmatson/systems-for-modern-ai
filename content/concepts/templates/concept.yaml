@@ -1,0 +1,47 @@
+# Canonical Concept metadata template.
+# Required fields are shown uncommented. Replace example values before promotion.
+# Omit unsupported optional fields instead of using TBD/unknown/N/A placeholders.
+
+schema_version: "1.0.0"
+concept_id: example-concept
+name: Example Concept
+concept_kind: mechanism
+summary: >
+  Replace this summary with a concise plain-text description suitable for
+  search results, cards, previews, and tooltips.
+content_file: ../content/example-concept.md
+
+# Optional aliases: acronyms, abbreviations, and recognized alternate terminology.
+# aliases:
+#   - EC
+
+# Optional inventory mappings. If present, exactly one mapping must be primary.
+# category/item text must match Organizational_Content_Inventory.md exactly.
+# inventory_mappings:
+#   - category: Networking protocols
+#     item: RDMA
+#     primary: true
+
+# Optional relationships. Targets must be existing global concept_id values.
+# Only direct prerequisite edges should be authored; reverse relationships are derived.
+# relationships:
+#   prerequisites:
+#     - prerequisite-concept
+#   specializes:
+#     - broader-concept
+#   contrasts_with:
+#     - contrasted-concept
+#   related:
+#     - related-concept
+
+# Optional broad search/filter tags. Use lowercase kebab-case and keep the list small.
+# tags:
+#   - networking
+
+# Optional structured provenance. source_id is local to this Concept record for now.
+# sources:
+#   - source_id: authoritative-source
+#     title: Authoritative Source Title
+#     url: https://example.org/real-source
+#     publisher: Publisher Name
+#     year: 2026

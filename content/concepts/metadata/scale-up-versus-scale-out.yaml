@@ -1,0 +1,14 @@
+schema_version: 1.0.0
+concept_id: scale-up-versus-scale-out
+name: Scale-up versus scale-out
+concept_kind: comparison_distinction
+summary: The distinction between tightly coupled accelerator expansion inside a system and cluster expansion across nodes, racks, or fabrics.
+content_file: ../content/scale-up-versus-scale-out.md
+inventory_mappings:
+- category: Scale-up versus scale-out
+  item: Scale-up versus scale-out
+  primary: true
+tags:
+- scale-up
+- scale-out
+- interconnect

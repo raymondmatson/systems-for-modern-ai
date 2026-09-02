@@ -1,0 +1,318 @@
+schema_version: 1.2.0
+reference_system:
+  id: amd-helios
+  name: AMD Helios Rack-Scale AI Platform
+  vendor_operator: AMD
+  planning_status: worth_considering_later
+  introduction:
+    date_or_year: 2026
+    lifecycle: new
+  summary: Open rack-scale reference architecture with 72 MI455X GPUs, EPYC hosts, UALink-over-Ethernet scale-up, and 
+    Ethernet-based scale-out.
+  learning_value:
+  - Open rack-scale alternative to NVIDIA NVL72
+  - UALink/UEC standards-based architecture
+  - Compute- and switch-tray serviceability
+  source_ids:
+  - amd-helios
+  - amd-helios-brochure
+sources:
+- id: amd-helios
+  title: AMD Helios
+  publisher: AMD
+  url: https://www.amd.com/en/products/rackscale-solutions/helios.html
+  accessed: '2026-08-19'
+- id: amd-helios-brochure
+  title: AMD Helios Rackscale Solution blueprint
+  publisher: AMD
+  url: 
+    https://www.amd.com/content/dam/amd/en/documents/products/accelerators/instinct/amd-instinct-helios-blueprint-brochure.pdf
+  accessed: '2026-08-19'
+configurations:
+- id: helios-72gpu-reference-rack
+  name: Helios 72-GPU reference rack
+  configuration_status: emerging
+  default_scenario:
+    id: baseline-normal-operation
+    name: Baseline / normal operation
+    description: Normal/baseline operation with no deliberately injected fault or bottleneck.
+  scope_notes: Models the published 72-GPU reference rack as the stable scale-up unit; multi-rack scale-out is 
+    represented through connections rather than by inventing a cluster size.
+  modeling_notes:
+  - Exact NIC/DPU counts are not inferred when the source only establishes their role.
+  source_ids:
+  - amd-helios
+  - amd-helios-brochure
+  hierarchy:
+    root:
+      id: helios-system
+      name: AMD Helios rack-scale solution
+      entity_type: rack_scale_system
+      explore_tier: 1
+      inventory:
+        category: Physical infrastructure hierarchy
+        item: Compute clusters
+        status: existing
+      representation: explicit
+      evidence:
+        status: documented
+        source_ids:
+        - amd-helios-brochure
+        note: Reference design scales from a single rack to multi-rack AI factory deployments.
+      properties: {}
+      children:
+      - id: helios-rack
+        name: Helios Open Rack Wide rack
+        entity_type: rack
+        explore_tier: 2
+        inventory:
+          category: Physical infrastructure hierarchy
+          item: Racks
+          status: existing
+        representation: explicit
+        evidence:
+          status: documented
+          source_ids:
+          - amd-helios
+          - amd-helios-brochure
+          note: Single rack contains 72 MI455X GPUs.
+        properties:
+          gpus: 72
+          rack_standard: OCP Open Rack Wide
+          cooling: liquid
+        children:
+        - id: helios-compute-trays
+          name: Helios compute trays
+          entity_type: compute_tray
+          explore_tier: 3
+          inventory:
+            category: Physical infrastructure hierarchy
+            item: Compute trays / accelerator trays
+            status: existing
+          representation: aggregate
+          evidence:
+            status: documented
+            source_ids:
+            - amd-helios-brochure
+            note: 18 one-processor/four-GPU compute trays.
+          properties:
+            quantity_per_rack: 18
+          children:
+          - id: helios-mi455x
+            name: MI455X GPUs
+            entity_type: gpu
+            product_identity:
+              manufacturer: AMD
+              product_family: Instinct MI400 Series
+              model: MI455X
+              architecture: CDNA 5
+            explore_tier: 4
+            inventory:
+              category: Server-level hardware
+              item: GPUs
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - amd-helios-brochure
+              note: Four MI455X GPUs per compute tray.
+            properties:
+              quantity_per_tray: 4
+            children: []
+          - id: helios-epyc
+            name: EPYC Venice CPUs
+            entity_type: cpu
+            product_identity:
+              manufacturer: AMD
+              product_family: EPYC
+              generation: 6th Gen
+              architecture: Zen 6
+              codename: Venice
+            explore_tier: 4
+            inventory:
+              category: Server-level hardware
+              item: CPUs
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - amd-helios-brochure
+              note: One EPYC Venice CPU per compute tray.
+            properties:
+              quantity_per_tray: 1
+            children: []
+          - id: helios-vulcano
+            name: Pensando Vulcano AI NICs
+            entity_type: smartnic
+            product_identity:
+              manufacturer: AMD
+              product_family: Pensando
+              model: Vulcano AI NIC
+            explore_tier: 4
+            inventory:
+              category: Server-level hardware
+              item: SmartNICs
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - amd-helios
+              note: Vulcano AI NICs provide Ethernet scale-out; exact count is not asserted.
+            properties:
+              max_link_gbps: 800
+            children: []
+          - id: helios-salina
+            name: Pensando Salina DPU
+            entity_type: dpu
+            product_identity:
+              manufacturer: AMD
+              product_family: Pensando
+              model: Salina DPU
+            explore_tier: 4
+            inventory:
+              category: Server-level hardware
+              item: DPUs
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - amd-helios
+              note: Salina DPU provides front-end offload; exact placement/count is simplified.
+            properties: {}
+            children: []
+        - id: helios-switch-trays
+          name: Helios scale-up switch trays
+          entity_type: switch_tray
+          explore_tier: 3
+          inventory:
+            category: Physical infrastructure hierarchy
+            item: Switch trays / fabric switch trays
+            status: existing
+          representation: aggregate
+          evidence:
+            status: documented
+            source_ids:
+            - amd-helios-brochure
+            note: Six switch trays are specified in the blueprint.
+          properties:
+            quantity_per_rack: 6
+          children: []
+      - id: helios-cooling
+        name: Rack-scale liquid cooling
+        entity_type: cooling_system
+        explore_tier: 2
+        inventory:
+          category: Physical infrastructure hierarchy
+          item: Cooling infrastructure
+          status: existing
+        representation: aggregate
+        evidence:
+          status: documented
+          source_ids:
+          - amd-helios-brochure
+          note: Helios reference rack is liquid cooled.
+        properties: {}
+        children: []
+  connections:
+  - id: helios-ualink
+    name: UALink over Ethernet scale-up fabric
+    relationship_type: physical_connectivity
+    endpoints:
+    - helios-mi455x
+    - helios-switch-trays
+    directionality: undirected
+    inventory:
+      category: Local server interconnects
+      item: UALink / emerging scale-up fabrics
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - amd-helios-brochure
+      note: UALoE provides the in-rack all-to-all scale-up fabric.
+    properties: {}
+  - id: helios-scaleout
+    name: Ethernet scale-out
+    relationship_type: physical_connectivity
+    endpoints:
+    - helios-vulcano
+    - helios-system
+    directionality: undirected
+    inventory:
+      category: Network organization and fabrics
+      item: Scale-out networks
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - amd-helios-brochure
+      note: Standards-based Ethernet/UEC-aligned scale-out links racks into larger clusters.
+    properties: {}
+  - id: helios-cooling-dep
+    name: Liquid-cooling dependency
+    relationship_type: dependency_service
+    endpoints:
+    - helios-cooling
+    - helios-rack
+    directionality: source_to_target
+    inventory:
+      category: Thermal management
+      item: Liquid cooling
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - amd-helios-brochure
+      note: Rack is liquid cooled.
+    properties: {}
+  functional_groups:
+  - id: helios-scaleup-domain
+    name: 72-GPU UALoE scale-up domain
+    category: scale_up_domain
+    member_ids:
+    - helios-mi455x
+    - helios-switch-trays
+    evidence:
+      status: documented
+      source_ids:
+      - amd-helios-brochure
+      note: Single-rack scale-up domain.
+  - id: helios-scaleout-domain
+    name: Ethernet scale-out domain
+    category: scale_out_domain
+    member_ids:
+    - helios-vulcano
+    - helios-system
+    evidence:
+      status: documented
+      source_ids:
+      - amd-helios-brochure
+      note: Multi-rack scale-out is Ethernet based.
+  concept_links:
+  - name: UALink
+    inventory:
+      category: Local server interconnects
+      item: UALink / emerging scale-up fabrics
+      status: existing
+    entity_ids:
+    - helios-mi455x
+    - helios-switch-trays
+    note: ''
+  - name: Open rack form factors
+    inventory:
+      category: Physical infrastructure hierarchy
+      item: Open rack standards / form factors
+      status: existing
+    entity_ids:
+    - helios-rack
+    note: OCP Open Rack Wide is structurally important to the reference design.
+  unknowns:
+  - description: Exact scale-out cluster size and deployment-specific rack/facility infrastructure vary by OEM/ODM 
+      implementation of the reference design.
+    treatment: omitted
+    affected_entity_ids:
+    - helios-system

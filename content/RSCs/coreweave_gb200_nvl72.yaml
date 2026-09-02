@@ -1,0 +1,299 @@
+schema_version: 1.2.0
+reference_system:
+  id: coreweave-gb200-nvl72
+  name: CoreWeave GB200 NVL72 Cluster
+  vendor_operator: CoreWeave / NVIDIA
+  planning_status: worth_considering_later
+  introduction:
+    date_or_year: 2025
+    lifecycle: current
+  summary: Cloud AI cluster using GB200 NVL72 rack-scale domains, Quantum-2 InfiniBand, BlueField-3 DPUs, accelerated 
+    storage, and direct-to-chip cooling.
+  learning_value:
+  - Neocloud realization of NVL72
+  - Rail-optimized InfiniBand at very large scale
+  - Cloud networking/storage/observability context
+  source_ids:
+  - cw-gb200
+  - cw-dc
+sources:
+- id: cw-gb200
+  title: CoreWeave GB200 NVL72 General Availability
+  publisher: CoreWeave
+  url: 
+    https://www.coreweave.com/blog/coreweave-becomes-the-first-cloud-provider-with-generally-available-nvidia-gb200-nvl72-instances
+  accessed: '2026-08-19'
+- id: cw-dc
+  title: CoreWeave AI Data Centers
+  publisher: CoreWeave
+  url: https://www.coreweave.com/ai-data-centers
+  accessed: '2026-08-19'
+configurations:
+- id: coreweave-gb200-nvl72-cluster
+  name: CoreWeave GB200 NVL72 cluster
+  configuration_status: baseline
+  default_scenario:
+    id: baseline-normal-operation
+    name: Baseline / normal operation
+    description: Normal/baseline operation with no deliberately injected fault or bottleneck.
+  scope_notes: Models the GB200 NVL72 rack, Quantum-2 InfiniBand scale-out, BlueField-3 DPU cloud networking, storage, 
+    and liquid cooling at a high level.
+  modeling_notes:
+  - Exact physical storage topology and internal tray arrangement are simplified where the CoreWeave sources do not 
+    provide the same detail as NVIDIA platform documentation.
+  source_ids:
+  - cw-gb200
+  - cw-dc
+  hierarchy:
+    root:
+      id: cw-gb200-cluster
+      name: CoreWeave GB200 NVL72 cluster
+      entity_type: compute_cluster
+      explore_tier: 1
+      inventory:
+        category: Physical infrastructure hierarchy
+        item: Compute clusters
+        status: existing
+      representation: explicit
+      evidence:
+        status: documented
+        source_ids:
+        - cw-gb200
+        note: Clusters use rack-scale GB200 NVL72 and can scale to very large GPU counts.
+      properties: {}
+      children:
+      - id: cw-gb200-rack
+        name: GB200 NVL72 rack
+        entity_type: rack_scale_system
+        product_identity:
+          manufacturer: NVIDIA
+          product_family: NVL72
+          model: GB200 NVL72
+          architecture: Blackwell
+        explore_tier: 2
+        inventory:
+          category: Physical infrastructure hierarchy
+          item: Racks
+          status: existing
+        representation: explicit
+        evidence:
+          status: documented
+          source_ids:
+          - cw-gb200
+          note: 36 Grace CPUs and 72 Blackwell GPUs in one liquid-cooled rack.
+        properties:
+          grace_cpus: 36
+          blackwell_gpus: 72
+        children:
+        - id: cw-gb200-compute
+          name: NVL72 compute-host layer
+          entity_type: compute_tray
+          explore_tier: 3
+          inventory:
+            category: Physical infrastructure hierarchy
+            item: Compute trays / accelerator trays
+            status: existing
+          representation: aggregate
+          evidence:
+            status: simplified
+            source_ids:
+            - cw-gb200
+            note: CoreWeave source establishes rack-level architecture; detailed tray population is inherited only at 
+              aggregate level, not reasserted.
+          properties: {}
+          children:
+          - id: cw-gb200-gpus
+            name: Blackwell GPUs
+            entity_type: gpu
+            product_identity:
+              manufacturer: NVIDIA
+              model: B200
+              architecture: Blackwell
+            explore_tier: 4
+            inventory:
+              category: Server-level hardware
+              item: GPUs
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - cw-gb200
+              note: 72 GPUs per rack.
+            properties: {}
+            children: []
+          - id: cw-bf3
+            name: BlueField-3 DPUs
+            entity_type: dpu
+            product_identity:
+              manufacturer: NVIDIA
+              product_family: BlueField
+              model: BlueField-3 DPU
+            explore_tier: 4
+            inventory:
+              category: Server-level hardware
+              item: DPUs
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - cw-gb200
+              note: BlueField-3 DPUs support cloud networking and data access.
+            properties: {}
+            children: []
+      - id: cw-ib
+        name: Quantum-2 InfiniBand fabric
+        entity_type: network_fabric
+        product_identity:
+          manufacturer: NVIDIA
+          product_family: Quantum
+          model: Quantum-2
+        explore_tier: 2
+        inventory:
+          category: Network organization and fabrics
+          item: Backend / accelerator networks
+          status: existing
+        representation: aggregate
+        evidence:
+          status: documented
+          source_ids:
+          - cw-gb200
+          - cw-dc
+          note: 400 Gb/s per GPU, rail-optimized topology for GB200 and non-blocking InfiniBand at larger scale.
+        properties:
+          per_gpu_gbps: 400
+          topology: rail-optimized
+        children: []
+      - id: cw-storage
+        name: CoreWeave accelerated storage
+        entity_type: storage_system
+        explore_tier: 2
+        inventory:
+          category: Storage
+          item: Distributed storage
+          status: existing
+        representation: aggregate
+        evidence:
+          status: documented
+          source_ids:
+          - cw-dc
+          note: CoreWeave provides AI-optimized object and file storage; detailed physical storage servers are not 
+            modeled.
+        properties: {}
+        children: []
+      - id: cw-cooling
+        name: Direct-to-chip liquid cooling
+        entity_type: cooling_system
+        explore_tier: 2
+        inventory:
+          category: Physical infrastructure hierarchy
+          item: Cooling infrastructure
+          status: existing
+        representation: aggregate
+        evidence:
+          status: documented
+          source_ids:
+          - cw-dc
+          note: Blackwell deployments use closed-loop direct-to-chip liquid cooling.
+        properties: {}
+        children: []
+  connections:
+  - id: cw-nvlink
+    name: Rack NVLink domain
+    relationship_type: physical_connectivity
+    endpoints:
+    - cw-gb200-gpus
+    - cw-gb200-rack
+    directionality: undirected
+    inventory:
+      category: Local server interconnects
+      item: NVLink
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - cw-gb200
+      note: Rack-level NVLink connectivity.
+    properties: {}
+  - id: cw-ib-link
+    name: Quantum-2 InfiniBand scale-out
+    relationship_type: physical_connectivity
+    endpoints:
+    - cw-gb200-rack
+    - cw-ib
+    directionality: undirected
+    inventory:
+      category: Networking protocols
+      item: InfiniBand
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - cw-gb200
+      note: 400 Gb/s per GPU via rail-optimized Quantum-2 InfiniBand.
+    properties: {}
+  - id: cw-storage-link
+    name: Compute-storage path
+    relationship_type: data_communication_path
+    endpoints:
+    - cw-gb200-rack
+    - cw-storage
+    directionality: bidirectional
+    inventory:
+      category: Storage
+      item: Distributed storage
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - cw-dc
+      note: AI-optimized object/file storage services.
+    properties: {}
+  functional_groups:
+  - id: cw-scaleup-domain
+    name: GB200 NVL72 scale-up domain
+    category: scale_up_domain
+    member_ids:
+    - cw-gb200-gpus
+    - cw-gb200-rack
+    evidence:
+      status: documented
+      source_ids:
+      - cw-gb200
+      note: Rack-scale NVLink.
+  - id: cw-scaleout-domain
+    name: Quantum-2 scale-out domain
+    category: scale_out_domain
+    member_ids:
+    - cw-gb200-rack
+    - cw-ib
+    evidence:
+      status: documented
+      source_ids:
+      - cw-gb200
+      note: Rail-optimized InfiniBand.
+  concept_links:
+  - name: In-network aggregation
+    inventory:
+      category: Collective communication
+      item: In-network aggregation
+      status: existing
+    entity_ids:
+    - cw-ib
+    note: Quantum-2 SHARP offloads collective communication.
+  - name: Rail-optimized fabrics
+    inventory:
+      category: Network organization and fabrics
+      item: Rail-optimized fabrics
+      status: existing
+    entity_ids:
+    - cw-ib
+    note: ''
+  unknowns:
+  - description: Detailed storage-server layout and some rack-internal host/tray organization are simplified rather than
+      inferred.
+    treatment: simplified
+    affected_entity_ids:
+    - cw-storage
+    - cw-gb200-compute

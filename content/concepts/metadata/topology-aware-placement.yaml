@@ -1,0 +1,14 @@
+schema_version: 1.0.0
+concept_id: topology-aware-placement
+name: Topology-aware placement
+concept_kind: mechanism
+summary: A placement strategy that assigns workloads or communicating ranks with knowledge of physical network locality and topology to reduce communication cost.
+content_file: ../content/topology-aware-placement.md
+inventory_mappings:
+- category: Distributed training
+  item: Topology-aware placement
+  primary: true
+tags:
+- scheduling
+- distributed-training
+- locality

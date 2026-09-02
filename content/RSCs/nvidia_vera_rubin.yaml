@@ -1,0 +1,310 @@
+schema_version: 1.2.0
+reference_system:
+  id: nvidia-vera-rubin
+  name: NVIDIA Vera Rubin NVL72 / Rubin POD
+  vendor_operator: NVIDIA
+  planning_status: worth_considering_later
+  introduction:
+    date_or_year: 2026
+    lifecycle: emerging
+  summary: Next-generation rack-scale NVIDIA architecture with 72 Rubin GPUs, 36 Vera CPUs, NVLink 6 scale-up, and 
+    multiple high-speed scale-out options.
+  learning_value:
+  - Evolution beyond Blackwell NVL72
+  - Next-generation NIC/DPU integration
+  - Rack-scale compute and switch trays
+  source_ids:
+  - nv-rubin
+  - nv-rubin-pod
+sources:
+- id: nv-rubin
+  title: NVIDIA Vera Rubin NVL72
+  publisher: NVIDIA
+  url: https://www.nvidia.com/en-us/data-center/vera-rubin-nvl72/
+  accessed: '2026-08-19'
+- id: nv-rubin-pod
+  title: NVIDIA Vera Rubin POD
+  publisher: NVIDIA Developer
+  url: https://developer.nvidia.com/blog/nvidia-vera-rubin-pod-seven-chips-five-rack-scale-systems-one-ai-supercomputer/
+  accessed: '2026-08-19'
+configurations:
+- id: vera-rubin-nvl72-pod-reference
+  name: Vera Rubin NVL72-centered POD reference
+  configuration_status: emerging
+  default_scenario:
+    id: baseline-normal-operation
+    name: Baseline / normal operation
+    description: Normal/baseline operation with no deliberately injected fault or bottleneck.
+  scope_notes: Represents the documented NVL72 rack as the primary physical building block; broader Rubin POD 
+    specialized rack types are not expanded in this initial file.
+  modeling_notes:
+  - The full Rubin POD contains additional rack-scale systems; those are intentionally outside this initial 
+    configuration rather than invented.
+  source_ids:
+  - nv-rubin
+  - nv-rubin-pod
+  hierarchy:
+    root:
+      id: rubin-system
+      name: Vera Rubin NVL72 / Rubin POD
+      entity_type: compute_cluster
+      explore_tier: 1
+      inventory:
+        category: Physical infrastructure hierarchy
+        item: Pods / superpods
+        status: existing
+      representation: explicit
+      evidence:
+        status: simplified
+        source_ids:
+        - nv-rubin-pod
+        note: Initial model centers the POD on repeatable Vera Rubin NVL72 racks.
+      properties: {}
+      children:
+      - id: rubin-nvl72
+        name: Vera Rubin NVL72 rack
+        entity_type: rack_scale_system
+        product_identity:
+          manufacturer: NVIDIA
+          product_family: Vera Rubin
+          model: Vera Rubin NVL72
+          architecture: Rubin
+        explore_tier: 2
+        inventory:
+          category: Physical infrastructure hierarchy
+          item: Racks
+          status: existing
+        representation: explicit
+        evidence:
+          status: documented
+          source_ids:
+          - nv-rubin
+          - nv-rubin-pod
+          note: Rack integrates 72 Rubin GPUs and 36 Vera CPUs.
+        properties:
+          gpus: 72
+          vera_cpus: 36
+          cooling: liquid
+        children:
+        - id: rubin-compute-trays
+          name: Compute trays
+          entity_type: compute_tray
+          explore_tier: 3
+          inventory:
+            category: Physical infrastructure hierarchy
+            item: Compute trays / accelerator trays
+            status: existing
+          representation: aggregate
+          evidence:
+            status: documented
+            source_ids:
+            - nv-rubin-pod
+            note: 18 compute trays per rack.
+          properties:
+            quantity_per_rack: 18
+          children:
+          - id: rubin-gpus
+            name: Rubin GPUs
+            entity_type: gpu
+            product_identity:
+              manufacturer: NVIDIA
+              product_family: Rubin
+              model: Rubin GPU
+              architecture: Rubin
+            explore_tier: 4
+            inventory:
+              category: Server-level hardware
+              item: GPUs
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - nv-rubin
+              note: 72 GPUs per rack.
+            properties: {}
+            children: []
+          - id: rubin-cpus
+            name: Vera CPUs
+            entity_type: cpu
+            product_identity:
+              manufacturer: NVIDIA
+              product_family: Vera
+              model: Vera CPU
+            explore_tier: 4
+            inventory:
+              category: Server-level hardware
+              item: CPUs
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - nv-rubin
+              note: 36 CPUs per rack.
+            properties: {}
+            children: []
+          - id: rubin-cx9
+            name: ConnectX-9 SuperNICs
+            entity_type: smartnic
+            product_identity:
+              manufacturer: NVIDIA
+              product_family: ConnectX
+              model: ConnectX-9 SuperNIC
+            explore_tier: 4
+            inventory:
+              category: Server-level hardware
+              item: SmartNICs
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - nv-rubin
+              - nv-rubin-pod
+              note: ConnectX-9 SuperNICs are integrated into compute trays.
+            properties: {}
+            children: []
+          - id: rubin-bf4
+            name: BlueField-4 DPUs
+            entity_type: dpu
+            product_identity:
+              manufacturer: NVIDIA
+              product_family: BlueField
+              model: BlueField-4 DPU
+            explore_tier: 4
+            inventory:
+              category: Server-level hardware
+              item: DPUs
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - nv-rubin
+              - nv-rubin-pod
+              note: BlueField-4 DPUs are integrated in the rack platform.
+            properties: {}
+            children: []
+        - id: rubin-switch-trays
+          name: NVLink 6 switch trays
+          entity_type: switch_tray
+          product_identity:
+            manufacturer: NVIDIA
+            product_family: NVLink Switch
+            model: NVLink 6 Switch
+          explore_tier: 3
+          inventory:
+            category: Physical infrastructure hierarchy
+            item: Switch trays / fabric switch trays
+            status: existing
+          representation: aggregate
+          evidence:
+            status: documented
+            source_ids:
+            - nv-rubin-pod
+            note: Nine NVLink switch trays per rack.
+          properties:
+            quantity_per_rack: 9
+          children: []
+      - id: rubin-scaleout
+        name: Quantum-X800 / Spectrum-X scale-out fabric
+        entity_type: network_fabric
+        explore_tier: 2
+        inventory:
+          category: Network organization and fabrics
+          item: Scale-out networks
+          status: existing
+        representation: aggregate
+        evidence:
+          status: documented
+          source_ids:
+          - nv-rubin
+          note: Platform scales out using Quantum-X800 InfiniBand or Spectrum-X Ethernet.
+        properties:
+          options:
+          - Quantum-X800 InfiniBand
+          - Spectrum-X Ethernet
+        children: []
+  connections:
+  - id: rubin-nvlink6
+    name: NVLink 6 scale-up fabric
+    relationship_type: physical_connectivity
+    endpoints:
+    - rubin-gpus
+    - rubin-switch-trays
+    directionality: undirected
+    inventory:
+      category: Local server interconnects
+      item: NVLink
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - nv-rubin
+      note: 72 GPUs form a rack-scale NVLink 6 domain.
+    properties: {}
+  - id: rubin-scaleout-link
+    name: Scale-out network
+    relationship_type: physical_connectivity
+    endpoints:
+    - rubin-cx9
+    - rubin-scaleout
+    directionality: undirected
+    inventory:
+      category: Network organization and fabrics
+      item: Scale-out networks
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - nv-rubin
+      note: ConnectX-9 participates in scale-out networking.
+    properties: {}
+  functional_groups:
+  - id: rubin-scaleup-domain
+    name: 72-GPU NVLink 6 domain
+    category: scale_up_domain
+    member_ids:
+    - rubin-gpus
+    - rubin-switch-trays
+    evidence:
+      status: documented
+      source_ids:
+      - nv-rubin
+      note: Rack-scale scale-up domain.
+  - id: rubin-scaleout-domain
+    name: Rubin scale-out domain
+    category: scale_out_domain
+    member_ids:
+    - rubin-cx9
+    - rubin-scaleout
+    evidence:
+      status: documented
+      source_ids:
+      - nv-rubin
+      note: InfiniBand or Ethernet scale-out.
+  concept_links:
+  - name: Scale-up versus scale-out
+    inventory:
+      category: Scale-up versus scale-out
+      item: Scale-up
+      status: existing
+    entity_ids:
+    - rubin-nvl72
+    - rubin-scaleout
+    note: ''
+  - name: Liquid cooling
+    inventory:
+      category: Thermal management
+      item: Liquid cooling
+      status: existing
+    entity_ids:
+    - rubin-nvl72
+    note: ''
+  unknowns:
+  - description: Additional specialized rack-scale systems in the wider Rubin POD are omitted from this first 
+      configuration.
+    treatment: omitted
+    affected_entity_ids:
+    - rubin-system

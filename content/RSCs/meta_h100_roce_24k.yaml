@@ -1,0 +1,307 @@
+schema_version: 1.3.0
+reference_system:
+  id: meta-h100-roce-24k
+  name: Meta 24K H100 RoCE Training Cluster
+  vendor_operator: Meta
+  planning_status: recommended_initial
+  introduction:
+    date_or_year: 2024
+    lifecycle: current
+  summary: Production-scale H100 training cluster that contrasts Ethernet/RoCE scale-out with InfiniBand alternatives and exposes storage, scheduling, and operational concerns at very large scale.
+  learning_value:
+  - Real production AI training deployment
+  - RoCE/Ethernet accelerator fabric
+  - Storage and topology-aware operations
+  source_ids:
+  - meta-genai
+  - meta-grandteton
+sources:
+- id: meta-genai
+  title: Building Meta's GenAI Infrastructure
+  publisher: Meta Engineering
+  url: https://engineering.fb.com/2024/03/12/data-center-engineering/building-metas-genai-infrastructure/
+  accessed: '2026-08-19'
+- id: meta-grandteton
+  title: Meta's open AI hardware vision
+  publisher: Meta Engineering
+  url: https://engineering.fb.com/2024/10/15/data-infrastructure/metas-open-ai-hardware-vision/
+  accessed: '2026-08-19'
+configurations:
+- id: meta-24576-h100-roce
+  name: Meta 24,576-H100 RoCE training cluster
+  configuration_status: historical
+  default_scenario:
+    id: baseline-normal-operation
+    name: Baseline / normal operation
+    description: Normal/baseline operation with no deliberately injected fault or bottleneck.
+  scope_notes: Models the RoCE cluster variant described by Meta, emphasizing the production Ethernet/RDMA fabric, Grand Teton compute platform, and flash-backed storage infrastructure.
+  modeling_notes:
+  - Grand Teton internals and rack counts remain black-box/aggregate where Meta does not provide enough H100-specific layout detail in the selected source.
+  source_ids:
+  - meta-genai
+  - meta-grandteton
+  hierarchy:
+    root:
+      id: meta-h100-roce
+      name: Meta 24K H100 RoCE training cluster
+      entity_type: compute_cluster
+      explore_tier: 1
+      inventory:
+        category: Physical infrastructure hierarchy
+        item: Compute clusters
+        status: existing
+      representation: explicit
+      evidence:
+        status: documented
+        source_ids:
+        - meta-genai
+        note: Cluster scale is 24,576 H100 GPUs; this file models the RoCE variant.
+      properties:
+        h100_gpu_count:
+          status: known
+          value:
+            form: scalar
+            number: 24576
+            approximate: false
+          basis: advertised
+        endpoint_speed_gbps:
+          status: known
+          value:
+            form: scalar
+            number: 400
+            approximate: false
+            unit: Gb/s
+          basis: advertised
+          scope: per_link
+      children:
+      - id: meta-compute-racks
+        name: Compute racks
+        entity_type: rack_group
+        explore_tier: 2
+        inventory:
+          category: Physical infrastructure hierarchy
+          item: Racks
+          status: existing
+        representation: aggregate
+        evidence:
+          status: simplified
+          source_ids:
+          - meta-genai
+          note: Cluster uses Open Rack and Grand Teton; rack count is not asserted.
+        properties:
+          rack_standard:
+            status: known
+            value:
+              form: text
+              text: Meta Open Rack
+        children:
+        - id: meta-grand-teton
+          name: Grand Teton GPU platform
+          entity_type: compute_node
+          product_identity:
+            manufacturer: Meta
+            model: Grand Teton
+          explore_tier: 3
+          inventory:
+            category: Physical infrastructure hierarchy
+            item: Servers / compute nodes
+            status: existing
+          representation: black_box
+          evidence:
+            status: documented
+            source_ids:
+            - meta-genai
+            - meta-grandteton
+            note: Grand Teton integrates power, control, compute and fabric into a chassis; exact H100-per-chassis layout is not asserted here.
+          properties: {}
+          children:
+          - id: meta-h100-gpus
+            name: H100 GPUs
+            entity_type: gpu
+            product_identity:
+              manufacturer: NVIDIA
+              model: H100
+              architecture: Hopper
+            explore_tier: 4
+            inventory:
+              category: Server-level hardware
+              item: GPUs
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - meta-genai
+              note: H100 accelerators are the cluster compute devices; per-chassis quantity is intentionally unknown here.
+            properties: {}
+            children: []
+      - id: meta-roce-switches
+        name: RoCE fabric switches
+        entity_type: network_switch
+        explore_tier: 3
+        inventory:
+          category: Physical infrastructure hierarchy
+          item: Network switches
+          status: existing
+        representation: aggregate
+        evidence:
+          status: documented
+          source_ids:
+          - meta-genai
+          note: RoCE fabric uses Arista 7800 with Wedge400 and Minipack2 OCP rack switches.
+        properties:
+          switch_families:
+            status: known
+            value:
+              form: text
+              text: Arista 7800, Wedge400, Minipack2
+        children: []
+      - id: meta-storage-racks
+        name: Storage infrastructure
+        entity_type: storage_group
+        explore_tier: 2
+        inventory:
+          category: Storage
+          item: Distributed storage
+          status: existing
+        representation: aggregate
+        evidence:
+          status: documented
+          source_ids:
+          - meta-genai
+          note: Storage uses Tectonic and Hammerspace-backed deployments.
+        properties: {}
+        children:
+        - id: meta-yv3
+          name: YV3 Sierra Point storage servers
+          entity_type: storage_server
+          product_identity:
+            manufacturer: Meta
+            model: YV3 Sierra Point
+          explore_tier: 3
+          inventory:
+            category: Physical infrastructure hierarchy
+            item: Storage servers
+            status: existing
+          representation: aggregate
+          evidence:
+            status: documented
+            source_ids:
+            - meta-genai
+            note: Both storage deployments use the YV3 Sierra Point server platform.
+          properties: {}
+          children:
+          - id: meta-e1s
+            name: High-capacity E1.S SSDs
+            entity_type: local_storage
+            explore_tier: 4
+            inventory:
+              category: Server-level hardware
+              item: NVMe SSDs
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - meta-genai
+              note: Storage servers use high-capacity E1.S SSDs.
+            properties: {}
+            children: []
+  connections:
+  - id: meta-roce-link
+    name: 400-Gb/s RoCE accelerator fabric
+    relationship_type: physical_connectivity
+    endpoints:
+    - meta-grand-teton
+    - meta-roce-switches
+    directionality: undirected
+    inventory:
+      category: Networking protocols
+      item: RoCE
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - meta-genai
+      note: RoCE cluster interconnects 400-Gb/s endpoints.
+    properties: {}
+  - id: meta-storage-path
+    name: Training cluster to storage
+    relationship_type: data_communication_path
+    endpoints:
+    - meta-grand-teton
+    - meta-yv3
+    directionality: bidirectional
+    inventory:
+      category: Storage
+      item: Distributed storage
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - meta-genai
+      note: Tectonic/Hammerspace storage supports datasets and checkpointing.
+    properties: {}
+  functional_groups:
+  - id: meta-backend-fabric
+    name: RoCE backend accelerator fabric
+    category: compute_fabric
+    member_ids:
+    - meta-grand-teton
+    - meta-roce-switches
+    evidence:
+      status: documented
+      source_ids:
+      - meta-genai
+      note: Ethernet/RoCE backend fabric.
+  - id: meta-storage-group
+    name: Training storage path
+    category: storage_fabric
+    member_ids:
+    - meta-yv3
+    - meta-grand-teton
+    evidence:
+      status: documented
+      source_ids:
+      - meta-genai
+      note: Flash-backed distributed storage and parallel NFS.
+  concept_links:
+  - concept_id: roce
+    role: uses
+    target:
+      type: entity
+      id: meta-roce-switches
+    note: ''
+  - concept_id: roce
+    role: uses
+    target:
+      type: entity
+      id: meta-grand-teton
+    note: ''
+  - concept_id: topology-aware-placement
+    role: illustrates
+    target:
+      type: entity
+      id: meta-h100-roce
+    note: ''
+  - concept_id: topology-aware-placement
+    role: illustrates
+    target:
+      type: entity
+      id: meta-roce-switches
+    note: ''
+  - concept_id: open-rack-standards-form-factors
+    role: illustrates
+    target:
+      type: entity
+      id: meta-compute-racks
+    note: Meta documents the cluster as using Open Rack with Grand Teton; exact rack generation and population remain simplified.
+  unknowns:
+  - description: Exact Grand Teton H100 chassis internals and compute-rack population are not asserted in the public source used for this initial model.
+    treatment: black_box
+    affected_entity_ids:
+    - meta-grand-teton
+    - meta-compute-racks
+  scenario_catalog:
+    path: scenarios/meta-24576-h100-roce.yaml
+    default_scenario_id: baseline-normal-operation

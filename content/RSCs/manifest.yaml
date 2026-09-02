@@ -1,0 +1,100 @@
+schema_version: 1.3.0
+generated: '2026-08-25'
+system_file_count: 16
+systems:
+- file: nvidia_dgx_h100_superpod.yaml
+  id: nvidia-dgx-h100-superpod
+  name: NVIDIA DGX H100 SuperPOD
+  planning_status: recommended_initial
+  configuration_count: 1
+  source_schema_version: 1.3.0
+- file: nvidia_dgx_gb300_nvl72_superpod.yaml
+  id: nvidia-dgx-gb300-nvl72-superpod
+  name: NVIDIA DGX GB300 NVL72 / SuperPOD
+  planning_status: recommended_initial
+  configuration_count: 1
+  source_schema_version: 1.3.0
+- file: google_tpu7x_ironwood.yaml
+  id: google-tpu7x-ironwood
+  name: Google Cloud TPU7x (Ironwood) Pod / Superpod
+  planning_status: recommended_initial
+  configuration_count: 1
+  source_schema_version: 1.3.0
+- file: aws_trainium3_ultraserver.yaml
+  id: aws-trainium3-ultraserver
+  name: AWS Trainium3 UltraServer / EC2 UltraCluster 3.0
+  planning_status: worth_considering_later
+  configuration_count: 1
+  source_schema_version: 1.2.0
+- file: meta_h100_roce_24k.yaml
+  id: meta-h100-roce-24k
+  name: Meta 24K H100 RoCE Training Cluster
+  planning_status: recommended_initial
+  configuration_count: 1
+  source_schema_version: 1.3.0
+- file: amd_helios.yaml
+  id: amd-helios
+  name: AMD Helios Rack-Scale AI Platform
+  planning_status: worth_considering_later
+  configuration_count: 1
+  source_schema_version: 1.2.0
+- file: cerebras_cs3_condor_galaxy3.yaml
+  id: cerebras-cs3-condor-galaxy3
+  name: Cerebras CS-3 / Condor Galaxy 3
+  planning_status: recommended_initial
+  configuration_count: 1
+  source_schema_version: 1.3.0
+- file: microsoft_maia200.yaml
+  id: microsoft-maia200
+  name: Microsoft Azure Maia 200 Inference System
+  planning_status: worth_considering_later
+  configuration_count: 1
+  source_schema_version: 1.2.0
+- file: groq_lpu_groqcloud.yaml
+  id: groq-lpu-groqcloud
+  name: Groq LPU Rack / GroqCloud Infrastructure
+  planning_status: worth_considering_later
+  configuration_count: 1
+  source_schema_version: 1.2.0
+- file: llnl_el_capitan.yaml
+  id: llnl-el-capitan
+  name: LLNL El Capitan
+  planning_status: worth_considering_later
+  configuration_count: 1
+  source_schema_version: 1.2.0
+- file: xai_colossus1.yaml
+  id: xai-colossus1
+  name: xAI Colossus 1
+  planning_status: worth_considering_later
+  configuration_count: 1
+  source_schema_version: 1.2.0
+- file: nvidia_vera_rubin.yaml
+  id: nvidia-vera-rubin
+  name: NVIDIA Vera Rubin NVL72 / Rubin POD
+  planning_status: worth_considering_later
+  configuration_count: 1
+  source_schema_version: 1.2.0
+- file: google_tpu8_family.yaml
+  id: google-tpu8-family
+  name: Google TPU 8t / TPU 8i Family
+  planning_status: worth_considering_later
+  configuration_count: 2
+  source_schema_version: 1.2.0
+- file: aws_trainium2_rainier.yaml
+  id: aws-trainium2-rainier
+  name: AWS Trainium2 / Project Rainier
+  planning_status: worth_considering_later
+  configuration_count: 1
+  source_schema_version: 1.2.0
+- file: oci_gb200_gb300_supercluster.yaml
+  id: oci-gb200-gb300-supercluster
+  name: OCI GB200 / GB300 NVL72 Supercluster
+  planning_status: worth_considering_later
+  configuration_count: 2
+  source_schema_version: 1.2.0
+- file: coreweave_gb200_nvl72.yaml
+  id: coreweave-gb200-nvl72
+  name: CoreWeave GB200 NVL72 Cluster
+  planning_status: worth_considering_later
+  configuration_count: 1
+  source_schema_version: 1.2.0

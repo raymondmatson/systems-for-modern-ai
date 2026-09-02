@@ -1,0 +1,484 @@
+schema_version: 1.2.0
+reference_system:
+  id: oci-gb200-gb300-supercluster
+  name: OCI GB200 / GB300 NVL72 Supercluster
+  vendor_operator: Oracle Cloud Infrastructure / NVIDIA
+  planning_status: worth_considering_later
+  introduction:
+    date_or_year: 2025
+    lifecycle: current
+  summary: Cloud-scale NVL72 deployment combining rack-scale NVLink domains with OCI high-performance InfiniBand or RoCE
+    networking and cloud-level rack management.
+  learning_value:
+  - Cloud realization of rack-scale NVL72
+  - RoCE versus InfiniBand scale-out options
+  - Example of multiple configurations in one provider system family
+  source_ids:
+  - oci-gb200
+  - oci-network
+  - oci-gb300
+  - nv-gb300-oci-support
+  - oci-gb200-exemplar
+sources:
+- id: oci-gb200
+  title: 'Behind the Scenes: Scale NVIDIA GB200 NVL72 deployments'
+  publisher: Oracle Cloud Infrastructure
+  url: https://blogs.oracle.com/cloud-infrastructure/behind-the-scenes-scale-nvidia-gb200-nvl72-deployments
+  accessed: '2026-08-19'
+- id: oci-network
+  title: High-Performance Networking for AI Infrastructure at Scale
+  publisher: Oracle Cloud Infrastructure
+  url: https://blogs.oracle.com/cloud-infrastructure/high-performance-networking-ai-infrastructure
+  accessed: '2026-08-19'
+- id: oci-gb300
+  title: Announcing New AI Infrastructure Capabilities with NVIDIA
+  publisher: Oracle Cloud Infrastructure
+  url: https://blogs.oracle.com/cloud-infrastructure/supercluster-nvidia-blackwell-dedicated-alloy
+  accessed: '2026-08-19'
+- id: nv-gb300-oci-support
+  title: NVIDIA GB300 NVL72
+  publisher: NVIDIA
+  url: https://www.nvidia.com/en-us/data-center/gb300-nvl72/
+  accessed: '2026-08-19'
+- id: oci-gb200-exemplar
+  title: OCI Cloud Achieves Exemplar Cloud with NVIDIA GB200 NVL72
+  publisher: Oracle Cloud Infrastructure
+  url: https://blogs.oracle.com/cloud-infrastructure/oci-achieves-nvidia-exemplar-cloud-nvidia-gb200
+  accessed: '2026-08-22'
+configurations:
+- id: oci-gb200-supercluster
+  name: GB200 Blackwell NVL72 OCI Supercluster
+  configuration_status: baseline
+  default_scenario:
+    id: baseline-normal-operation
+    name: Baseline / normal operation
+    description: Normal/baseline operation with no deliberately injected fault or bottleneck.
+  scope_notes: Models the rack-scale NVL72 unit plus OCI scale-out network. The GB300 variant is intentionally less 
+    detailed where OCI-specific physical node details are not yet public.
+  modeling_notes:
+  - Cloud control-plane/API behavior is not part of the physical hierarchy.
+  source_ids:
+  - oci-gb200
+  - oci-network
+  - oci-gb300
+  - nv-gb300-oci-support
+  - oci-gb200-exemplar
+  hierarchy:
+    root:
+      id: oci-gb200-cluster
+      name: OCI GB200 Blackwell Supercluster
+      entity_type: compute_cluster
+      explore_tier: 1
+      inventory:
+        category: Physical infrastructure hierarchy
+        item: Compute clusters
+        status: existing
+      representation: explicit
+      evidence:
+        status: documented
+        source_ids:
+        - oci-gb200
+        note: OCI offers rack-scale NVL72 systems in large Superclusters.
+      properties: {}
+      children:
+      - id: oci-gb200-rack
+        name: GB200 Blackwell NVL72 rack
+        entity_type: rack_scale_system
+        product_identity:
+          manufacturer: NVIDIA
+          product_family: NVL72
+          model: GB200 NVL72
+          architecture: Blackwell
+        explore_tier: 2
+        inventory:
+          category: Physical infrastructure hierarchy
+          item: Racks
+          status: existing
+        representation: explicit
+        evidence:
+          status: documented
+          source_ids:
+          - oci-gb200
+          note: Rack contains 72 GPUs.
+        properties:
+          gpus: 72
+        children:
+        - id: oci-gb200-hosts
+          name: Rack compute hosts / trays
+          entity_type: compute_tray
+          explore_tier: 3
+          inventory:
+            category: Physical infrastructure hierarchy
+            item: Compute trays / accelerator trays
+            status: existing
+          representation: aggregate
+          evidence:
+            status: documented
+            source_ids:
+            - oci-gb200
+            note: GB200 has 18 hosts; GB300 representation uses NVIDIA rack-level structure without asserting 
+              OCI-specific host details.
+          properties:
+            quantity_per_gb200_rack: 18
+          children:
+          - id: oci-gb200-gpus
+            name: GB200 Blackwell GPUs
+            entity_type: gpu
+            product_identity:
+              manufacturer: NVIDIA
+              model: B200
+              architecture: Blackwell
+            explore_tier: 4
+            inventory:
+              category: Server-level hardware
+              item: GPUs
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - oci-gb200
+              note: Rack-level GPU population documented.
+            properties: {}
+            children: []
+          - id: oci-gb200-rdma-nics
+            name: RDMA NICs
+            entity_type: nic
+            product_identity:
+              manufacturer: NVIDIA
+              product_family: ConnectX
+              model: ConnectX-8
+            explore_tier: 4
+            inventory:
+              category: Server-level hardware
+              item: NICs
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - oci-gb200
+              - oci-gb200-exemplar
+              note: OCI documents four NVIDIA ConnectX-8 RDMA NICs per GB200 compute node; the cluster supports InfiniBand or Spectrum-X/RoCE scale-out.
+            properties: {}
+            children: []
+      - id: oci-gb200-scaleout
+        name: OCI high-performance cluster network
+        entity_type: network_fabric
+        explore_tier: 2
+        inventory:
+          category: Network organization and fabrics
+          item: Scale-out networks
+          status: existing
+        representation: aggregate
+        evidence:
+          status: documented
+          source_ids:
+          - oci-network
+          note: OCI documents lossless 3-tier Clos RoCEv2 as a major cluster-network option, while NVL72 also supports 
+            InfiniBand.
+        properties:
+          topology: 3-tier Clos (RoCE option)
+          options:
+          - RoCEv2 Ethernet
+          - NVIDIA InfiniBand
+        children: []
+  connections:
+  - id: oci-gb200-nvlink
+    name: Rack NVLink domain
+    relationship_type: physical_connectivity
+    endpoints:
+    - oci-gb200-gpus
+    - oci-gb200-rack
+    directionality: undirected
+    inventory:
+      category: Local server interconnects
+      item: NVLink
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - oci-gb200
+      note: NVL72 is a single rack-scale NVLink domain.
+    properties: {}
+  - id: oci-gb200-scaleout-link
+    name: OCI scale-out networking
+    relationship_type: physical_connectivity
+    endpoints:
+    - oci-gb200-rdma-nics
+    - oci-gb200-scaleout
+    directionality: undirected
+    inventory:
+      category: Network organization and fabrics
+      item: Scale-out networks
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - oci-gb200
+      - oci-network
+      note: OCI supports InfiniBand or RoCE RDMA for rack-to-rack scaling.
+    properties: {}
+  functional_groups:
+  - id: oci-gb200-scaleup-domain
+    name: NVL72 scale-up domain
+    category: scale_up_domain
+    member_ids:
+    - oci-gb200-gpus
+    - oci-gb200-rack
+    evidence:
+      status: documented
+      source_ids:
+      - oci-gb200
+      note: 72-GPU rack domain.
+  - id: oci-gb200-scaleout-domain
+    name: OCI scale-out domain
+    category: scale_out_domain
+    member_ids:
+    - oci-gb200-rdma-nics
+    - oci-gb200-scaleout
+    evidence:
+      status: documented
+      source_ids:
+      - oci-network
+      note: High-performance cluster network.
+  concept_links:
+  - name: Clos
+    inventory:
+      category: Network topologies
+      item: Clos
+      status: existing
+    entity_ids:
+    - oci-gb200-scaleout
+    note: ''
+  - name: RoCEv2
+    inventory:
+      category: Networking protocols
+      item: RoCEv2
+      status: existing
+    entity_ids:
+    - oci-gb200-scaleout
+    note: ''
+  unknowns:
+  - description: Deployment-specific rack counts, storage topology, and the full GB300 OCI physical node layout are 
+      intentionally not inferred.
+    treatment: simplified
+    affected_entity_ids:
+    - oci-gb200-cluster
+- id: oci-gb300-supercluster
+  name: GB300 Blackwell Ultra NVL72 OCI Supercluster
+  configuration_status: emerging
+  default_scenario:
+    id: baseline-normal-operation
+    name: Baseline / normal operation
+    description: Normal/baseline operation with no deliberately injected fault or bottleneck.
+  scope_notes: Models the rack-scale NVL72 unit plus OCI scale-out network. The GB300 variant is intentionally less 
+    detailed where OCI-specific physical node details are not yet public.
+  modeling_notes:
+  - Cloud control-plane/API behavior is not part of the physical hierarchy.
+  source_ids:
+  - oci-gb200
+  - oci-network
+  - oci-gb300
+  - nv-gb300-oci-support
+  hierarchy:
+    root:
+      id: oci-gb300-cluster
+      name: OCI GB300 Blackwell Ultra Supercluster
+      entity_type: compute_cluster
+      explore_tier: 1
+      inventory:
+        category: Physical infrastructure hierarchy
+        item: Compute clusters
+        status: existing
+      representation: explicit
+      evidence:
+        status: documented
+        source_ids:
+        - oci-gb300
+        note: OCI offers rack-scale NVL72 systems in large Superclusters.
+      properties: {}
+      children:
+      - id: oci-gb300-rack
+        name: GB300 Blackwell Ultra NVL72 rack
+        entity_type: rack_scale_system
+        product_identity:
+          manufacturer: NVIDIA
+          product_family: NVL72
+          model: GB300 NVL72
+          architecture: Blackwell Ultra
+        explore_tier: 2
+        inventory:
+          category: Physical infrastructure hierarchy
+          item: Racks
+          status: existing
+        representation: explicit
+        evidence:
+          status: documented
+          source_ids:
+          - nv-gb300-oci-support
+          note: Rack contains 72 GPUs.
+        properties:
+          gpus: 72
+        children:
+        - id: oci-gb300-hosts
+          name: Rack compute hosts / trays
+          entity_type: compute_tray
+          explore_tier: 3
+          inventory:
+            category: Physical infrastructure hierarchy
+            item: Compute trays / accelerator trays
+            status: existing
+          representation: aggregate
+          evidence:
+            status: documented
+            source_ids:
+            - nv-gb300-oci-support
+            note: GB200 has 18 hosts; GB300 representation uses NVIDIA rack-level structure without asserting 
+              OCI-specific host details.
+          properties: {}
+          children:
+          - id: oci-gb300-gpus
+            name: GB300 Blackwell Ultra GPUs
+            entity_type: gpu
+            product_identity:
+              manufacturer: NVIDIA
+              model: B300
+              architecture: Blackwell Ultra
+            explore_tier: 4
+            inventory:
+              category: Server-level hardware
+              item: GPUs
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - nv-gb300-oci-support
+              note: Rack-level GPU population documented.
+            properties: {}
+            children: []
+          - id: oci-gb300-rdma-nics
+            name: RDMA NICs
+            entity_type: nic
+            product_identity:
+              manufacturer: NVIDIA
+              product_family: ConnectX
+              model: ConnectX-8
+              variant: SuperNIC
+            explore_tier: 4
+            inventory:
+              category: Server-level hardware
+              item: NICs
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - oci-gb300
+              note: OCI identifies NVIDIA ConnectX-8 SuperNICs for GB300 NVL72; exact deployment-specific node placement and count remain simplified.
+            properties: {}
+            children: []
+      - id: oci-gb300-scaleout
+        name: OCI high-performance cluster network
+        entity_type: network_fabric
+        explore_tier: 2
+        inventory:
+          category: Network organization and fabrics
+          item: Scale-out networks
+          status: existing
+        representation: aggregate
+        evidence:
+          status: documented
+          source_ids:
+          - oci-network
+          note: OCI documents lossless 3-tier Clos RoCEv2 as a major cluster-network option, while NVL72 also supports 
+            InfiniBand.
+        properties:
+          topology: 3-tier Clos (RoCE option)
+          options:
+          - RoCEv2 Ethernet
+          - NVIDIA InfiniBand
+        children: []
+  connections:
+  - id: oci-gb300-nvlink
+    name: Rack NVLink domain
+    relationship_type: physical_connectivity
+    endpoints:
+    - oci-gb300-gpus
+    - oci-gb300-rack
+    directionality: undirected
+    inventory:
+      category: Local server interconnects
+      item: NVLink
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - nv-gb300-oci-support
+      note: NVL72 is a single rack-scale NVLink domain.
+    properties: {}
+  - id: oci-gb300-scaleout-link
+    name: OCI scale-out networking
+    relationship_type: physical_connectivity
+    endpoints:
+    - oci-gb300-rdma-nics
+    - oci-gb300-scaleout
+    directionality: undirected
+    inventory:
+      category: Network organization and fabrics
+      item: Scale-out networks
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - oci-gb200
+      - oci-network
+      note: OCI supports InfiniBand or RoCE RDMA for rack-to-rack scaling.
+    properties: {}
+  functional_groups:
+  - id: oci-gb300-scaleup-domain
+    name: NVL72 scale-up domain
+    category: scale_up_domain
+    member_ids:
+    - oci-gb300-gpus
+    - oci-gb300-rack
+    evidence:
+      status: documented
+      source_ids:
+      - nv-gb300-oci-support
+      note: 72-GPU rack domain.
+  - id: oci-gb300-scaleout-domain
+    name: OCI scale-out domain
+    category: scale_out_domain
+    member_ids:
+    - oci-gb300-rdma-nics
+    - oci-gb300-scaleout
+    evidence:
+      status: documented
+      source_ids:
+      - oci-network
+      note: High-performance cluster network.
+  concept_links:
+  - name: Clos
+    inventory:
+      category: Network topologies
+      item: Clos
+      status: existing
+    entity_ids:
+    - oci-gb300-scaleout
+    note: ''
+  - name: RoCEv2
+    inventory:
+      category: Networking protocols
+      item: RoCEv2
+      status: existing
+    entity_ids:
+    - oci-gb300-scaleout
+    note: ''
+  unknowns:
+  - description: Deployment-specific rack counts, storage topology, and the full GB300 OCI physical node layout are 
+      intentionally not inferred.
+    treatment: simplified
+    affected_entity_ids:
+    - oci-gb300-cluster

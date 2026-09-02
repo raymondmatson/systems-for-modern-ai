@@ -1,0 +1,119 @@
+version: 1
+source_of_truth_version: "0.7"
+rsc_target_schema: "1.3.0"
+concept_library_revision: "1.0.0-v1-implementation"
+systems:
+  nvidia-dgx-h100-superpod:
+    configuration_id: h100-superpod-4su-reference
+    claims:
+      - claim: Baseline server-centered GPU cluster
+        entities: [dgx-h100-node, h100-gpus, h100-cx7]
+      - claim: Clear scale-up versus scale-out boundary
+        entities: [h100-gpus, h100-nvswitch, h100-cx7]
+        connections: [h100-nvlink-domain, h100-scaleout-link]
+        concepts: [scale-up-versus-scale-out]
+      - claim: Rail-optimized InfiniBand fabric
+        entities: [h100-compute-switches, h100-cx7]
+        concepts: [rail-optimized-fabrics]
+    domains:
+      compute_accelerator: {status: modeled, entities: [dgx-h100-node, h100-gpus]}
+      memory: {status: modeled, entities: [h100-gpus]}
+      local_scale_up: {status: modeled, entities: [h100-nvswitch], connections: [h100-nvlink-domain]}
+      scale_out_network: {status: modeled, entities: [h100-cx7, h100-compute-switches], connections: [h100-scaleout-link]}
+      topology: {status: modeled, entities: [h100-compute-switches], concepts: [rail-optimized-fabrics]}
+      storage_data_movement: {status: modeled, entities: [h100-storage], connections: [h100-storage-path]}
+      management_control: {status: modeled, entities: [h100-management]}
+      power_cooling: {status: not_material, note: Generic facility power/cooling is outside this configuration's primary learning claims.}
+  nvidia-dgx-gb300-nvl72-superpod:
+    configuration_id: gb300-nvl72-superpod-reference
+    claims:
+      - claim: Rack-scale scale-up architecture
+        entities: [gb300-nvl72-rack, gb300-gpus, gb300-nvswitch]
+        connections: [gb300-nvlink]
+        concepts: [scale-up-versus-scale-out]
+      - claim: Compute-tray and switch-tray organization
+        entities: [gb300-compute-trays, gb300-switch-trays]
+      - claim: Modern liquid-cooled AI-factory design
+        entities: [gb300-cooling, gb300-nvl72-rack]
+        connections: [gb300-cooling-dependency]
+        concepts: [liquid-cooling]
+    domains:
+      compute_accelerator: {status: modeled, entities: [gb300-compute-trays, gb300-gpus]}
+      memory: {status: modeled, entities: [gb300-gpus]}
+      local_scale_up: {status: modeled, entities: [gb300-nvswitch], connections: [gb300-nvlink]}
+      scale_out_network: {status: modeled, entities: [gb300-cx8, gb300-scaleout-switches], connections: [gb300-scaleout]}
+      topology: {status: modeled, entities: [gb300-nvl72-rack, gb300-switch-trays]}
+      storage_data_movement: {status: modeled, entities: [gb300-cache]}
+      management_control: {status: not_material, note: Dedicated management structure is not required by the approved primary learning claims.}
+      power_cooling: {status: modeled, entities: [gb300-cooling], connections: [gb300-cooling-dependency]}
+  google-tpu7x-ironwood:
+    configuration_id: tpu7x-9216-chip-superpod
+    claims:
+      - claim: Custom accelerator alternative to GPUs
+        entities: [ironwood-tpu]
+      - claim: 3D torus plus optical reconfiguration
+        entities: [ironwood-cube, ironwood-ocs]
+        connections: [ironwood-ici, ironwood-ocs-link]
+        concepts: [torus, dynamically-reconfigurable-connectivity]
+      - claim: Specialized TensorCore/SparseCore internals
+        entities: [ironwood-tensorcores, ironwood-sparsecores]
+    domains:
+      compute_accelerator: {status: modeled, entities: [ironwood-tpu, ironwood-tensorcores, ironwood-sparsecores]}
+      memory: {status: modeled, entities: [ironwood-hbm]}
+      local_scale_up: {status: modeled, connections: [ironwood-ici]}
+      scale_out_network: {status: modeled, entities: [ironwood-ocs, ironwood-dcn], connections: [ironwood-ocs-link]}
+      topology: {status: modeled, entities: [ironwood-cube, ironwood-ocs], concepts: [torus, dynamically-reconfigurable-connectivity]}
+      storage_data_movement: {status: not_material, note: Storage is not required by the approved Ironwood primary learning claims.}
+      management_control: {status: not_material, note: Management structure is not required by the approved Ironwood primary learning claims.}
+      power_cooling: {status: modeled, entities: [ironwood-cooling]}
+  cerebras-cs3-condor-galaxy3:
+    configuration_id: condor-galaxy-3-64-cs3
+    claims:
+      - claim: Wafer-scale compute alternative
+        entities: [cg3-wse3, cg3-ai-cores]
+      - claim: Disaggregated model-weight memory
+        entities: [cg3-memoryx, cg3-cs3]
+        connections: [cg3-weight-stream]
+        concepts: [disaggregation]
+      - claim: Dedicated broadcast/reduction fabric
+        entities: [cg3-swarmx]
+        connections: [cg3-gradient-reduce]
+        concepts: [in-network-aggregation]
+    domains:
+      compute_accelerator: {status: modeled, entities: [cg3-cs3, cg3-wse3, cg3-ai-cores]}
+      memory: {status: modeled, entities: [cg3-sram, cg3-memoryx]}
+      local_scale_up: {status: modeled, entities: [cg3-swarmx], connections: [cg3-gradient-reduce]}
+      scale_out_network: {status: not_material, note: A conventional scale-out fabric is not the principal architectural lesson of this configuration.}
+      topology: {status: modeled, entities: [cg3-swarmx], connections: [cg3-weight-stream, cg3-gradient-reduce]}
+      storage_data_movement: {status: modeled, entities: [cg3-preprocess], connections: [cg3-input-path]}
+      management_control: {status: modeled, entities: [cg3-management]}
+      power_cooling: {status: not_material, note: Facility power/cooling is not required by the approved primary learning claims.}
+  meta-h100-roce-24k:
+    configuration_id: meta-24576-h100-roce
+    claims:
+      - claim: Real production AI training deployment
+        entities: [meta-h100-roce, meta-compute-racks, meta-grand-teton]
+      - claim: RoCE/Ethernet accelerator fabric
+        entities: [meta-grand-teton, meta-roce-switches]
+        connections: [meta-roce-link]
+        concepts: [roce]
+      - claim: Storage and topology-aware operations
+        entities: [meta-storage-racks, meta-yv3, meta-roce-switches]
+        connections: [meta-storage-path]
+        concepts: [topology-aware-placement]
+    domains:
+      compute_accelerator: {status: modeled, entities: [meta-grand-teton, meta-h100-gpus]}
+      memory: {status: modeled, entities: [meta-h100-gpus]}
+      local_scale_up: {status: not_material, note: Intra-node scale-up is not one of this configuration's approved primary learning claims.}
+      scale_out_network: {status: modeled, entities: [meta-roce-switches], connections: [meta-roce-link], concepts: [roce]}
+      topology: {status: modeled, entities: [meta-compute-racks, meta-roce-switches], concepts: [topology-aware-placement]}
+      storage_data_movement: {status: modeled, entities: [meta-storage-racks, meta-yv3, meta-e1s], connections: [meta-storage-path]}
+      management_control: {status: not_material, note: Management structure is not required by the approved primary learning claims.}
+      power_cooling: {status: not_material, note: Facility power/cooling is not required by the approved primary learning claims.}
+release_evidence:
+  documentation_confidence:
+    status: unavailable_in_shared_sources
+    note: The Source of Truth requires Documentation Confidence >= 3, but the current shared-source set does not contain the candidate-comparison ratings artifact needed to reproduce that score.
+  browser_e2e:
+    status: pending_environment
+    note: Chromium is available for the renderer benchmark; installed Firefox/WebKit Playwright browsers and npm dependency resolution are unavailable in this offline container.

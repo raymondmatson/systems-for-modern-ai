@@ -1,0 +1,391 @@
+schema_version: 1.2.0
+reference_system:
+  id: google-tpu8-family
+  name: Google TPU 8t / TPU 8i Family
+  vendor_operator: Google Cloud
+  planning_status: worth_considering_later
+  introduction:
+    date_or_year: 2026
+    lifecycle: new
+  summary: Eighth-generation TPU family deliberately split into training-oriented TPU 8t and inference-oriented TPU 8i 
+    configurations with different topology and on-chip specialization.
+  learning_value:
+  - Demonstrates multiple configurations within one system family
+  - Training-versus-inference hardware specialization
+  - Boardfly topology and collective acceleration
+  source_ids:
+  - gcp-tpu8
+sources:
+- id: gcp-tpu8
+  title: TPU 8t and TPU 8i technical deep dive
+  publisher: Google Cloud
+  url: https://cloud.google.com/blog/products/compute/tpu-8t-and-tpu-8i-technical-deep-dive
+  accessed: '2026-08-19'
+configurations:
+- id: tpu8t-training-superpod
+  name: TPU 8t training superpod
+  configuration_status: emerging
+  default_scenario:
+    id: baseline-normal-operation
+    name: Baseline / normal operation
+    description: Baseline large-scale pre-training state.
+  scope_notes: Training-oriented configuration with 3D-torus ICI and Virgo scale-out.
+  modeling_notes:
+  - Host/rack internal physical packaging is simplified because the source emphasizes chip/network architecture.
+  source_ids:
+  - gcp-tpu8
+  hierarchy:
+    root:
+      id: tpu8t-superpod
+      name: TPU 8t training superpod
+      entity_type: compute_cluster
+      explore_tier: 1
+      inventory:
+        category: Physical infrastructure hierarchy
+        item: Pods / superpods
+        status: existing
+      representation: explicit
+      evidence:
+        status: documented
+        source_ids:
+        - gcp-tpu8
+        note: TPU 8t uses a 3D torus and scales to 9,600 chips in a superpod.
+      properties:
+        chips: 9600
+      children:
+      - id: tpu8t-racks
+        name: TPU 8t racks
+        entity_type: rack_group
+        explore_tier: 2
+        inventory:
+          category: Physical infrastructure hierarchy
+          item: Racks
+          status: existing
+        representation: aggregate
+        evidence:
+          status: simplified
+          source_ids:
+          - gcp-tpu8
+          note: Rack-level connectivity is published but exact rack population is not asserted in this model.
+        properties: {}
+        children:
+        - id: tpu8t-chip
+          name: TPU 8t chips
+          entity_type: tpu
+          product_identity:
+            manufacturer: Google
+            product_family: TPU
+            model: TPU 8t
+            generation: 8th generation
+          explore_tier: 4
+          inventory:
+            category: Server-level hardware
+            item: TPUs
+            status: existing
+          representation: aggregate
+          evidence:
+            status: documented
+            source_ids:
+            - gcp-tpu8
+            note: Training-specialized TPU chips with SparseCore and decoder-engine features.
+          properties:
+            hbm_gb: 216
+          children:
+          - id: tpu8t-sparse
+            name: SparseCore
+            entity_type: sparse_core
+            explore_tier: 5
+            inventory:
+              category: Accelerator internals
+              item: Sparse / embedding accelerator cores
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - gcp-tpu8
+              note: SparseCore is a dedicated embedding/irregular-access accelerator.
+            properties: {}
+            children: []
+      - id: tpu8t-virgo
+        name: Virgo scale-out fabric
+        entity_type: network_fabric
+        explore_tier: 2
+        inventory:
+          category: Network organization and fabrics
+          item: Scale-out networks
+          status: existing
+        representation: aggregate
+        evidence:
+          status: documented
+          source_ids:
+          - gcp-tpu8
+          note: Virgo is a flat two-layer non-blocking multi-planar scale-out network.
+        properties: {}
+        children: []
+  connections:
+  - id: tpu8t-ici
+    name: TPU 8t ICI
+    relationship_type: physical_connectivity
+    endpoints:
+    - tpu8t-chip
+    - tpu8t-racks
+    directionality: undirected
+    inventory:
+      category: Local server interconnects
+      item: TPU Inter-Chip Interconnect (ICI)
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - gcp-tpu8
+      note: 3D torus ICI.
+    properties: {}
+  - id: tpu8t-virgo-link
+    name: Virgo scale-out
+    relationship_type: physical_connectivity
+    endpoints:
+    - tpu8t-racks
+    - tpu8t-virgo
+    directionality: undirected
+    inventory:
+      category: Network organization and fabrics
+      item: Scale-out networks
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - gcp-tpu8
+      note: Virgo connects TPU 8t at large scale.
+    properties: {}
+  functional_groups:
+  - id: tpu8t-scaleup
+    name: TPU 8t ICI domain
+    category: scale_up_domain
+    member_ids:
+    - tpu8t-chip
+    - tpu8t-racks
+    evidence:
+      status: documented
+      source_ids:
+      - gcp-tpu8
+      note: 3D torus.
+  - id: tpu8t-scaleout
+    name: Virgo network
+    category: scale_out_domain
+    member_ids:
+    - tpu8t-racks
+    - tpu8t-virgo
+    evidence:
+      status: documented
+      source_ids:
+      - gcp-tpu8
+      note: Flat two-layer network.
+  concept_links:
+  - name: Torus
+    inventory:
+      category: Network topologies
+      item: Torus
+      status: existing
+    entity_ids:
+    - tpu8t-racks
+    - tpu8t-chip
+    note: ''
+  - name: Sparse activation / embedding offload
+    inventory:
+      category: Computation
+      item: Tensor operations
+      status: existing
+    entity_ids:
+    - tpu8t-sparse
+    note: ''
+  unknowns:
+  - description: Detailed rack/host mechanical hierarchy is simplified in this first architecture file.
+    treatment: simplified
+    affected_entity_ids:
+    - tpu8t-racks
+- id: tpu8i-inference-pod
+  name: TPU 8i Boardfly inference pod
+  configuration_status: emerging
+  default_scenario:
+    id: baseline-normal-operation
+    name: Baseline / normal operation
+    description: Baseline serving/sampling state.
+  scope_notes: Inference-oriented configuration emphasizing Boardfly topology and dedicated collectives acceleration.
+  modeling_notes:
+  - Published sources describe up to 1,152 chips; Boardfly example active-chip counts can vary, so this model avoids 
+    inventing exact group population beyond documented building blocks.
+  source_ids:
+  - gcp-tpu8
+  hierarchy:
+    root:
+      id: tpu8i-pod
+      name: TPU 8i inference pod
+      entity_type: compute_cluster
+      explore_tier: 1
+      inventory:
+        category: Physical infrastructure hierarchy
+        item: Pods / superpods
+        status: existing
+      representation: explicit
+      evidence:
+        status: documented
+        source_ids:
+        - gcp-tpu8
+        note: TPU 8i is an inference-oriented system using Boardfly topology.
+      properties:
+        max_chips: 1152
+      children:
+      - id: tpu8i-board-groups
+        name: Boardfly groups
+        entity_type: topology_group
+        explore_tier: 2
+        inventory:
+          category: Network topologies
+          item: Boardfly topology
+          status: existing
+        representation: aggregate
+        evidence:
+          status: documented
+          source_ids:
+          - gcp-tpu8
+          note: 'Boardfly is hierarchical: four-chip building blocks, groups, and a pod connected partly through OCS.'
+        properties: {}
+        children:
+        - id: tpu8i-trays
+          name: Four-chip Boardfly building-block trays
+          entity_type: compute_tray
+          explore_tier: 3
+          inventory:
+            category: Physical infrastructure hierarchy
+            item: Compute trays / accelerator trays
+            status: existing
+          representation: aggregate
+          evidence:
+            status: documented
+            source_ids:
+            - gcp-tpu8
+            note: Each building-block tray forms a four-chip ring.
+          properties:
+            chips_per_tray: 4
+          children:
+          - id: tpu8i-chip
+            name: TPU 8i chips
+            entity_type: tpu
+            product_identity:
+              manufacturer: Google
+              product_family: TPU
+              model: TPU 8i
+              generation: 8th generation
+            explore_tier: 4
+            inventory:
+              category: Server-level hardware
+              item: TPUs
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - gcp-tpu8
+              note: Inference-oriented TPU 8i chip.
+            properties:
+              hbm_gb: 288
+              vmem_mb: 384
+            children:
+            - id: tpu8i-cae
+              name: Collectives Acceleration Engine (CAE)
+              entity_type: collective_engine
+              explore_tier: 5
+              inventory:
+                category: Accelerator internals
+                item: Dedicated collective communication engines / cores
+                status: existing
+              representation: aggregate
+              evidence:
+                status: documented
+                source_ids:
+                - gcp-tpu8
+                note: Dedicated hardware block accelerates aggregation/synchronization.
+              properties: {}
+              children: []
+      - id: tpu8i-ocs
+        name: Optical circuit switching
+        entity_type: optical_network
+        explore_tier: 3
+        inventory:
+          category: Optical networking
+          item: Optical circuit switches
+          status: existing
+        representation: aggregate
+        evidence:
+          status: documented
+          source_ids:
+          - gcp-tpu8
+          note: OCS links higher-level Boardfly groups.
+        properties: {}
+        children: []
+  connections:
+  - id: tpu8i-boardfly-link
+    name: Boardfly ICI
+    relationship_type: physical_connectivity
+    endpoints:
+    - tpu8i-chip
+    - tpu8i-board-groups
+    - tpu8i-ocs
+    directionality: undirected
+    inventory:
+      category: Local server interconnects
+      item: TPU Inter-Chip Interconnect (ICI)
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - gcp-tpu8
+      note: Hierarchical Boardfly fabric uses copper local links and OCS between groups.
+    properties: {}
+  functional_groups:
+  - id: tpu8i-scaleup
+    name: Boardfly scale-up domain
+    category: scale_up_domain
+    member_ids:
+    - tpu8i-chip
+    - tpu8i-board-groups
+    - tpu8i-ocs
+    evidence:
+      status: documented
+      source_ids:
+      - gcp-tpu8
+      note: Inference-optimized topology.
+  concept_links:
+  - name: Collective offload
+    inventory:
+      category: Collective communication
+      item: Collective offload
+      status: existing
+    entity_ids:
+    - tpu8i-cae
+    note: ''
+  - name: Optical circuit switches
+    inventory:
+      category: Network topologies
+      item: Optical circuit switches
+      status: existing
+    entity_ids:
+    - tpu8i-ocs
+    note: ''
+  - name: Boardfly topology
+    inventory:
+      category: Network topologies
+      item: Boardfly topology
+      status: existing
+    entity_ids:
+    - tpu8i-board-groups
+    - tpu8i-trays
+    - tpu8i-ocs
+    note: Boardfly describes the hierarchical topology; the underlying TPU-to-TPU physical interconnect is ICI.
+  unknowns:
+  - description: Exact deployment-specific active-chip population and mechanical rack mapping can differ from the 
+      topology examples.
+    treatment: simplified
+    affected_entity_ids:
+    - tpu8i-board-groups

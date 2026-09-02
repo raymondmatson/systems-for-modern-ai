@@ -1,0 +1,24 @@
+schema_version: 1.0.0
+configuration_id: h100-superpod-4su-reference
+scenarios:
+- id: baseline-normal-operation
+  name: Baseline / normal operation
+  description: Normal/baseline operation with no deliberately injected fault or bottleneck.
+  default: true
+  scenario_types:
+  - baseline
+  effects: []
+- id: backend-fabric-bottleneck
+  name: Backend fabric bottleneck
+  description: Backend fabric contention limits distributed communication.
+  default: false
+  scenario_types:
+  - performance_bottleneck
+  effects:
+  - target:
+      type: entity
+      id: h100-compute-switches
+    state:
+      health: degraded
+      emphasis: bottleneck
+      note: Backend fabric contention limits distributed communication.
