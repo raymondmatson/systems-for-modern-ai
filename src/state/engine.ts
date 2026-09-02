@@ -1,28 +1,565 @@
-import type {AppState,Configuration,ContextLocator,HistoryDestination,Id,ReferenceSystem,ReturnContext} from '../domain/types';
-export interface DomainIndex {systems:Record<Id,ReferenceSystem>}
-const same=(a:ContextLocator,b:ContextLocator)=>JSON.stringify(a)===JSON.stringify(b);
-const cfg=(i:DomainIndex,s:Id,c:Id)=>i.systems[s]?.configurations[c];
-const root=(s:Id,c:Configuration):ContextLocator=>({kind:'entity',systemId:s,configurationId:c.id,entityId:c.rootEntityId});
-const exists=(c:Configuration,l:ContextLocator)=>l.kind==='entity'?!!c.entities[l.entityId]:l.kind==='connection'?!!c.connections[l.connectionId]:l.kind==='representative_member'?!!c.entities[l.aggregateId]&&l.path.every(id=>!!c.entities[id]):true;
-const path=(c:Configuration,l:ContextLocator)=>{if(l.kind!=='entity')return [];const out:Id[]=[];let cur:import('../domain/types').Entity|undefined=c.entities[l.entityId];while(cur){out.unshift(cur.id);cur=cur.parentId?c.entities[cur.parentId]:undefined;}return out};
-const push=(s:AppState,d:HistoryDestination):AppState=>{const history=s.appHistory.slice(0,s.historyIndex+1);history.push(d);return {...s,appHistory:history,historyIndex:history.length-1}}
-export function activeConfiguration(i:DomainIndex,s:AppState){const c=cfg(i,s.explore.systemId,s.explore.configurationId);if(!c)throw new Error('Active configuration unavailable');return c}
-export function createInitialState(i:DomainIndex,systemId='nvidia-dgx-h100-superpod'):AppState{const sys=i.systems[systemId];if(!sys)throw new Error(`Unknown initial system ${systemId}`);const c=Object.values(sys.configurations)[0];if(!c)throw new Error('Initial system has no configuration');const r=root(systemId,c);return {view:'explore',explore:{systemId,configurationId:c.id,scenarioId:c.defaultScenarioId,structuralLocation:r,structuralHistory:[r],detailVisible:true},concepts:{query:''},appHistory:[{view:'explore',locator:r}],historyIndex:0}}
-export const inspect=(s:AppState,target?:ContextLocator):AppState=>({...s,explore:{...s.explore,preview:target}});
-export const select=(s:AppState,target:ContextLocator):AppState=>({...s,explore:{...s.explore,selection:target,preview:undefined}});
-export const clearSelection=(s:AppState):AppState=>({...s,explore:{...s.explore,selection:undefined}});
-export const toggleDetail=(s:AppState):AppState=>({...s,explore:{...s.explore,detailVisible:!s.explore.detailVisible}});
-export function enter(i:DomainIndex,s:AppState,target:ContextLocator):AppState{if(target.kind!=='entity'&&target.kind!=='representative_member')throw new Error('Enter requires a structural target');const c=cfg(i,target.systemId,target.configurationId);if(!c||!exists(c,target))throw new Error('Enter destination unavailable');const n={...s,view:'explore' as const,explore:{...s.explore,systemId:target.systemId,configurationId:target.configurationId,structuralLocation:target,selection:undefined,preview:undefined,structuralHistory:[...s.explore.structuralHistory,target],traversalOrigin:undefined}};return push(n,{view:'explore',locator:target})}
-export function follow(i:DomainIndex,s:AppState,destination:ContextLocator,origin:ContextLocator){const n=enter(i,s,destination);return {...n,explore:{...n.explore,traversalOrigin:origin}}}
-export function changeScenario(i:DomainIndex,s:AppState,id:Id){const c=activeConfiguration(i,s);if(!c.scenarios[id])throw new Error(`Unknown scenario ${id}`);return {...s,explore:{...s.explore,scenarioId:id}}}
-export function switchConfiguration(i:DomainIndex,s:AppState,systemId:Id,configurationId:Id){const c=cfg(i,systemId,configurationId);if(!c)throw new Error('Destination configuration unavailable');const r=root(systemId,c);return push({...s,view:'explore',explore:{...s.explore,systemId,configurationId,scenarioId:c.defaultScenarioId,structuralLocation:r,selection:undefined,preview:undefined,structuralHistory:[r],traversalOrigin:undefined},returnContext:undefined},{view:'explore',locator:r})}
-export function openConcept(i:DomainIndex,s:AppState,conceptId:Id,origin?:ContextLocator){let rc=s.returnContext;if(origin&&s.view==='explore'){const c=activeConfiguration(i,s);const label=origin.kind==='entity'?(c.entities[origin.entityId]?.name??origin.entityId):origin.kind==='connection'?(c.connections[origin.connectionId]?.name??origin.connectionId):'Explore';rc={kind:'explore_origin',systemId:s.explore.systemId,configurationId:s.explore.configurationId,scenarioId:s.explore.scenarioId,structuralLocation:s.explore.structuralLocation,structuralPath:path(c,s.explore.structuralLocation),selection:s.explore.selection,sourceConceptId:conceptId,label:`Return to ${label}`} satisfies ReturnContext}const l:ContextLocator={kind:'concept',conceptId};return push({...s,view:'concepts',concepts:{...s.concepts,conceptId},explore:{...s.explore,preview:undefined},returnContext:rc},{view:'concepts',locator:l})}
-export function openConceptDirect(s:AppState,conceptId:Id){const l:ContextLocator={kind:'concept',conceptId};return push({...s,view:'concepts',concepts:{...s.concepts,conceptId},explore:{...s.explore,preview:undefined},returnContext:undefined},{view:'concepts',locator:l})}
-export function openExploreDirect(s:AppState){const l=s.explore.structuralLocation;return push({...s,view:'explore',explore:{...s.explore,preview:undefined},returnContext:undefined},{view:'explore',locator:l})}
+import type {
+  AppState,
+  Configuration,
+  ContextLocator,
+  HistoryDestination,
+  Id,
+  Entity,
+  ReferenceSystem,
+  ReturnContext,
+} from '../domain/types';
 
-export function conceptToExploreOccurrence(i:DomainIndex,s:AppState,occ:{systemId:Id;configurationId:Id;target:{type:'entity'|'connection'|'configuration';id:Id}}){if(s.view!=='concepts'||!s.concepts.conceptId)throw new Error('Active concept required');const c=cfg(i,occ.systemId,occ.configurationId);if(!c)throw new Error('Occurrence configuration unavailable');let d=root(occ.systemId,c),selection:ContextLocator|undefined;if(occ.target.type==='entity'){const e=c.entities[occ.target.id];if(!e)throw new Error('Occurrence entity unavailable');if(e.parentId){d={kind:'entity',systemId:occ.systemId,configurationId:occ.configurationId,entityId:e.parentId};selection={kind:'entity',systemId:occ.systemId,configurationId:occ.configurationId,entityId:e.id}}else d={kind:'entity',systemId:occ.systemId,configurationId:occ.configurationId,entityId:e.id}}else if(occ.target.type==='connection'){const con=c.connections[occ.target.id];if(!con)throw new Error('Occurrence connection unavailable');const e=c.entities[con.endpointIds[0]];if(e)d={kind:'entity',systemId:occ.systemId,configurationId:occ.configurationId,entityId:e.parentId??e.id};selection={kind:'connection',systemId:occ.systemId,configurationId:occ.configurationId,connectionId:con.id}}const cross=s.explore.systemId!==occ.systemId||s.explore.configurationId!==occ.configurationId;const n={...s,view:'explore' as const,explore:{...s.explore,systemId:occ.systemId,configurationId:occ.configurationId,scenarioId:cross?c.defaultScenarioId:s.explore.scenarioId,structuralLocation:d,selection,preview:undefined,structuralHistory:[...s.explore.structuralHistory,d],traversalOrigin:undefined},returnContext:{kind:'concept_origin',conceptId:s.concepts.conceptId,label:`Return to ${s.concepts.conceptId}`} as ReturnContext};return push(n,{view:'explore',locator:d})}
-export function returnToOrigin(i:DomainIndex,s:AppState){const rc=s.returnContext;if(!rc)return s;if(rc.kind==='concept_origin')return openConceptDirect({...s,returnContext:undefined},rc.conceptId);const c=cfg(i,rc.systemId,rc.configurationId);if(!c)return s;let d=exists(c,rc.structuralLocation)?rc.structuralLocation:undefined;if(!d){for(const id of [...rc.structuralPath].reverse())if(c.entities[id]){d={kind:'entity',systemId:rc.systemId,configurationId:rc.configurationId,entityId:id};break}}d??=root(rc.systemId,c);const scenario=c.scenarios[rc.scenarioId]?rc.scenarioId:c.defaultScenarioId;const selection=rc.selection&&exists(c,rc.selection)?rc.selection:undefined;return push({...s,view:'explore',explore:{...s.explore,systemId:rc.systemId,configurationId:rc.configurationId,scenarioId:scenario,structuralLocation:d,selection,preview:undefined,structuralHistory:[...s.explore.structuralHistory,d]},returnContext:undefined},{view:'explore',locator:d})}
-function replay(i:DomainIndex,s:AppState,d:HistoryDestination):AppState{if(d.view==='concepts'&&d.locator.kind==='concept')return {...s,view:'concepts',concepts:{...s.concepts,conceptId:d.locator.conceptId},returnContext:undefined};if(d.view==='explore'&&('systemId'in d.locator)){const c=cfg(i,d.locator.systemId,d.locator.configurationId);if(!c)return s;const loc=exists(c,d.locator)?d.locator:root(d.locator.systemId,c);const cross=s.explore.systemId!==d.locator.systemId||s.explore.configurationId!==d.locator.configurationId;return {...s,view:'explore',explore:{...s.explore,systemId:d.locator.systemId,configurationId:d.locator.configurationId,scenarioId:cross?c.defaultScenarioId:s.explore.scenarioId,structuralLocation:loc,selection:undefined,preview:undefined}}}return s}
-export function back(i:DomainIndex,s:AppState){if(s.historyIndex<=0)return s;const n=s.historyIndex-1;return {...replay(i,s,s.appHistory[n]!),historyIndex:n}}
-export function forward(i:DomainIndex,s:AppState){if(s.historyIndex>=s.appHistory.length-1)return s;const n=s.historyIndex+1;return {...replay(i,s,s.appHistory[n]!),historyIndex:n}}
-export const sameLocator=same;
+export interface DomainIndex {
+  systems: Record<Id, ReferenceSystem>;
+}
+
+const same = (a: ContextLocator, b: ContextLocator) =>
+  JSON.stringify(a) === JSON.stringify(b);
+
+const configurationFor = (index: DomainIndex, systemId: Id, configurationId: Id) =>
+  index.systems[systemId]?.configurations[configurationId];
+
+const rootLocator = (systemId: Id, configuration: Configuration): ContextLocator => ({
+  kind: 'entity',
+  systemId,
+  configurationId: configuration.id,
+  entityId: configuration.rootEntityId,
+});
+
+const locatorExists = (configuration: Configuration, locator: ContextLocator) => {
+  if (locator.kind === 'entity') return Boolean(configuration.entities[locator.entityId]);
+  if (locator.kind === 'connection') return Boolean(configuration.connections[locator.connectionId]);
+  if (locator.kind === 'representative_member') {
+    return (
+      Boolean(configuration.entities[locator.aggregateId]) &&
+      locator.path.every((id) => Boolean(configuration.entities[id]))
+    );
+  }
+  return true;
+};
+
+const containmentPath = (configuration: Configuration, locator: ContextLocator) => {
+  if (locator.kind !== 'entity') return [];
+  const output: Id[] = [];
+  let current: Entity | undefined = configuration.entities[locator.entityId];
+  while (current) {
+    output.unshift(current.id);
+    current = current.parentId ? configuration.entities[current.parentId] : undefined;
+  }
+  return output;
+};
+
+function pushDestination(state: AppState, destination: HistoryDestination): AppState {
+  const history = state.appHistory.slice(0, state.historyIndex + 1);
+  history.push(destination);
+  return {...state, appHistory: history, historyIndex: history.length - 1};
+}
+
+function conceptsDestination(state: AppState): HistoryDestination {
+  const locator: ContextLocator = state.concepts.conceptId
+    ? {kind: 'concept', conceptId: state.concepts.conceptId}
+    : {kind: 'concept_library'};
+  return {
+    view: 'concepts',
+    locator,
+    systemId: state.explore.systemId,
+    configurationId: state.explore.configurationId,
+  };
+}
+
+function appendConceptBrowse(state: AppState, conceptId: Id) {
+  const history = state.concepts.browseHistory;
+  return history.at(-1) === conceptId ? history : [...history, conceptId];
+}
+
+export function activeConfiguration(index: DomainIndex, state: AppState) {
+  const configuration = configurationFor(
+    index,
+    state.explore.systemId,
+    state.explore.configurationId,
+  );
+  if (!configuration) throw new Error('Active configuration unavailable');
+  return configuration;
+}
+
+export function createInitialState(
+  index: DomainIndex,
+  systemId = 'nvidia-dgx-h100-superpod',
+): AppState {
+  const system = index.systems[systemId];
+  if (!system) throw new Error(`Unknown initial system ${systemId}`);
+  const configuration = Object.values(system.configurations)[0];
+  if (!configuration) throw new Error('Initial system has no configuration');
+  const root = rootLocator(systemId, configuration);
+  return {
+    view: 'explore',
+    explore: {
+      systemId,
+      configurationId: configuration.id,
+      scenarioId: configuration.defaultScenarioId,
+      structuralLocation: root,
+      structuralHistory: [root],
+      detailVisible: true,
+    },
+    concepts: {query: '', browseHistory: []},
+    appHistory: [{view: 'explore', locator: root}],
+    historyIndex: 0,
+  };
+}
+
+export const inspect = (state: AppState, target?: ContextLocator): AppState => ({
+  ...state,
+  explore: {...state.explore, preview: target},
+});
+
+export const select = (state: AppState, target: ContextLocator): AppState => ({
+  ...state,
+  explore: {...state.explore, selection: target, preview: undefined},
+});
+
+export const clearSelection = (state: AppState): AppState => ({
+  ...state,
+  explore: {...state.explore, selection: undefined},
+});
+
+export const toggleDetail = (state: AppState): AppState => ({
+  ...state,
+  explore: {...state.explore, detailVisible: !state.explore.detailVisible},
+});
+
+export function enter(
+  index: DomainIndex,
+  state: AppState,
+  target: ContextLocator,
+): AppState {
+  if (target.kind !== 'entity' && target.kind !== 'representative_member') {
+    throw new Error('Enter requires a structural target');
+  }
+  const configuration = configurationFor(index, target.systemId, target.configurationId);
+  if (!configuration || !locatorExists(configuration, target)) {
+    throw new Error('Enter destination unavailable');
+  }
+  if (
+    target.systemId === state.explore.systemId &&
+    target.configurationId === state.explore.configurationId &&
+    same(state.explore.structuralLocation, target)
+  ) {
+    return state;
+  }
+
+  const next: AppState = {
+    ...state,
+    view: 'explore',
+    explore: {
+      ...state.explore,
+      systemId: target.systemId,
+      configurationId: target.configurationId,
+      structuralLocation: target,
+      selection: undefined,
+      preview: undefined,
+      structuralHistory: [...state.explore.structuralHistory, target],
+      traversalOrigin: undefined,
+    },
+  };
+  return pushDestination(next, {view: 'explore', locator: target});
+}
+
+export function follow(
+  index: DomainIndex,
+  state: AppState,
+  destination: ContextLocator,
+  origin: ContextLocator,
+): AppState {
+  const next = enter(index, state, destination);
+  if (next === state) return state;
+  return {...next, explore: {...next.explore, traversalOrigin: origin}};
+}
+
+export function changeScenario(index: DomainIndex, state: AppState, id: Id) {
+  const configuration = activeConfiguration(index, state);
+  if (!configuration.scenarios[id]) throw new Error(`Unknown scenario ${id}`);
+  return {...state, explore: {...state.explore, scenarioId: id}};
+}
+
+export function switchConfiguration(
+  index: DomainIndex,
+  state: AppState,
+  systemId: Id,
+  configurationId: Id,
+) {
+  const configuration = configurationFor(index, systemId, configurationId);
+  if (!configuration) throw new Error('Destination configuration unavailable');
+  const root = rootLocator(systemId, configuration);
+  const next: AppState = {
+    ...state,
+    explore: {
+      ...state.explore,
+      systemId,
+      configurationId,
+      scenarioId: configuration.defaultScenarioId,
+      structuralLocation: root,
+      selection: undefined,
+      preview: undefined,
+      structuralHistory: [root],
+      traversalOrigin: undefined,
+    },
+  };
+  return pushDestination(
+    next,
+    next.view === 'explore' ? {view: 'explore', locator: root} : conceptsDestination(next),
+  );
+}
+
+export function setConceptQuery(state: AppState, query: string): AppState {
+  return {...state, concepts: {...state.concepts, query}};
+}
+
+export function openConcept(
+  index: DomainIndex,
+  state: AppState,
+  conceptId: Id,
+  origin?: ContextLocator,
+) {
+  let returnContext = state.returnContext;
+  if (origin && state.view === 'explore') {
+    const configuration = activeConfiguration(index, state);
+    const sourceLabel =
+      origin.kind === 'entity'
+        ? (configuration.entities[origin.entityId]?.name ?? origin.entityId)
+        : origin.kind === 'connection'
+          ? (configuration.connections[origin.connectionId]?.name ?? origin.connectionId)
+          : origin.kind === 'representative_member'
+            ? (configuration.entities[origin.path.at(-1) ?? origin.aggregateId]?.name ??
+              configuration.entities[origin.aggregateId]?.name ??
+              'representative member')
+            : 'Explore';
+    returnContext = {
+      kind: 'explore_origin',
+      systemId: state.explore.systemId,
+      configurationId: state.explore.configurationId,
+      scenarioId: state.explore.scenarioId,
+      structuralLocation: state.explore.structuralLocation,
+      structuralPath: containmentPath(configuration, state.explore.structuralLocation),
+      selection: state.explore.selection,
+      sourceConceptId: conceptId,
+      label: `Return to ${sourceLabel}`,
+    } satisfies ReturnContext;
+  }
+
+  const locator: ContextLocator = {kind: 'concept', conceptId};
+  const next: AppState = {
+    ...state,
+    view: 'concepts',
+    concepts: {
+      ...state.concepts,
+      conceptId,
+      browseHistory: appendConceptBrowse(state, conceptId),
+    },
+    explore: {...state.explore, preview: undefined},
+    returnContext,
+  };
+  return pushDestination(next, {
+    view: 'concepts',
+    locator,
+    systemId: next.explore.systemId,
+    configurationId: next.explore.configurationId,
+  });
+}
+
+export function openConceptDirect(state: AppState, conceptId: Id) {
+  const locator: ContextLocator = {kind: 'concept', conceptId};
+  const next: AppState = {
+    ...state,
+    view: 'concepts',
+    concepts: {
+      ...state.concepts,
+      conceptId,
+      browseHistory: appendConceptBrowse(state, conceptId),
+    },
+    explore: {...state.explore, preview: undefined},
+  };
+  return pushDestination(next, {
+    view: 'concepts',
+    locator,
+    systemId: next.explore.systemId,
+    configurationId: next.explore.configurationId,
+  });
+}
+
+export function openConceptsDirect(state: AppState) {
+  if (state.view === 'concepts') return state;
+  const next: AppState = {
+    ...state,
+    view: 'concepts',
+    explore: {...state.explore, preview: undefined},
+  };
+  return pushDestination(next, conceptsDestination(next));
+}
+
+export function openExploreDirect(state: AppState) {
+  if (state.view === 'explore') return state;
+  const locator = state.explore.structuralLocation;
+  const next: AppState = {
+    ...state,
+    view: 'explore',
+    explore: {...state.explore, preview: undefined},
+  };
+  return pushDestination(next, {view: 'explore', locator});
+}
+
+export function conceptToExploreOccurrence(
+  index: DomainIndex,
+  state: AppState,
+  occurrence: {
+    systemId: Id;
+    configurationId: Id;
+    target: {type: 'entity' | 'connection' | 'configuration'; id: Id};
+  },
+) {
+  if (state.view !== 'concepts' || !state.concepts.conceptId) {
+    throw new Error('Active concept required');
+  }
+  const configuration = configurationFor(index, occurrence.systemId, occurrence.configurationId);
+  if (!configuration) throw new Error('Occurrence configuration unavailable');
+
+  let destination = rootLocator(occurrence.systemId, configuration);
+  let selection: ContextLocator | undefined;
+
+  if (occurrence.target.type === 'entity') {
+    const entity = configuration.entities[occurrence.target.id];
+    if (!entity) throw new Error('Occurrence entity unavailable');
+    if (entity.parentId) {
+      destination = {
+        kind: 'entity',
+        systemId: occurrence.systemId,
+        configurationId: occurrence.configurationId,
+        entityId: entity.parentId,
+      };
+      selection = {
+        kind: 'entity',
+        systemId: occurrence.systemId,
+        configurationId: occurrence.configurationId,
+        entityId: entity.id,
+      };
+    } else {
+      destination = {
+        kind: 'entity',
+        systemId: occurrence.systemId,
+        configurationId: occurrence.configurationId,
+        entityId: entity.id,
+      };
+    }
+  } else if (occurrence.target.type === 'connection') {
+    const connection = configuration.connections[occurrence.target.id];
+    if (!connection) throw new Error('Occurrence connection unavailable');
+    const endpoint = configuration.entities[connection.endpointIds[0] ?? ''];
+    if (endpoint) {
+      destination = {
+        kind: 'entity',
+        systemId: occurrence.systemId,
+        configurationId: occurrence.configurationId,
+        entityId: endpoint.parentId ?? endpoint.id,
+      };
+    }
+    selection = {
+      kind: 'connection',
+      systemId: occurrence.systemId,
+      configurationId: occurrence.configurationId,
+      connectionId: connection.id,
+    };
+  }
+
+  const crossConfiguration =
+    state.explore.systemId !== occurrence.systemId ||
+    state.explore.configurationId !== occurrence.configurationId;
+  const root = rootLocator(occurrence.systemId, configuration);
+  const structuralHistory = crossConfiguration
+    ? same(root, destination)
+      ? [root]
+      : [root, destination]
+    : same(state.explore.structuralLocation, destination)
+      ? state.explore.structuralHistory
+      : [...state.explore.structuralHistory, destination];
+
+  const next: AppState = {
+    ...state,
+    view: 'explore',
+    explore: {
+      ...state.explore,
+      systemId: occurrence.systemId,
+      configurationId: occurrence.configurationId,
+      scenarioId: crossConfiguration
+        ? configuration.defaultScenarioId
+        : state.explore.scenarioId,
+      structuralLocation: destination,
+      selection,
+      preview: undefined,
+      structuralHistory,
+      traversalOrigin: undefined,
+    },
+    returnContext: {
+      kind: 'concept_origin',
+      conceptId: state.concepts.conceptId,
+      label: 'Return to Concept',
+    },
+  };
+  return pushDestination(next, {view: 'explore', locator: destination});
+}
+
+export function returnToOrigin(index: DomainIndex, state: AppState) {
+  const returnContext = state.returnContext;
+  if (!returnContext) return state;
+
+  if (returnContext.kind === 'concept_origin') {
+    const cleared = {...state, returnContext: undefined};
+    return openConceptDirect(cleared, returnContext.conceptId);
+  }
+
+  const configuration = configurationFor(
+    index,
+    returnContext.systemId,
+    returnContext.configurationId,
+  );
+  if (!configuration) return state;
+
+  let destination = locatorExists(configuration, returnContext.structuralLocation)
+    ? returnContext.structuralLocation
+    : undefined;
+  if (!destination) {
+    for (const id of [...returnContext.structuralPath].reverse()) {
+      if (configuration.entities[id]) {
+        destination = {
+          kind: 'entity',
+          systemId: returnContext.systemId,
+          configurationId: returnContext.configurationId,
+          entityId: id,
+        };
+        break;
+      }
+    }
+  }
+  destination ??= rootLocator(returnContext.systemId, configuration);
+  const scenarioId = configuration.scenarios[returnContext.scenarioId]
+    ? returnContext.scenarioId
+    : configuration.defaultScenarioId;
+  const selection =
+    returnContext.selection && locatorExists(configuration, returnContext.selection)
+      ? returnContext.selection
+      : undefined;
+
+  const next: AppState = {
+    ...state,
+    view: 'explore',
+    explore: {
+      ...state.explore,
+      systemId: returnContext.systemId,
+      configurationId: returnContext.configurationId,
+      scenarioId,
+      structuralLocation: destination,
+      selection,
+      preview: undefined,
+      structuralHistory: same(state.explore.structuralLocation, destination)
+        ? state.explore.structuralHistory
+        : [...state.explore.structuralHistory, destination],
+    },
+    returnContext: undefined,
+  };
+  return pushDestination(next, {view: 'explore', locator: destination});
+}
+
+function replay(index: DomainIndex, state: AppState, destination: HistoryDestination): AppState {
+  if (destination.view === 'concepts') {
+    const configuration = configurationFor(
+      index,
+      destination.systemId,
+      destination.configurationId,
+    );
+    if (!configuration) return state;
+    const crossConfiguration =
+      state.explore.systemId !== destination.systemId ||
+      state.explore.configurationId !== destination.configurationId;
+    const root = rootLocator(destination.systemId, configuration);
+    return {
+      ...state,
+      view: 'concepts',
+      concepts: {
+        ...state.concepts,
+        conceptId:
+          destination.locator.kind === 'concept'
+            ? destination.locator.conceptId
+            : undefined,
+      },
+      explore: {
+        ...state.explore,
+        systemId: destination.systemId,
+        configurationId: destination.configurationId,
+        scenarioId: crossConfiguration
+          ? configuration.defaultScenarioId
+          : state.explore.scenarioId,
+        structuralLocation: crossConfiguration
+          ? root
+          : state.explore.structuralLocation,
+        selection: crossConfiguration ? undefined : state.explore.selection,
+        preview: undefined,
+        structuralHistory: crossConfiguration ? [root] : state.explore.structuralHistory,
+      },
+    };
+  }
+
+  if ('systemId' in destination.locator) {
+    const configuration = configurationFor(
+      index,
+      destination.locator.systemId,
+      destination.locator.configurationId,
+    );
+    if (!configuration) return state;
+    const locator = locatorExists(configuration, destination.locator)
+      ? destination.locator
+      : rootLocator(destination.locator.systemId, configuration);
+    const crossConfiguration =
+      state.explore.systemId !== destination.locator.systemId ||
+      state.explore.configurationId !== destination.locator.configurationId;
+    return {
+      ...state,
+      view: 'explore',
+      explore: {
+        ...state.explore,
+        systemId: destination.locator.systemId,
+        configurationId: destination.locator.configurationId,
+        scenarioId: crossConfiguration
+          ? configuration.defaultScenarioId
+          : state.explore.scenarioId,
+        structuralLocation: locator,
+        selection: undefined,
+        preview: undefined,
+        structuralHistory: crossConfiguration
+          ? (() => {
+              const root = rootLocator(destination.locator.systemId, configuration);
+              return same(root, locator) ? [root] : [root, locator];
+            })()
+          : state.explore.structuralHistory,
+      },
+    };
+  }
+
+  return state;
+}
+
+export function goToHistoryIndex(index: DomainIndex, state: AppState, historyIndex: number) {
+  if (historyIndex < 0 || historyIndex >= state.appHistory.length) return state;
+  return {...replay(index, state, state.appHistory[historyIndex]!), historyIndex};
+}
+
+export function back(index: DomainIndex, state: AppState) {
+  return state.historyIndex <= 0
+    ? state
+    : goToHistoryIndex(index, state, state.historyIndex - 1);
+}
+
+export function forward(index: DomainIndex, state: AppState) {
+  return state.historyIndex >= state.appHistory.length - 1
+    ? state
+    : goToHistoryIndex(index, state, state.historyIndex + 1);
+}
+
+export const sameLocator = same;

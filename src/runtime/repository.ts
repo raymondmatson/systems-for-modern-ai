@@ -1,4 +1,6 @@
 import type {
+  CapabilityRegistry,
+  PropertyRegistry,
   ReferenceSystem,
   RuntimeConcept,
   RuntimeManifest,
@@ -21,6 +23,8 @@ export interface BootContent {
   systems: Record<string, ReferenceSystem>;
   concepts: Record<string, RuntimeConcept>;
   occurrences: Record<string, RuntimeOccurrence[]>;
+  capabilities: CapabilityRegistry;
+  propertyRegistry: PropertyRegistry;
 }
 
 async function getJson<T>(url: string): Promise<T> {
@@ -49,13 +53,19 @@ export class BrowserContentRepository {
       ] as const),
     );
 
+    const [occurrences, capabilities, propertyRegistry] = await Promise.all([
+      getJson<Record<string, RuntimeOccurrence[]>>('./runtime/concepts/occurrences.json'),
+      getJson<CapabilityRegistry>('./runtime/capabilities.json'),
+      getJson<PropertyRegistry>('./runtime/property-registry.json'),
+    ]);
+
     return {
       manifest,
       systems: Object.fromEntries(systemEntries),
       concepts: Object.fromEntries(conceptEntries),
-      occurrences: await getJson<Record<string, RuntimeOccurrence[]>>(
-        './runtime/concepts/occurrences.json',
-      ),
+      occurrences,
+      capabilities,
+      propertyRegistry,
     };
   }
 }

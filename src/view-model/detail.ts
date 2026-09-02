@@ -1,10 +1,20 @@
 import type {
   AppState,
+  CapabilityRegistry,
   Configuration,
   ContextLocator,
   Entity,
+  PropertyRegistry,
   PropertyValue,
+  RuntimeConcept,
 } from '../domain/types';
+import {
+  entityTypeLabel,
+  formatMetadataValue,
+  propertyLabel,
+  relationshipTypeLabel,
+  representativeEntityLabel,
+} from './labels';
 
 export type DetailAction = {
   kind: 'enter' | 'follow' | 'concept';
@@ -13,30 +23,63 @@ export type DetailAction = {
   conceptId?: string;
 };
 
+export interface DetailProperty {
+  id: string;
+  label: string;
+  value: string;
+  metadata: string[];
+}
+
+export interface DetailConnection {
+  id: string;
+  name: string;
+  relationshipType: string;
+  endpoints: string[];
+}
+
+export interface DetailConcept {
+  id: string;
+  name: string;
+  role: string;
+}
+
 export interface DetailVM {
   title: string;
   subtitle: string;
   summary: string;
-  properties: Array<[string, string]>;
+  identity: Array<[string, string]>;
+  properties: DetailProperty[];
   scenarioState: Array<[string, string]>;
+  containment: Array<[string, string]>;
+  connections: DetailConnection[];
+  evidence: Array<[string, string]>;
   actions: DetailAction[];
-  concepts: string[];
+  peerActions: DetailAction[];
+  concepts: DetailConcept[];
   isCurrentLocationSummary: boolean;
+  sections: string[];
+}
+
+export interface DetailResources {
+  capabilities: CapabilityRegistry;
+  propertyRegistry: PropertyRegistry;
+  concepts: Record<string, RuntimeConcept>;
 }
 
 function formatProperty(value: PropertyValue): string {
+  const prefix = value.value?.approximate ? '≈ ' : '';
   if (value.value?.form === 'scalar') {
     const magnitude = value.value.number ?? '';
-    return `${magnitude}${value.value.unit ? ` ${value.value.unit}` : ''}`;
+    return `${prefix}${magnitude}${value.value.unit ? ` ${value.value.unit}` : ''}`;
   }
   if (value.value?.form === 'range') {
     const min = value.value.min ?? '';
     const max = value.value.max ?? '';
     const unit = value.value.unit ? ` ${value.value.unit}` : '';
-    return `${min}–${max}${unit}`;
+    return `${prefix}${min}–${max}${unit}`;
   }
   if (value.value?.text) return value.value.text;
-  return value.status ?? '';
+  return formatMetadataValue(value.status ?? 'unavailable');
 }
 
 function entityIdForLocator(locator: ContextLocator): string | undefined {
@@ -55,25 +98,23 @@ function entityForLocator(
   return entityId ? configuration.entities[entityId] : undefined;
 }
 
-function conceptIdsForTarget(
+function conceptOccurrencesForTarget(
   configuration: Configuration,
   target: ContextLocator,
-): string[] {
+) {
   const entityId = entityIdForLocator(target);
-  return configuration.conceptOccurrences
-    .filter((occurrence) => {
-      if (entityId) {
-        return occurrence.target.type === 'entity' && occurrence.target.id === entityId;
-      }
-      if (target.kind === 'connection') {
-        return (
-          occurrence.target.type === 'connection' &&
-          occurrence.target.id === target.connectionId
-        );
-      }
-      return false;
-    })
-    .map((occurrence) => occurrence.conceptId);
+  return configuration.conceptOccurrences.filter((occurrence) => {
+    if (entityId) {
+      return occurrence.target.type === 'entity' && occurrence.target.id === entityId;
+    }
+    if (target.kind === 'connection') {
+      return (
+        occurrence.target.type === 'connection' &&
+        occurrence.target.id === target.connectionId
+      );
+    }
+    return false;
+  });
 }
 
 function scenarioStateForTarget(
@@ -92,16 +133,125 @@ function scenarioStateForTarget(
     (candidate) =>
       candidate.target.type === targetType && candidate.target.id === targetId,
   );
-  if (!effect) return [];
-  return Object.entries(effect.state).map(([key, value]) => [
-    key.replaceAll('_', ' '),
-    typeof value === 'string' ? value : JSON.stringify(value),
-  ]);
+  const rows: Array<[string, string]> = effect
+    ? Object.entries(effect.state).map(([key, value]) => [
+        formatMetadataValue(key),
+        typeof value === 'string' ? formatMetadataValue(value) : JSON.stringify(value),
+      ])
+    : [];
+
+  if (target.kind === 'representative_member' && target.path.length > 1) {
+    const aggregateEffect = scenario.effects.find(
+      (candidate) =>
+        candidate.target.type === 'entity' && candidate.target.id === target.aggregateId,
+    );
+    if (aggregateEffect) {
+      for (const [key, value] of Object.entries(aggregateEffect.state)) {
+        rows.push([
+          `Parent aggregate ${formatMetadataValue(key)}`,
+          typeof value === 'string' ? formatMetadataValue(value) : JSON.stringify(value),
+        ]);
+      }
+      if (!effect) rows.push(['Representative member', 'Individual state not specified']);
+    }
+  }
+  return rows;
+}
+
+function capabilityFor(resources: DetailResources, entity: Entity) {
+  const capability = resources.capabilities.entity_types.find(
+    (candidate) => candidate.entity_type === entity.entityType,
+  );
+  const profile = capability
+    ? resources.capabilities.profiles[capability.profile]
+    : undefined;
+  return {capability, profile};
+}
+
+function isEnterable(
+  entity: Entity,
+  target: ContextLocator,
+  configuration: Configuration,
+  resources: DetailResources,
+): boolean {
+  const {capability} = capabilityFor(resources, entity);
+  if (!capability || capability.enterability !== 'contextual') return false;
+  if (entity.population?.expansionMode === 'representative_member') return true;
+  if (entity.childIds.length > 0) return true;
+  if (entity.representation === 'black_box') return false;
+  const hasArchitecturalRelationships = Object.values(configuration.connections).some(
+    (connection) => connection.endpointIds.includes(entity.id),
+  );
+  return hasArchitecturalRelationships &&
+    (target.kind === 'entity' || target.kind === 'representative_member');
+}
+
+function propertyRows(
+  entityProperties: Record<string, PropertyValue>,
+  resources: DetailResources,
+): DetailProperty[] {
+  return Object.entries(entityProperties).map(([id, value]) => {
+    const metadata = [
+      value.scope ? `Scope: ${formatMetadataValue(value.scope)}` : undefined,
+      value.basis ? `Basis: ${formatMetadataValue(value.basis)}` : undefined,
+      value.directionalBasis
+        ? `Direction: ${formatMetadataValue(value.directionalBasis)}`
+        : undefined,
+      value.evidence?.status
+        ? `Evidence: ${formatMetadataValue(value.evidence.status)}`
+        : undefined,
+      value.derivation ? `Derivation: ${value.derivation}` : undefined,
+    ].filter((item): item is string => Boolean(item));
+    return {
+      id,
+      label: propertyLabel(id, resources.propertyRegistry.properties[id]),
+      value: formatProperty(value),
+      metadata,
+    };
+  });
+}
+
+function peerActions(state: AppState, configuration: Configuration): DetailAction[] {
+  const locator = state.explore.structuralLocation;
+  const entityId = entityIdForLocator(locator);
+  if (!entityId) return [];
+  const entity = configuration.entities[entityId];
+  if (!entity?.parentId) return [];
+  const parent = configuration.entities[entity.parentId];
+  if (!parent) return [];
+  const index = parent.childIds.indexOf(entity.id);
+  if (index < 0) return [];
+
+  const candidates = [
+    {label: 'Previous peer', id: parent.childIds[index - 1]},
+    {label: 'Next peer', id: parent.childIds[index + 1]},
+  ].filter((candidate): candidate is {label: string; id: string} => Boolean(candidate.id));
+
+  return candidates.map((candidate) => {
+    const target: ContextLocator =
+      locator.kind === 'representative_member'
+        ? {
+            ...locator,
+            path: [...locator.path.slice(0, -1), candidate.id],
+          }
+        : {
+            kind: 'entity',
+            systemId: state.explore.systemId,
+            configurationId: configuration.id,
+            entityId: candidate.id,
+          };
+    return {
+      kind: 'enter',
+      label: `${candidate.label}: ${configuration.entities[candidate.id]?.name ?? candidate.id}`,
+      target,
+    };
+  });
 }
 
 export function buildDetailVM(
   state: AppState,
   configuration: Configuration,
+  resources: DetailResources,
 ): DetailVM {
   const selected = state.explore.selection;
   const target = selected ?? state.explore.structuralLocation;
@@ -109,54 +259,128 @@ export function buildDetailVM(
   let title = 'Current location';
   let subtitle = '';
   let summary = '';
-  let properties: Array<[string, string]> = [];
+  let identity: Array<[string, string]> = [];
+  let properties: DetailProperty[] = [];
+  let containment: Array<[string, string]> = [];
+  let connections: DetailConnection[] = [];
+  let evidence: Array<[string, string]> = [];
   const actions: DetailAction[] = [];
+  let sections = ['overview', 'properties', 'scenario', 'containment', 'connections', 'concepts', 'evidence', 'actions'];
 
   if (target.kind === 'entity' || target.kind === 'representative_member') {
     const entity = entityForLocator(configuration, target);
     if (entity) {
       const representative = target.kind === 'representative_member';
-      title = representative ? `Representative ${entity.name}` : entity.name;
-      subtitle = entity.entityType.replaceAll('_', ' ');
+      const resolvedCapability = capabilityFor(resources, entity);
+      sections = [...(resolvedCapability.profile?.detail_sections ?? sections)];
+      if ((entity.childIds.length > 0 || entity.population) && !sections.includes('containment')) sections.push('containment');
+      title = representative ? representativeEntityLabel(entity) : entity.name;
+      subtitle = entityTypeLabel(entity.entityType);
       summary = representative
-        ? 'Educational exemplar of the modeled repeated population; it is not a numbered physical instance.'
+        ? 'Educational exemplar of a modeled repeated population; this context is not a numbered physical instance.'
         : entity.representation === 'black_box'
           ? 'Known architectural boundary; deeper internals are intentionally not modeled.'
-          : `Tier ${entity.exploreTier} ${entity.representation} entity.`;
-      if (isCurrentLocationSummary) {
-        summary = `Current location. ${summary}`;
+          : `Tier ${entity.exploreTier} ${formatMetadataValue(entity.representation)} architectural entity.`;
+      if (isCurrentLocationSummary) summary = `Current location. ${summary}`;
+
+      identity = [
+        ['Representation', formatMetadataValue(entity.representation)],
+        ['Home tier', `Tier ${entity.exploreTier}`],
+        ['Inventory classification', `${entity.inventory.category} — ${entity.inventory.item}`],
+      ];
+      if (representative) identity.push(['Identity', 'Representative / noncanonical exemplar']);
+      for (const [key, value] of Object.entries(entity.productIdentity ?? {})) {
+        identity.push([formatMetadataValue(key), value]);
       }
 
-      properties = Object.entries(entity.properties).map(([key, value]) => [
-        key.replaceAll('_', ' '),
-        formatProperty(value),
-      ]);
+      properties = propertyRows(entity.properties, resources);
 
-      if (selected) {
-        const hasChildren = entity.childIds.length > 0;
-        const representativePopulation =
-          entity.population?.expansionMode === 'representative_member';
-        if (hasChildren || representativePopulation) {
-          actions.push({
-            kind: 'enter',
-            label: representativePopulation
+      const parent = entity.parentId ? configuration.entities[entity.parentId] : undefined;
+      if (parent) containment.push(['Contained by', parent.name]);
+      if (entity.childIds.length > 0) {
+        containment.push([
+          'Constituents',
+          entity.childIds
+            .map((id) => configuration.entities[id]?.name ?? id)
+            .join(', '),
+        ]);
+      }
+      if (entity.population) {
+        const count =
+          entity.population.count.form === 'unknown'
+            ? 'Unknown'
+            : (entity.population.count.value ?? entity.population.count.form);
+        containment.push(['Population', count]);
+        containment.push(['Count basis', formatMetadataValue(entity.population.count.basis)]);
+        containment.push(['Expansion mode', formatMetadataValue(entity.population.expansionMode)]);
+        containment.push([
+          'Member identity',
+          entity.population.individuallyAddressable
+            ? 'Individually addressable'
+            : 'Not individually addressable',
+        ]);
+      }
+
+      connections = Object.values(configuration.connections)
+        .filter((connection) => connection.endpointIds.includes(entity.id))
+        .map((connection) => ({
+          id: connection.id,
+          name: connection.name,
+          relationshipType: relationshipTypeLabel(connection.relationshipType),
+          endpoints: connection.endpointIds.map(
+            (id) => configuration.entities[id]?.name ?? id,
+          ),
+        }));
+
+      evidence = [
+        ['Evidence', formatMetadataValue(entity.evidence.status)],
+        ...(entity.evidence.sourceIds.length > 0
+          ? [['Source references', entity.evidence.sourceIds.join(', ')] as [string, string]]
+          : []),
+        ...(entity.evidence.note
+          ? [['Evidence note', entity.evidence.note] as [string, string]]
+          : []),
+      ];
+
+      if (selected && isEnterable(entity, target, configuration, resources)) {
+        actions.push({
+          kind: 'enter',
+          label:
+            entity.population?.expansionMode === 'representative_member'
               ? 'Explore representative member'
               : 'Enter',
-            target,
-          });
-        }
+          target,
+        });
       }
     }
   } else if (target.kind === 'connection') {
     const connection = configuration.connections[target.connectionId];
     if (connection) {
       title = connection.name;
-      subtitle = connection.relationshipType.replaceAll('_', ' ');
-      summary = `Connects ${connection.endpointIds.join(' ↔ ')}.`;
-      properties = Object.entries(connection.properties).map(([key, value]) => [
-        key.replaceAll('_', ' '),
-        formatProperty(value),
-      ]);
+      subtitle = relationshipTypeLabel(connection.relationshipType);
+      const endpointNames = connection.endpointIds.map(
+        (id) => configuration.entities[id]?.name ?? id,
+      );
+      summary = `Connects ${endpointNames.join(' ↔ ')}.`;
+      identity = [
+        ['Relationship', relationshipTypeLabel(connection.relationshipType)],
+        ['Directionality', formatMetadataValue(connection.directionality)],
+      ];
+      properties = propertyRows(connection.properties, resources);
+      connections = [
+        {
+          id: connection.id,
+          name: connection.name,
+          relationshipType: relationshipTypeLabel(connection.relationshipType),
+          endpoints: endpointNames,
+        },
+      ];
+      evidence = [
+        ['Evidence', formatMetadataValue(connection.evidence.status)],
+        ...(connection.evidence.sourceIds.length > 0
+          ? [['Source references', connection.evidence.sourceIds.join(', ')] as [string, string]]
+          : []),
+      ];
 
       for (const entityId of connection.endpointIds) {
         actions.push({
@@ -173,19 +397,30 @@ export function buildDetailVM(
     }
   }
 
-  const concepts = conceptIdsForTarget(configuration, target);
-  for (const conceptId of concepts) {
-    actions.push({kind: 'concept', label: `Open ${conceptId}`, conceptId});
+  const conceptOccurrences = conceptOccurrencesForTarget(configuration, target);
+  const concepts: DetailConcept[] = conceptOccurrences.map((occurrence) => ({
+    id: occurrence.conceptId,
+    name: resources.concepts[occurrence.conceptId]?.name ?? occurrence.conceptId,
+    role: formatMetadataValue(occurrence.role),
+  }));
+  for (const concept of concepts) {
+    actions.push({kind: 'concept', label: `Open ${concept.name}`, conceptId: concept.id});
   }
 
   return {
     title,
     subtitle,
     summary,
+    identity,
     properties,
     scenarioState: scenarioStateForTarget(state, configuration, target),
+    containment,
+    connections,
+    evidence,
     actions,
+    peerActions: peerActions(state, configuration),
     concepts,
     isCurrentLocationSummary,
+    sections,
   };
 }

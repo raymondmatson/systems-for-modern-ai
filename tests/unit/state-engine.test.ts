@@ -8,9 +8,12 @@ import {
   enter,
   forward,
   openConcept,
+  openConceptDirect,
+  openConceptsDirect,
   openExploreDirect,
   returnToOrigin,
   select,
+  setConceptQuery,
   switchConfiguration,
   type DomainIndex,
 } from '../../src/state/engine';
@@ -44,7 +47,7 @@ function system(id: string, configurationId: string): ReferenceSystem {
               item: 'Compute clusters',
             },
             properties: {},
-            childIds: ['node-bank'],
+            childIds: ['node-bank', 'peer-bank'],
           },
           'node-bank': {
             id: 'node-bank',
@@ -66,6 +69,21 @@ function system(id: string, configurationId: string): ReferenceSystem {
               individuallyAddressable: false,
               memberEntityType: 'compute_node',
             },
+          },
+          'peer-bank': {
+            id: 'peer-bank',
+            name: 'Peer nodes',
+            entityType: 'compute_node',
+            exploreTier: 3,
+            representation: 'aggregate',
+            evidence: {status: 'documented', sourceIds: []},
+            inventory: {
+              category: 'Physical infrastructure hierarchy',
+              item: 'Servers / compute nodes',
+            },
+            properties: {},
+            childIds: [],
+            parentId: 'root',
           },
           'gpu-template': {
             id: 'gpu-template',
@@ -135,9 +153,17 @@ describe('semantic state engine', () => {
     expect(state.appHistory).toHaveLength(2);
   });
 
-  it('does not add scenario or selection changes to history', () => {
+  it('treats Enter of the current structural location as a no-op', () => {
+    const state = createInitialState(index, 'a');
+    const next = enter(index, state, state.explore.structuralLocation);
+    expect(next).toBe(state);
+    expect(next.appHistory).toHaveLength(1);
+  });
+
+  it('does not add scenario, query, or selection changes to history', () => {
     let state = createInitialState(index, 'a');
     state = changeScenario(index, state, 'degraded');
+    state = setConceptQuery(state, 'latency');
     state = select(state, {
       kind: 'entity',
       systemId: 'a',
@@ -147,19 +173,24 @@ describe('semantic state engine', () => {
     state = clearSelection(state);
     expect(state.appHistory).toHaveLength(1);
     expect(state.explore.scenarioId).toBe('degraded');
+    expect(state.concepts.query).toBe('latency');
   });
 
-  it('switches configuration to destination default and root', () => {
+  it('switches configuration to destination default and root while preserving active view', () => {
     let state = createInitialState(index, 'a');
+    state = openConceptsDirect(state);
+    state = openConceptDirect(state, 'latency');
     state = changeScenario(index, state, 'degraded');
     state = switchConfiguration(index, state, 'b', 'b-cfg');
+    expect(state.view).toBe('concepts');
+    expect(state.concepts.conceptId).toBe('latency');
     expect(state.explore.systemId).toBe('b');
     expect(state.explore.scenarioId).toBe('baseline');
     expect(state.explore.selection).toBeUndefined();
     expect(state.explore.structuralHistory).toHaveLength(1);
   });
 
-  it('preserves semantic Return for Explore to Concept and back', () => {
+  it('preserves semantic Return for Explore to Concept and through subsequent Concept browsing', () => {
     let state = createInitialState(index, 'a');
     const target = {
       kind: 'entity',
@@ -171,9 +202,32 @@ describe('semantic state engine', () => {
     state = openConcept(index, state, 'latency', target);
     expect(state.view).toBe('concepts');
     expect(state.returnContext?.kind).toBe('explore_origin');
+    state = openConceptDirect(state, 'rdma');
+    expect(state.returnContext?.kind).toBe('explore_origin');
+    expect(state.concepts.browseHistory).toEqual(['latency', 'rdma']);
     state = returnToOrigin(index, state);
     expect(state.view).toBe('explore');
     expect(state.explore.selection).toEqual(target);
+  });
+
+  it('keeps Direct View Change distinct from explicit Return', () => {
+    let state = createInitialState(index, 'a');
+    const target = {
+      kind: 'entity',
+      systemId: 'a',
+      configurationId: 'a-cfg',
+      entityId: 'node-bank',
+    } as const;
+    state = select(state, target);
+    state = openConcept(index, state, 'latency', target);
+    const returnContext = state.returnContext;
+    state = openExploreDirect(state);
+    expect(state.view).toBe('explore');
+    expect(state.returnContext).toEqual(returnContext);
+    state = openConceptsDirect(state);
+    expect(state.view).toBe('concepts');
+    expect(state.concepts.conceptId).toBe('latency');
+    expect(state.returnContext).toEqual(returnContext);
   });
 
   it('supports application Back and Forward independent of structural path', () => {
@@ -209,11 +263,26 @@ describe('semantic state engine', () => {
 
   it('direct view switching records application history without creating Return', () => {
     let state = createInitialState(index, 'a');
-    state = openConcept(index, state, 'latency');
+    state = openConceptsDirect(state);
     expect(state.returnContext).toBeUndefined();
+    expect(state.concepts.conceptId).toBeUndefined();
+    state = openConceptDirect(state, 'latency');
     state = openExploreDirect(state);
     expect(state.view).toBe('explore');
     expect(state.returnContext).toBeUndefined();
     expect(state.appHistory.at(-1)?.view).toBe('explore');
+  });
+
+  it('clears the Forward branch when new navigation follows Back', () => {
+    let state = createInitialState(index, 'a');
+    state = openConceptsDirect(state);
+    state = openConceptDirect(state, 'latency');
+    const oldLength = state.appHistory.length;
+    state = back(index, state);
+    state = openConceptDirect(state, 'rdma');
+    expect(state.appHistory).toHaveLength(oldLength);
+    expect(state.appHistory.at(-1)?.view).toBe('concepts');
+    expect(state.appHistory.at(-1)?.locator).toEqual({kind: 'concept', conceptId: 'rdma'});
+    expect(forward(index, state)).toBe(state);
   });
 });
