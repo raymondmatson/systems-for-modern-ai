@@ -7,8 +7,8 @@ reference_system:
   introduction:
     date_or_year: 2026
     lifecycle: emerging
-  summary: Next-generation rack-scale NVIDIA architecture with 72 Rubin GPUs, 36 Vera CPUs, NVLink 6 scale-up, and 
-    multiple high-speed scale-out options.
+  summary: Next-generation rack-scale NVIDIA architecture with 72 Rubin GPUs, 36 Vera CPUs, NVLink 6 scale-up, and multiple
+    high-speed scale-out options.
   learning_value:
   - Evolution beyond Blackwell NVL72
   - Next-generation NIC/DPU integration
@@ -35,11 +35,11 @@ configurations:
     id: baseline-normal-operation
     name: Baseline / normal operation
     description: Normal/baseline operation with no deliberately injected fault or bottleneck.
-  scope_notes: Represents the documented NVL72 rack as the primary physical building block; broader Rubin POD 
-    specialized rack types are not expanded in this initial file.
+  scope_notes: Represents the documented NVL72 rack as the primary physical building block; broader Rubin POD specialized
+    rack types are not expanded in this initial file.
   modeling_notes:
-  - The full Rubin POD contains additional rack-scale systems; those are intentionally outside this initial 
-    configuration rather than invented.
+  - The full Rubin POD contains additional rack-scale systems; those are intentionally outside this initial configuration
+    rather than invented.
   source_ids:
   - nv-rubin
   - nv-rubin-pod
@@ -163,7 +163,8 @@ configurations:
               - nv-rubin
               - nv-rubin-pod
               note: ConnectX-9 SuperNICs are integrated into compute trays.
-            properties: {}
+            properties:
+              role: scale-out SuperNIC
             children: []
           - id: rubin-bf4
             name: BlueField-4 DPUs
@@ -184,7 +185,8 @@ configurations:
               - nv-rubin
               - nv-rubin-pod
               note: BlueField-4 DPUs are integrated in the rack platform.
-            properties: {}
+            properties:
+              role: storage/context-memory/infrastructure DPU
             children: []
         - id: rubin-switch-trays
           name: NVLink 6 switch trays
@@ -206,6 +208,7 @@ configurations:
             note: Nine NVLink switch trays per rack.
           properties:
             quantity_per_rack: 9
+            fabric_generation: NVLink 6
           children: []
       - id: rubin-scaleout
         name: Quantum-X800 / Spectrum-X scale-out fabric
@@ -225,6 +228,39 @@ configurations:
           options:
           - Quantum-X800 InfiniBand
           - Spectrum-X Ethernet
+        children: []
+      - id: rubin-stx-cmx
+        name: BlueField-4 STX / CMX context-memory storage rack boundary
+        entity_type: storage_system
+        explore_tier: 2
+        inventory:
+          category: Storage
+          item: Storage tiers
+          status: existing
+        representation: aggregate
+        evidence:
+          status: documented
+          source_ids:
+          - nv-rubin-pod
+          note: NVIDIA Rubin POD materials show BlueField-4 STX/CMX storage/context-memory support racks; partner media internals
+            are not asserted.
+        properties: {}
+        children: []
+      - id: rubin-spx
+        name: Spectrum-6 SPX networking rack
+        entity_type: network_fabric
+        explore_tier: 2
+        inventory:
+          category: Network organization and fabrics
+          item: Scale-out networks
+          status: existing
+        representation: aggregate
+        evidence:
+          status: documented
+          source_ids:
+          - nv-rubin-pod
+          note: Rubin POD materials show SPX networking racks supporting Spectrum-X Ethernet or Quantum-X800 InfiniBand variants.
+        properties: {}
         children: []
   connections:
   - id: rubin-nvlink6
@@ -261,6 +297,40 @@ configurations:
       - nv-rubin
       note: ConnectX-9 participates in scale-out networking.
     properties: {}
+  - id: rubin-storage-context-path
+    relationship_type: data_communication_path
+    directionality: bidirectional
+    endpoints:
+    - rubin-bf4
+    - rubin-stx-cmx
+    inventory:
+      category: Data movement as a unifying theme
+      item: Bandwidth
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - nv-rubin-pod
+      note: NVL72 infrastructure DPU to STX/CMX context-memory storage boundary
+    properties: {}
+    name: NVL72 infrastructure DPU to STX/CMX context-memory storage boundary
+  - id: rubin-spx-scaleout
+    relationship_type: physical_connectivity
+    directionality: bidirectional
+    endpoints:
+    - rubin-cx9
+    - rubin-spx
+    inventory:
+      category: Physical infrastructure hierarchy
+      item: Network switches
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - nv-rubin-pod
+      note: ConnectX-9 to SPX scale-out networking rack
+    properties: {}
+    name: ConnectX-9 to SPX scale-out networking rack
   functional_groups:
   - id: rubin-scaleup-domain
     name: 72-GPU NVLink 6 domain
@@ -303,8 +373,7 @@ configurations:
     - rubin-nvl72
     note: ''
   unknowns:
-  - description: Additional specialized rack-scale systems in the wider Rubin POD are omitted from this first 
-      configuration.
+  - description: Additional specialized rack-scale systems in the wider Rubin POD are omitted from this first configuration.
     treatment: omitted
     affected_entity_ids:
     - rubin-system

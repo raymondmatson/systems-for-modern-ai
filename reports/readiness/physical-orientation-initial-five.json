@@ -1,0 +1,199 @@
+{
+  "contexts": [
+    {
+      "anatomy_count": 4,
+      "black_box": false,
+      "child_count": 9,
+      "configuration": "h100-superpod-4su-reference",
+      "direct_connection_count": 0,
+      "entity": "dgx-h100-node",
+      "system": "nvidia-dgx-h100-superpod"
+    },
+    {
+      "anatomy_count": 0,
+      "black_box": false,
+      "child_count": 1,
+      "configuration": "h100-superpod-4su-reference",
+      "direct_connection_count": 0,
+      "entity": "h100-su",
+      "system": "nvidia-dgx-h100-superpod"
+    },
+    {
+      "anatomy_count": 0,
+      "black_box": false,
+      "child_count": 7,
+      "configuration": "h100-superpod-4su-reference",
+      "direct_connection_count": 0,
+      "entity": "h100-superpod",
+      "system": "nvidia-dgx-h100-superpod"
+    },
+    {
+      "anatomy_count": 2,
+      "black_box": false,
+      "child_count": 7,
+      "configuration": "gb300-nvl72-superpod-reference",
+      "direct_connection_count": 0,
+      "entity": "gb300-compute-trays",
+      "system": "nvidia-dgx-gb300-nvl72-superpod"
+    },
+    {
+      "anatomy_count": 1,
+      "black_box": false,
+      "child_count": 2,
+      "configuration": "gb300-nvl72-superpod-reference",
+      "direct_connection_count": 3,
+      "entity": "gb300-nvl72-rack",
+      "system": "nvidia-dgx-gb300-nvl72-superpod"
+    },
+    {
+      "anatomy_count": 0,
+      "black_box": false,
+      "child_count": 7,
+      "configuration": "gb300-nvl72-superpod-reference",
+      "direct_connection_count": 0,
+      "entity": "gb300-superpod",
+      "system": "nvidia-dgx-gb300-nvl72-superpod"
+    },
+    {
+      "anatomy_count": 0,
+      "black_box": false,
+      "child_count": 1,
+      "configuration": "gb300-nvl72-superpod-reference",
+      "direct_connection_count": 0,
+      "entity": "gb300-switch-trays",
+      "system": "nvidia-dgx-gb300-nvl72-superpod"
+    },
+    {
+      "anatomy_count": 1,
+      "black_box": false,
+      "child_count": 4,
+      "configuration": "tpu7x-9216-chip-superpod",
+      "direct_connection_count": 0,
+      "entity": "ironwood-chiplets",
+      "system": "google-tpu7x-ironwood"
+    },
+    {
+      "anatomy_count": 0,
+      "black_box": false,
+      "child_count": 1,
+      "configuration": "tpu7x-9216-chip-superpod",
+      "direct_connection_count": 4,
+      "entity": "ironwood-cube",
+      "system": "google-tpu7x-ironwood"
+    },
+    {
+      "anatomy_count": 0,
+      "black_box": false,
+      "child_count": 3,
+      "configuration": "tpu7x-9216-chip-superpod",
+      "direct_connection_count": 0,
+      "entity": "ironwood-host",
+      "system": "google-tpu7x-ironwood"
+    },
+    {
+      "anatomy_count": 0,
+      "black_box": false,
+      "child_count": 4,
+      "configuration": "tpu7x-9216-chip-superpod",
+      "direct_connection_count": 0,
+      "entity": "ironwood-superpod",
+      "system": "google-tpu7x-ironwood"
+    },
+    {
+      "anatomy_count": 0,
+      "black_box": false,
+      "child_count": 1,
+      "configuration": "tpu7x-9216-chip-superpod",
+      "direct_connection_count": 2,
+      "entity": "ironwood-tpu",
+      "system": "google-tpu7x-ironwood"
+    },
+    {
+      "anatomy_count": 0,
+      "black_box": false,
+      "child_count": 5,
+      "configuration": "condor-galaxy-3-64-cs3",
+      "direct_connection_count": 0,
+      "entity": "cg3",
+      "system": "cerebras-cs3-condor-galaxy3"
+    },
+    {
+      "anatomy_count": 1,
+      "black_box": false,
+      "child_count": 1,
+      "configuration": "condor-galaxy-3-64-cs3",
+      "direct_connection_count": 4,
+      "entity": "cg3-cs3",
+      "system": "cerebras-cs3-condor-galaxy3"
+    },
+    {
+      "anatomy_count": 0,
+      "black_box": false,
+      "child_count": 3,
+      "configuration": "condor-galaxy-3-64-cs3",
+      "direct_connection_count": 0,
+      "entity": "cg3-wse3",
+      "system": "cerebras-cs3-condor-galaxy3"
+    },
+    {
+      "anatomy_count": 0,
+      "black_box": false,
+      "child_count": 1,
+      "configuration": "meta-24576-h100-roce",
+      "direct_connection_count": 0,
+      "entity": "meta-compute-racks",
+      "system": "meta-h100-roce-24k"
+    },
+    {
+      "anatomy_count": 3,
+      "black_box": true,
+      "child_count": 1,
+      "configuration": "meta-24576-h100-roce",
+      "direct_connection_count": 4,
+      "entity": "meta-grand-teton",
+      "system": "meta-h100-roce-24k"
+    },
+    {
+      "anatomy_count": 0,
+      "black_box": false,
+      "child_count": 3,
+      "configuration": "meta-24576-h100-roce",
+      "direct_connection_count": 0,
+      "entity": "meta-h100-roce",
+      "system": "meta-h100-roce-24k"
+    },
+    {
+      "anatomy_count": 0,
+      "black_box": false,
+      "child_count": 3,
+      "configuration": "meta-24576-h100-roce",
+      "direct_connection_count": 1,
+      "entity": "meta-roce-switches",
+      "system": "meta-h100-roce-24k"
+    },
+    {
+      "anatomy_count": 0,
+      "black_box": false,
+      "child_count": 1,
+      "configuration": "meta-24576-h100-roce",
+      "direct_connection_count": 0,
+      "entity": "meta-storage-racks",
+      "system": "meta-h100-roce-24k"
+    },
+    {
+      "anatomy_count": 0,
+      "black_box": false,
+      "child_count": 1,
+      "configuration": "meta-24576-h100-roce",
+      "direct_connection_count": 1,
+      "entity": "meta-yv3",
+      "system": "meta-h100-roce-24k"
+    }
+  ],
+  "criterion": "DEP-033 / RDY-018",
+  "entered_contexts_checked": 21,
+  "mechanical_errors": [],
+  "note": "PASS requires both mechanically non-empty entered contexts and explicit per-system qualitative orientation review. It is not a minimum-object-count claim.",
+  "qualitative_review_source": "readiness/initial-five.yaml",
+  "result": "PASS"
+}

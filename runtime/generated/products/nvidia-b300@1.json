@@ -1,0 +1,1 @@
+{"entityType":"gpu","id":"nvidia-b300","identity":{"architecture":"Blackwell Ultra","manufacturer":"NVIDIA","model":"B300"},"name":"NVIDIA B300","properties":{},"recordLevel":"model","revision":1,"sourceIds":["official"],"summary":"NVIDIA B300 Blackwell Ultra GPU."}

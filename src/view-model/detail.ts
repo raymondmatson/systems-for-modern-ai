@@ -314,13 +314,15 @@ export function buildDetailVM(
             ? `Current location. ${explanatorySummary}`
             : explanatorySummary;
 
+      const resolvedIdentity = entity.resolvedProduct?.identity ?? entity.productIdentity;
       identity = [
         ['Representation', formatMetadataValue(entity.representation)],
         ['Home tier', `Tier ${entity.exploreTier}`],
         ['Inventory classification', `${entity.inventory.category} — ${entity.inventory.item}`],
+        ...(entity.resolvedProduct ? [['Product', `${entity.resolvedProduct.name} (catalog rev ${entity.resolvedProduct.revision})`] as [string,string]] : []),
       ];
       if (representative) identity.push(['Identity', 'Representative / noncanonical exemplar']);
-      for (const [key, value] of Object.entries(entity.productIdentity ?? {})) {
+      for (const [key, value] of Object.entries(resolvedIdentity ?? {})) {
         identity.push([formatMetadataValue(key), value]);
       }
 
@@ -349,6 +351,14 @@ export function buildDetailVM(
           entity.population.individuallyAddressable
             ? 'Individually addressable'
             : 'Not individually addressable',
+        ]);
+      }
+      if (entity.anatomyDepictions?.length) {
+        containment.push([
+          'Visible anatomy',
+          entity.anatomyDepictions
+            .map((item) => `${item.label}${item.placementBasis === 'schematic' ? ' (schematic)' : ''}`)
+            .join('; '),
         ]);
       }
 
@@ -381,6 +391,9 @@ export function buildDetailVM(
               ] as [string, string],
             )
           : []),
+        ...(entity.anatomyDepictions ?? [])
+          .filter((depiction) => Boolean(depiction.evidence.note))
+          .map((depiction) => [`Anatomy — ${depiction.label}`, depiction.evidence.note!] as [string, string]),
       ];
 
       if (selected && isEnterable(entity, target, configuration, resources)) {

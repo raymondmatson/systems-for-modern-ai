@@ -1,0 +1,21 @@
+schema_version: 1.0.0
+product:
+  id: nvidia-dgx-h100
+  revision: 1
+  record_level: model
+  name: NVIDIA DGX H100
+  entity_type: compute_node
+  identity:
+    manufacturer: NVIDIA
+    product_family: DGX
+    model: DGX H100
+  summary: NVIDIA DGX H100 eight-GPU AI system.
+  properties: {}
+  source_ids:
+  - official
+sources:
+- id: official
+  title: NVIDIA DGX H100 official documentation
+  publisher: NVIDIA
+  url: https://docs.nvidia.com/dgx/dgxh100-user-guide/introduction-to-dgxh100.html
+  accessed: '2026-09-07'

@@ -1,0 +1,20 @@
+schema_version: 1.0.0
+product:
+  id: meta-grand-teton
+  revision: 1
+  record_level: model
+  name: Meta Grand Teton
+  entity_type: compute_node
+  identity:
+    manufacturer: Meta
+    model: Grand Teton
+  summary: Meta Grand Teton AI hardware platform.
+  properties: {}
+  source_ids:
+  - official
+sources:
+- id: official
+  title: Meta Grand Teton official documentation
+  publisher: Meta
+  url: https://engineering.fb.com/2024/10/15/data-infrastructure/metas-open-ai-hardware-vision/
+  accessed: '2026-09-07'

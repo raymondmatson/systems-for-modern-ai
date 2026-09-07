@@ -1,0 +1,21 @@
+schema_version: 1.0.0
+product:
+  id: nvidia-connectx-8
+  revision: 1
+  record_level: model
+  name: NVIDIA ConnectX-8
+  entity_type: nic
+  identity:
+    manufacturer: NVIDIA
+    product_family: ConnectX
+    model: ConnectX-8
+  summary: NVIDIA ConnectX-8 SuperNIC/network adapter family.
+  properties: {}
+  source_ids:
+  - official
+sources:
+- id: official
+  title: NVIDIA ConnectX-8 official documentation
+  publisher: NVIDIA
+  url: https://www.nvidia.com/en-us/networking/ethernet/connectx-8/
+  accessed: '2026-09-07'

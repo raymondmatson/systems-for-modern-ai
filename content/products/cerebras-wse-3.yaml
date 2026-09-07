@@ -1,0 +1,22 @@
+schema_version: 1.0.0
+product:
+  id: cerebras-wse-3
+  revision: 1
+  record_level: model
+  name: Cerebras WSE-3
+  entity_type: ai_accelerator
+  identity:
+    manufacturer: Cerebras
+    product_family: Wafer-Scale Engine
+    model: WSE-3
+    generation: 3rd generation
+  summary: Cerebras third-generation Wafer-Scale Engine.
+  properties: {}
+  source_ids:
+  - official
+sources:
+- id: official
+  title: Cerebras WSE-3 official documentation
+  publisher: Cerebras
+  url: https://www.cerebras.ai/blog/cerebras-cs3
+  accessed: '2026-09-07'

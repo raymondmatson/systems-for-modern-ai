@@ -22,3 +22,25 @@ scenarios:
       health: degraded
       emphasis: bottleneck
       note: Backend fabric contention limits distributed communication.
+- id: checkpoint-storage-pressure
+  name: Checkpoint / storage pressure
+  description: A synchronized checkpoint burst emphasizes the dedicated storage interfaces, storage fabric, and certified
+    storage boundary without changing physical structure.
+  default: false
+  scenario_types:
+  - performance_bottleneck
+  effects:
+  - target:
+      type: connection
+      id: h100-storage-data-path
+    state:
+      operational: active
+      emphasis: storage_pressure
+      note: Checkpoint traffic concentrates on the storage data path.
+  - target:
+      type: entity
+      id: h100-storage-switches
+    state:
+      health: healthy
+      emphasis: high_traffic
+      note: Storage-fabric traffic is elevated during checkpoint I/O.

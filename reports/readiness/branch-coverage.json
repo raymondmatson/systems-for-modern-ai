@@ -1,0 +1,996 @@
+{
+  "branches": [
+    {
+      "black_box_boundary_exception": false,
+      "branch": "helios-rack",
+      "configuration": "helios-72gpu-reference-rack",
+      "crossing_connection_ids": [
+        "helios-cooling-dep",
+        "helios-front-end",
+        "helios-power-dependency",
+        "helios-scaleout"
+      ],
+      "internal_connection_ids": [
+        "helios-infinity-fabric",
+        "helios-ualink"
+      ],
+      "subtree_entity_count": 9,
+      "system": "amd-helios",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "helios-cooling",
+      "configuration": "helios-72gpu-reference-rack",
+      "crossing_connection_ids": [
+        "helios-cooling-dep"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "amd-helios",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "helios-scaleout-fabric",
+      "configuration": "helios-72gpu-reference-rack",
+      "crossing_connection_ids": [
+        "helios-scaleout"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "amd-helios",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": true,
+      "branch": "helios-front-end-network",
+      "configuration": "helios-72gpu-reference-rack",
+      "crossing_connection_ids": [
+        "helios-front-end"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "amd-helios",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "helios-power",
+      "configuration": "helios-72gpu-reference-rack",
+      "crossing_connection_ids": [
+        "helios-power-dependency"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "amd-helios",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "rainier-sites",
+      "configuration": "project-rainier-trainium2",
+      "crossing_connection_ids": [
+        "rainier-efa-scaleout"
+      ],
+      "internal_connection_ids": [
+        "rainier-neuronlink-intra",
+        "rainier-neuronlink-ultra"
+      ],
+      "subtree_entity_count": 10,
+      "system": "aws-trainium2-rainier",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "rainier-efa-fabric",
+      "configuration": "project-rainier-trainium2",
+      "crossing_connection_ids": [
+        "rainier-efa-scaleout"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "aws-trainium2-rainier",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "trn3-ultraserver",
+      "configuration": "trn3-ultraserver-ultracluster3",
+      "crossing_connection_ids": [
+        "trn3-scaleout-link"
+      ],
+      "internal_connection_ids": [
+        "trn3-neuronlink"
+      ],
+      "subtree_entity_count": 6,
+      "system": "aws-trainium3-ultraserver",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "trn3-scaleout",
+      "configuration": "trn3-ultraserver-ultracluster3",
+      "crossing_connection_ids": [
+        "trn3-scaleout-link"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "aws-trainium3-ultraserver",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "cg3-cs3",
+      "configuration": "condor-galaxy-3-64-cs3",
+      "crossing_connection_ids": [
+        "cg3-gradient-reduce",
+        "cg3-input-path",
+        "cg3-management-control",
+        "cg3-weight-stream"
+      ],
+      "internal_connection_ids": [
+        "cg3-core-mesh",
+        "cg3-sram-mesh"
+      ],
+      "subtree_entity_count": 5,
+      "system": "cerebras-cs3-condor-galaxy3",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "cg3-memoryx",
+      "configuration": "condor-galaxy-3-64-cs3",
+      "crossing_connection_ids": [
+        "cg3-weight-stream"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "cerebras-cs3-condor-galaxy3",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "cg3-swarmx",
+      "configuration": "condor-galaxy-3-64-cs3",
+      "crossing_connection_ids": [
+        "cg3-gradient-reduce",
+        "cg3-weight-stream"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "cerebras-cs3-condor-galaxy3",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "cg3-preprocess",
+      "configuration": "condor-galaxy-3-64-cs3",
+      "crossing_connection_ids": [
+        "cg3-input-path"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "cerebras-cs3-condor-galaxy3",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "cg3-management",
+      "configuration": "condor-galaxy-3-64-cs3",
+      "crossing_connection_ids": [
+        "cg3-management-control"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "cerebras-cs3-condor-galaxy3",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "cw-gb200-rack",
+      "configuration": "coreweave-gb200-nvl72-cluster",
+      "crossing_connection_ids": [
+        "cw-cooling-dependency",
+        "cw-ib-link",
+        "cw-remote-storage-cache-fill",
+        "cw-storage-link"
+      ],
+      "internal_connection_ids": [
+        "cw-local-cache-path",
+        "cw-nvlink"
+      ],
+      "subtree_entity_count": 6,
+      "system": "coreweave-gb200-nvl72",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "cw-ib",
+      "configuration": "coreweave-gb200-nvl72-cluster",
+      "crossing_connection_ids": [
+        "cw-ib-link"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "coreweave-gb200-nvl72",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "cw-storage",
+      "configuration": "coreweave-gb200-nvl72-cluster",
+      "crossing_connection_ids": [
+        "cw-remote-storage-cache-fill",
+        "cw-storage-link"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "coreweave-gb200-nvl72",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "cw-cooling",
+      "configuration": "coreweave-gb200-nvl72-cluster",
+      "crossing_connection_ids": [
+        "cw-cooling-dependency"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "coreweave-gb200-nvl72",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "ironwood-cube",
+      "configuration": "tpu7x-9216-chip-superpod",
+      "crossing_connection_ids": [
+        "ironwood-cooling-dependency",
+        "ironwood-dcn-link",
+        "ironwood-ocs-link"
+      ],
+      "internal_connection_ids": [
+        "ironwood-host-memory-path",
+        "ironwood-host-pcie",
+        "ironwood-ici"
+      ],
+      "subtree_entity_count": 10,
+      "system": "google-tpu7x-ironwood",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "ironwood-ocs",
+      "configuration": "tpu7x-9216-chip-superpod",
+      "crossing_connection_ids": [
+        "ironwood-ocs-link"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "google-tpu7x-ironwood",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "ironwood-dcn",
+      "configuration": "tpu7x-9216-chip-superpod",
+      "crossing_connection_ids": [
+        "ironwood-dcn-link"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "google-tpu7x-ironwood",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "ironwood-cooling",
+      "configuration": "tpu7x-9216-chip-superpod",
+      "crossing_connection_ids": [
+        "ironwood-cooling-dependency"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "google-tpu7x-ironwood",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "tpu8i-board-groups",
+      "configuration": "tpu8i-inference-pod",
+      "crossing_connection_ids": [
+        "tpu8i-group-ocs",
+        "tpu8i-host-support-path"
+      ],
+      "internal_connection_ids": [
+        "tpu8i-group-copper",
+        "tpu8i-local-copper-ring"
+      ],
+      "subtree_entity_count": 7,
+      "system": "google-tpu8-family",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "tpu8i-ocs",
+      "configuration": "tpu8i-inference-pod",
+      "crossing_connection_ids": [
+        "tpu8i-group-ocs"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "google-tpu8-family",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "tpu8i-host-support",
+      "configuration": "tpu8i-inference-pod",
+      "crossing_connection_ids": [
+        "tpu8i-host-support-path"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "google-tpu8-family",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "tpu8t-racks",
+      "configuration": "tpu8t-training-superpod",
+      "crossing_connection_ids": [
+        "tpu8t-host-support-path",
+        "tpu8t-tpudirect-rdma",
+        "tpu8t-tpudirect-storage",
+        "tpu8t-virgo-link"
+      ],
+      "internal_connection_ids": [
+        "tpu8t-ici"
+      ],
+      "subtree_entity_count": 5,
+      "system": "google-tpu8-family",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "tpu8t-virgo",
+      "configuration": "tpu8t-training-superpod",
+      "crossing_connection_ids": [
+        "tpu8t-virgo-link"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "google-tpu8-family",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "tpu8t-host-support",
+      "configuration": "tpu8t-training-superpod",
+      "crossing_connection_ids": [
+        "tpu8t-host-support-path"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "google-tpu8-family",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "tpu8t-nic",
+      "configuration": "tpu8t-training-superpod",
+      "crossing_connection_ids": [
+        "tpu8t-jupiter-path",
+        "tpu8t-tpudirect-rdma"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "google-tpu8-family",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "tpu8t-jupiter",
+      "configuration": "tpu8t-training-superpod",
+      "crossing_connection_ids": [
+        "tpu8t-jupiter-path"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "google-tpu8-family",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "tpu8t-lustre",
+      "configuration": "tpu8t-training-superpod",
+      "crossing_connection_ids": [
+        "tpu8t-tpudirect-storage"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "google-tpu8-family",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "groq-rack",
+      "configuration": "groq-256-lpu-rack",
+      "crossing_connection_ids": [],
+      "internal_connection_ids": [
+        "groq-network-path"
+      ],
+      "subtree_entity_count": 5,
+      "system": "groq-lpu-groqcloud",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "elcap-cabinets",
+      "configuration": "el-capitan-production",
+      "crossing_connection_ids": [
+        "elcap-filesystem-path",
+        "elcap-rabbit-direct",
+        "elcap-slingshot-link"
+      ],
+      "internal_connection_ids": [
+        "elcap-infinity"
+      ],
+      "subtree_entity_count": 7,
+      "system": "llnl-el-capitan",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "elcap-slingshot",
+      "configuration": "el-capitan-production",
+      "crossing_connection_ids": [
+        "elcap-rabbit-network",
+        "elcap-slingshot-link"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "llnl-el-capitan",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "elcap-filesystem",
+      "configuration": "el-capitan-production",
+      "crossing_connection_ids": [
+        "elcap-filesystem-path"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "llnl-el-capitan",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "elcap-rabbit",
+      "configuration": "el-capitan-production",
+      "crossing_connection_ids": [
+        "elcap-rabbit-direct",
+        "elcap-rabbit-network"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 3,
+      "system": "llnl-el-capitan",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "meta-compute-racks",
+      "configuration": "meta-24576-h100-roce",
+      "crossing_connection_ids": [
+        "meta-minipack-roce-link",
+        "meta-roce-link",
+        "meta-storage-path",
+        "meta-wedge-roce-link"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 3,
+      "system": "meta-h100-roce-24k",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "meta-roce-switches",
+      "configuration": "meta-24576-h100-roce",
+      "crossing_connection_ids": [
+        "meta-minipack-roce-link",
+        "meta-roce-link",
+        "meta-wedge-roce-link"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 4,
+      "system": "meta-h100-roce-24k",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "meta-storage-racks",
+      "configuration": "meta-24576-h100-roce",
+      "crossing_connection_ids": [
+        "meta-storage-path"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 3,
+      "system": "meta-h100-roce-24k",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "maia200-trays",
+      "configuration": "maia200-inference-cluster",
+      "crossing_connection_ids": [
+        "maia-scaleup",
+        "maia200-cooling-dependency",
+        "maia200-management-control"
+      ],
+      "internal_connection_ids": [
+        "maia-tray-links",
+        "maia200-onchip-data"
+      ],
+      "subtree_entity_count": 5,
+      "system": "microsoft-maia200",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "maia200-scaleup-network",
+      "configuration": "maia200-inference-cluster",
+      "crossing_connection_ids": [
+        "maia-scaleup"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "microsoft-maia200",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "maia200-cooling",
+      "configuration": "maia200-inference-cluster",
+      "crossing_connection_ids": [
+        "maia200-cooling-dependency"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "microsoft-maia200",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": true,
+      "branch": "maia200-management",
+      "configuration": "maia200-inference-cluster",
+      "crossing_connection_ids": [
+        "maia200-management-control"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "microsoft-maia200",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "gb300-nvl72-rack",
+      "configuration": "gb300-nvl72-superpod-reference",
+      "crossing_connection_ids": [
+        "gb300-compute-fabric-link",
+        "gb300-converged-link",
+        "gb300-cooling-dependency",
+        "gb300-oob-management",
+        "gb300-power-dependency"
+      ],
+      "internal_connection_ids": [
+        "gb300-host-memory-path",
+        "gb300-nvlink"
+      ],
+      "subtree_entity_count": 11,
+      "system": "nvidia-dgx-gb300-nvl72-superpod",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "gb300-scaleout-switches",
+      "configuration": "gb300-nvl72-superpod-reference",
+      "crossing_connection_ids": [
+        "gb300-compute-fabric-link"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "nvidia-dgx-gb300-nvl72-superpod",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "gb300-cooling",
+      "configuration": "gb300-nvl72-superpod-reference",
+      "crossing_connection_ids": [
+        "gb300-cooling-dependency"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "nvidia-dgx-gb300-nvl72-superpod",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "gb300-power-shelves",
+      "configuration": "gb300-nvl72-superpod-reference",
+      "crossing_connection_ids": [
+        "gb300-power-dependency"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "nvidia-dgx-gb300-nvl72-superpod",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "gb300-oob-switches",
+      "configuration": "gb300-nvl72-superpod-reference",
+      "crossing_connection_ids": [
+        "gb300-oob-management"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "nvidia-dgx-gb300-nvl72-superpod",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "gb300-converged-switches",
+      "configuration": "gb300-nvl72-superpod-reference",
+      "crossing_connection_ids": [
+        "gb300-converged-link",
+        "gb300-storage-path"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "nvidia-dgx-gb300-nvl72-superpod",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "gb300-external-storage",
+      "configuration": "gb300-nvl72-superpod-reference",
+      "crossing_connection_ids": [
+        "gb300-storage-path"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "nvidia-dgx-gb300-nvl72-superpod",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "h100-su",
+      "configuration": "h100-superpod-4su-reference",
+      "crossing_connection_ids": [
+        "h100-inband-management-link",
+        "h100-oob-management-link",
+        "h100-scaleout-link",
+        "h100-storage-fabric-link"
+      ],
+      "internal_connection_ids": [
+        "h100-host-io-pcie",
+        "h100-host-memory-path",
+        "h100-nvlink-domain"
+      ],
+      "subtree_entity_count": 11,
+      "system": "nvidia-dgx-h100-superpod",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "h100-compute-switches",
+      "configuration": "h100-superpod-4su-reference",
+      "crossing_connection_ids": [
+        "h100-scaleout-link"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "nvidia-dgx-h100-superpod",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "h100-management",
+      "configuration": "h100-superpod-4su-reference",
+      "crossing_connection_ids": [
+        "h100-management-oob-services"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "nvidia-dgx-h100-superpod",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "h100-storage-switches",
+      "configuration": "h100-superpod-4su-reference",
+      "crossing_connection_ids": [
+        "h100-storage-data-path",
+        "h100-storage-fabric-link"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "nvidia-dgx-h100-superpod",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "h100-inband-switches",
+      "configuration": "h100-superpod-4su-reference",
+      "crossing_connection_ids": [
+        "h100-inband-management-link"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "nvidia-dgx-h100-superpod",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "h100-oob-switches",
+      "configuration": "h100-superpod-4su-reference",
+      "crossing_connection_ids": [
+        "h100-management-oob-services",
+        "h100-oob-management-link"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "nvidia-dgx-h100-superpod",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "h100-storage",
+      "configuration": "h100-superpod-4su-reference",
+      "crossing_connection_ids": [
+        "h100-storage-data-path"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "nvidia-dgx-h100-superpod",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "rubin-nvl72",
+      "configuration": "vera-rubin-nvl72-pod-reference",
+      "crossing_connection_ids": [
+        "rubin-scaleout-link",
+        "rubin-spx-scaleout",
+        "rubin-storage-context-path"
+      ],
+      "internal_connection_ids": [
+        "rubin-nvlink6"
+      ],
+      "subtree_entity_count": 7,
+      "system": "nvidia-vera-rubin",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "rubin-scaleout",
+      "configuration": "vera-rubin-nvl72-pod-reference",
+      "crossing_connection_ids": [
+        "rubin-scaleout-link"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "nvidia-vera-rubin",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "rubin-stx-cmx",
+      "configuration": "vera-rubin-nvl72-pod-reference",
+      "crossing_connection_ids": [
+        "rubin-storage-context-path"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "nvidia-vera-rubin",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "rubin-spx",
+      "configuration": "vera-rubin-nvl72-pod-reference",
+      "crossing_connection_ids": [
+        "rubin-spx-scaleout"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "nvidia-vera-rubin",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "oci-gb200-rack",
+      "configuration": "oci-gb200-supercluster",
+      "crossing_connection_ids": [
+        "oci-gb200-cooling-dependency",
+        "oci-gb200-management-control",
+        "oci-gb200-power-dependency",
+        "oci-gb200-scaleout-link",
+        "oci-gb200-storage-path"
+      ],
+      "internal_connection_ids": [
+        "oci-gb200-nvlink"
+      ],
+      "subtree_entity_count": 4,
+      "system": "oci-gb200-gb300-supercluster",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "oci-gb200-scaleout",
+      "configuration": "oci-gb200-supercluster",
+      "crossing_connection_ids": [
+        "oci-gb200-scaleout-link"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "oci-gb200-gb300-supercluster",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "oci-gb200-lustre",
+      "configuration": "oci-gb200-supercluster",
+      "crossing_connection_ids": [
+        "oci-gb200-storage-path"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "oci-gb200-gb300-supercluster",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "oci-gb200-cooling",
+      "configuration": "oci-gb200-supercluster",
+      "crossing_connection_ids": [
+        "oci-gb200-cooling-dependency"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "oci-gb200-gb300-supercluster",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "oci-gb200-management",
+      "configuration": "oci-gb200-supercluster",
+      "crossing_connection_ids": [
+        "oci-gb200-management-control"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "oci-gb200-gb300-supercluster",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "oci-gb200-power",
+      "configuration": "oci-gb200-supercluster",
+      "crossing_connection_ids": [
+        "oci-gb200-power-dependency"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "oci-gb200-gb300-supercluster",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "oci-gb300-rack",
+      "configuration": "oci-gb300-supercluster",
+      "crossing_connection_ids": [
+        "oci-gb300-cooling-dependency",
+        "oci-gb300-management-control",
+        "oci-gb300-scaleout-link",
+        "oci-gb300-storage-path"
+      ],
+      "internal_connection_ids": [
+        "oci-gb300-nvlink"
+      ],
+      "subtree_entity_count": 4,
+      "system": "oci-gb200-gb300-supercluster",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "oci-gb300-scaleout",
+      "configuration": "oci-gb300-supercluster",
+      "crossing_connection_ids": [
+        "oci-gb300-scaleout-link"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "oci-gb200-gb300-supercluster",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "oci-gb300-lustre",
+      "configuration": "oci-gb300-supercluster",
+      "crossing_connection_ids": [
+        "oci-gb300-storage-path"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "oci-gb200-gb300-supercluster",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "oci-gb300-cooling",
+      "configuration": "oci-gb300-supercluster",
+      "crossing_connection_ids": [
+        "oci-gb300-cooling-dependency"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "oci-gb200-gb300-supercluster",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "oci-gb300-management",
+      "configuration": "oci-gb300-supercluster",
+      "crossing_connection_ids": [
+        "oci-gb300-management-control"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "oci-gb200-gb300-supercluster",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": true,
+      "branch": "colossus-compute",
+      "configuration": "colossus1-current-highlevel",
+      "crossing_connection_ids": [
+        "colossus-compute-supernic"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 2,
+      "system": "xai-colossus1",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "colossus-spectrum",
+      "configuration": "colossus1-current-highlevel",
+      "crossing_connection_ids": [
+        "colossus-roce"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 2,
+      "system": "xai-colossus1",
+      "valid": true
+    },
+    {
+      "black_box_boundary_exception": false,
+      "branch": "colossus-supernic",
+      "configuration": "colossus1-current-highlevel",
+      "crossing_connection_ids": [
+        "colossus-compute-supernic",
+        "colossus-roce"
+      ],
+      "internal_connection_ids": [],
+      "subtree_entity_count": 1,
+      "system": "xai-colossus1",
+      "valid": true
+    }
+  ],
+  "errors": [],
+  "result": "PASS"
+}

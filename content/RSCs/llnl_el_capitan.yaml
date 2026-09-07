@@ -7,8 +7,7 @@ reference_system:
   introduction:
     date_or_year: 2024
     lifecycle: current
-  summary: Exascale HPC/AI system built from MI300A APUs, compute cabinets, and HPE Slingshot networking in a Dragonfly 
-    topology.
+  summary: Exascale HPC/AI system built from MI300A APUs, compute cabinets, and HPE Slingshot networking in a Dragonfly topology.
   learning_value:
   - Unified CPU-GPU APU architecture
   - HPC/AI convergence
@@ -27,6 +26,11 @@ sources:
   publisher: Lawrence Livermore National Laboratory
   url: https://hpc.llnl.gov/hardware/compute-platforms
   accessed: '2026-08-22'
+- id: llnl-rabbits
+  title: 'Using El Capitan systems: File systems / Rabbits'
+  publisher: Lawrence Livermore National Laboratory
+  url: https://hpc.llnl.gov/documentation/user-guides/using-el-capitan-systems/file-systems-rabbits
+  accessed: '2026-09-07'
 configurations:
 - id: el-capitan-production
   name: El Capitan production architecture
@@ -61,6 +65,7 @@ configurations:
       properties:
         compute_nodes: 11520
         compute_cabinets: 90
+        peak_power_mw: 36
       children:
       - id: elcap-cabinets
         name: Compute cabinets
@@ -169,6 +174,7 @@ configurations:
                 note: Eight HBM3 stacks per MI300A.
               properties:
                 quantity_per_apu: 8
+                aggregate_hbm_gib_per_node: 512
               children: []
           - id: elcap-slingshot-if
             name: Slingshot network interfaces
@@ -187,6 +193,8 @@ configurations:
             properties:
               quantity_per_node: 4
               gbps_per_interface: 200
+              interfaces_per_node: 4
+              link_rate_gbps: 200
             children: []
       - id: elcap-slingshot
         name: HPE Slingshot switch fabric
@@ -206,10 +214,12 @@ configurations:
           source_ids:
           - llnl-elcap
           - llnl-compute-platforms
-          note: LLNL identifies El Capitan's interconnect as HPE Slingshot 11; the hardware overview documents its high-radix Dragonfly topology.
+          note: LLNL identifies El Capitan's interconnect as HPE Slingshot 11; the hardware overview documents its high-radix
+            Dragonfly topology.
         properties:
-          topology: Dragonfly
+          topology: Dragonfly-derived HPE Slingshot
           switch_ports: 64
+          switch_capacity_tbps: 25.6
         children: []
       - id: elcap-filesystem
         name: Parallel filesystem
@@ -224,10 +234,59 @@ configurations:
           status: simplified
           source_ids:
           - llnl-elcap
-          note: File system is a major system building block; detailed storage topology is not modeled in this initial 
-            file.
+          note: File system is a major system building block; detailed storage topology is not modeled in this initial file.
         properties: {}
         children: []
+      - id: elcap-rabbit
+        name: Rabbit near-node storage nodes
+        entity_type: storage_server
+        explore_tier: 2
+        inventory:
+          category: Physical infrastructure hierarchy
+          item: Storage servers
+          status: existing
+        representation: aggregate
+        evidence:
+          status: documented
+          source_ids:
+          - llnl-rabbits
+          note: LLNL documents Rabbit near-node storage with two Rabbit nodes per system rack; system-wide per-rack totals
+            are not rederived here.
+        properties: {}
+        children:
+        - id: elcap-rabbit-ssds
+          name: Rabbit SSD set
+          entity_type: local_storage
+          explore_tier: 4
+          inventory:
+            category: Server-level hardware
+            item: NVMe SSDs
+            status: existing
+          representation: aggregate
+          evidence:
+            status: documented
+            source_ids:
+            - llnl-rabbits
+            note: Each Rabbit node contains 16 SSDs.
+          properties:
+            quantity_per_node: 16
+          children: []
+        - id: elcap-rabbit-cpu
+          name: Rabbit EPYC storage processor
+          entity_type: cpu
+          explore_tier: 4
+          inventory:
+            category: Server-level hardware
+            item: CPUs
+            status: existing
+          representation: aggregate
+          evidence:
+            status: documented
+            source_ids:
+            - llnl-rabbits
+            note: Each Rabbit node includes an AMD EPYC storage processor.
+          properties: {}
+          children: []
   connections:
   - id: elcap-infinity
     name: MI300A Infinity Fabric
@@ -264,6 +323,57 @@ configurations:
       - llnl-elcap
       note: Four Slingshot interfaces per node connect to the Dragonfly fabric.
     properties: {}
+  - id: elcap-filesystem-path
+    relationship_type: data_communication_path
+    directionality: bidirectional
+    endpoints:
+    - elcap-node
+    - elcap-filesystem
+    inventory:
+      category: Data movement as a unifying theme
+      item: Bandwidth
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - llnl-elcap
+      note: Compute nodes to parallel filesystem data path
+    properties: {}
+    name: Compute nodes to parallel filesystem data path
+  - id: elcap-rabbit-direct
+    relationship_type: data_communication_path
+    directionality: bidirectional
+    endpoints:
+    - elcap-rabbit
+    - elcap-node
+    inventory:
+      category: Data movement as a unifying theme
+      item: Bandwidth
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - llnl-rabbits
+      note: Rabbit near-node storage direct compute path
+    properties: {}
+    name: Rabbit near-node storage direct compute path
+  - id: elcap-rabbit-network
+    relationship_type: physical_connectivity
+    directionality: bidirectional
+    endpoints:
+    - elcap-rabbit
+    - elcap-slingshot
+    inventory:
+      category: Physical infrastructure hierarchy
+      item: Network switches
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - llnl-rabbits
+      note: Rabbit storage network attachment
+    properties: {}
+    name: Rabbit storage network attachment
   functional_groups:
   - id: elcap-scaleout-domain
     name: Slingshot Dragonfly fabric
@@ -295,8 +405,8 @@ configurations:
     - elcap-hbm
     note: ''
   unknowns:
-  - description: Detailed parallel-filesystem appliance/rack layout is outside the selected public hardware overview and
-      is aggregated here.
+  - description: Detailed parallel-filesystem appliance/rack layout is outside the selected public hardware overview and is
+      aggregated here.
     treatment: simplified
     affected_entity_ids:
     - elcap-filesystem

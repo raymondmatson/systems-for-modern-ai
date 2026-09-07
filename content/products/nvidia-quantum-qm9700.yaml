@@ -1,0 +1,21 @@
+schema_version: 1.0.0
+product:
+  id: nvidia-quantum-qm9700
+  revision: 1
+  record_level: model
+  name: NVIDIA Quantum QM9700
+  entity_type: network_switch
+  identity:
+    manufacturer: NVIDIA
+    product_family: Quantum
+    model: QM9700
+  summary: NVIDIA Quantum InfiniBand switch family used in DGX SuperPOD fabrics.
+  properties: {}
+  source_ids:
+  - official
+sources:
+- id: official
+  title: NVIDIA Quantum QM9700 official documentation
+  publisher: NVIDIA
+  url: https://www.nvidia.com/en-us/networking/infiniband-switching/
+  accessed: '2026-09-07'

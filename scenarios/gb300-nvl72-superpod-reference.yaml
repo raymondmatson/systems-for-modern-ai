@@ -22,3 +22,40 @@ scenarios:
       health: degraded
       emphasis: thermal
       note: Reduced cooling headroom emphasizes rack-scale thermal dependency.
+- id: east-west-compute-plane-degradation
+  name: East/West compute-plane degradation
+  description: Degraded East/West compute-fabric service emphasizes dependence on the ConnectX-8/SN5600 scale-out path while
+    rack identity remains fixed.
+  default: false
+  scenario_types:
+  - failure_degradation
+  effects:
+  - target:
+      type: connection
+      id: gb300-compute-fabric-link
+    state:
+      health: degraded
+      emphasis: compute_fabric
+      note: The compute fabric is degraded; rack-scale NVLink remains structurally unchanged.
+- id: north-south-storage-pressure
+  name: North/South / storage pressure
+  description: Heavy North/South storage traffic emphasizes the BlueField-3 and converged-fabric path without changing the
+    physical rack.
+  default: false
+  scenario_types:
+  - performance_bottleneck
+  effects:
+  - target:
+      type: connection
+      id: gb300-storage-path
+    state:
+      operational: active
+      emphasis: storage_pressure
+      note: Storage traffic is emphasized on the converged network.
+  - target:
+      type: entity
+      id: gb300-bf3
+    state:
+      health: healthy
+      emphasis: high_traffic
+      note: The DPU remains healthy while carrying elevated North/South traffic.

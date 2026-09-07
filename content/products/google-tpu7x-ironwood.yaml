@@ -1,0 +1,22 @@
+schema_version: 1.0.0
+product:
+  id: google-tpu7x-ironwood
+  revision: 1
+  record_level: model
+  name: Google TPU7x (Ironwood)
+  entity_type: tpu
+  identity:
+    manufacturer: Google
+    product_family: Ironwood
+    model: TPU7x
+    generation: 7th generation
+  summary: Google Cloud seventh-generation Ironwood TPU.
+  properties: {}
+  source_ids:
+  - official
+sources:
+- id: official
+  title: Google TPU7x (Ironwood) official documentation
+  publisher: Google
+  url: https://docs.cloud.google.com/tpu/docs/tpu7x
+  accessed: '2026-09-07'

@@ -188,3 +188,16 @@ test('narrow layout preserves readable canvas by scrolling instead of shrinking 
   expect(dimensions.scrollWidth).toBeGreaterThan(dimensions.clientWidth);
   await expect(page.locator('svg.explore-canvas')).toHaveCSS('min-width', '760px');
 });
+
+test('authored Anatomy Depictions are visible but noninteractive and summarized accessibly', async ({page}) => {
+  await page.goto('./');
+  await enterRepresentativeH100Node(page);
+
+  const depiction = page.locator('svg .anatomy-depiction').first();
+  await expect(depiction).toBeVisible();
+  await expect(depiction).toHaveAttribute('aria-hidden', 'true');
+  await expect(depiction).not.toHaveAttribute('tabindex', /.+/);
+
+  await expect(page.getByLabel('Detail')).toContainText('Visible anatomy');
+  await expect(page.getByRole('region', {name: 'Explore semantic structure'}).locator('.anatomy-depiction')).toHaveCount(0);
+});

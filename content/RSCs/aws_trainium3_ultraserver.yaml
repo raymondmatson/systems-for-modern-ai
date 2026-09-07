@@ -7,8 +7,8 @@ reference_system:
   introduction:
     date_or_year: 2025
     lifecycle: new
-  summary: AWS custom-accelerator architecture that expands the tightly coupled scale-up domain to as many as 144 
-    Trainium3 chips using NeuronSwitch-v1 and NeuronLink-v4.
+  summary: AWS custom-accelerator architecture that expands the tightly coupled scale-up domain to as many as 144 Trainium3
+    chips using NeuronSwitch-v1 and NeuronLink-v4.
   learning_value:
   - Alternative custom accelerator ecosystem
   - Large all-to-all scale-up domain
@@ -41,8 +41,8 @@ configurations:
     id: baseline-normal-operation
     name: Baseline / normal operation
     description: Normal/baseline operation with no deliberately injected fault or bottleneck.
-  scope_notes: Centers the model on the documented 144-chip UltraServer and leaves the larger UltraCluster physical 
-    switch/rack composition as a black box.
+  scope_notes: Centers the model on the documented 144-chip UltraServer and leaves the larger UltraCluster physical switch/rack
+    composition as a black box.
   modeling_notes:
   - Rack placement and host CPU details are omitted because the public source used here does not establish them.
   source_ids:
@@ -87,6 +87,8 @@ configurations:
           note: UltraServer scales to 144 Trainium3 chips.
         properties:
           max_trainium3_chips: 144
+          aggregate_hbm_tb: 20.7
+          aggregate_hbm_bandwidth_tbps: 706
         children:
         - id: trn3-chips
           name: Trainium3 chips
@@ -107,7 +109,8 @@ configurations:
             source_ids:
             - aws-trn3
             - aws-neuron-arch
-            note: Up to 144 Trainium3 chips per fully configured UltraServer; AWS Neuron documentation identifies Trainium3 as the third-generation Trainium training accelerator.
+            note: Up to 144 Trainium3 chips per fully configured UltraServer; AWS Neuron documentation identifies Trainium3
+              as the third-generation Trainium training accelerator.
           properties:
             quantity_max: 144
           children:
@@ -144,8 +147,7 @@ configurations:
               status: documented
               source_ids:
               - aws-trn3
-              note: Trainium3 architecture includes dedicated collective communication capability; exact representation 
-                is simplified.
+              note: Dedicated collective communication engines are integrated in Trainium3 to accelerate collective operations.
             properties: {}
             children: []
           - id: trn3-hbm
@@ -164,6 +166,8 @@ configurations:
               note: UltraServer aggregate HBM3e capacity is published; physical stack details are not modeled.
             properties:
               ultraserver_aggregate_tb: 20.7
+              capacity_gb_per_chip: 144
+              bandwidth_tbps_per_chip: 4.9
             children: []
         - id: trn3-neuronswitch
           name: NeuronSwitch-v1 fabric
@@ -198,9 +202,11 @@ configurations:
           status: documented
           source_ids:
           - aws-trn3
-          note: UltraCluster 3.0 is described as scaling to hundreds of thousands of chips; detailed physical fabric 
-            composition is not specified on this source page.
-        properties: {}
+          note: UltraCluster 3.0 is described as scaling to hundreds of thousands of chips; detailed physical fabric composition
+            is not specified on this source page.
+        properties:
+          aggregate_scaleout_tbps: 28.8
+          topology_precision_note: Nonblocking/petabit-scale service boundary; exact switch topology is not modeled.
         children: []
   connections:
   - id: trn3-neuronlink
@@ -220,6 +226,23 @@ configurations:
       - aws-trn3
       note: NeuronSwitch-v1 uses NeuronLink-v4 for all-to-all chip connectivity.
     properties: {}
+  - id: trn3-scaleout-link
+    relationship_type: physical_connectivity
+    directionality: bidirectional
+    endpoints:
+    - trn3-ultraserver
+    - trn3-scaleout
+    inventory:
+      category: Physical infrastructure hierarchy
+      item: Network switches
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - aws-trn3
+      note: Trn3 UltraServer to UltraCluster scale-out network
+    properties: {}
+    name: Trn3 UltraServer to UltraCluster scale-out network
   functional_groups:
   - id: trn3-scaleup-domain
     name: Trainium3 UltraServer scale-up domain
@@ -263,8 +286,8 @@ configurations:
     - trn3-neuronswitch
     note: ''
   unknowns:
-  - description: The detailed rack, host, and UltraCluster 3.0 switching layout is not sufficiently specified in the 
-      public high-level sources used here.
+  - description: The detailed rack, host, and UltraCluster 3.0 switching layout is not sufficiently specified in the public
+      high-level sources used here.
     treatment: black_box
     affected_entity_ids:
     - trn3-scaleout

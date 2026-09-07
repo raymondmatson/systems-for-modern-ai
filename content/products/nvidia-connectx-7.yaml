@@ -1,0 +1,21 @@
+schema_version: 1.0.0
+product:
+  id: nvidia-connectx-7
+  revision: 1
+  record_level: model
+  name: NVIDIA ConnectX-7
+  entity_type: nic
+  identity:
+    manufacturer: NVIDIA
+    product_family: ConnectX
+    model: ConnectX-7
+  summary: NVIDIA ConnectX-7 network adapter family used for high-speed AI/HPC networking.
+  properties: {}
+  source_ids:
+  - official
+sources:
+- id: official
+  title: NVIDIA ConnectX-7 official documentation
+  publisher: NVIDIA
+  url: https://www.nvidia.com/en-us/networking/ethernet/connectx-7/
+  accessed: '2026-09-07'

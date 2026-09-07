@@ -1,0 +1,21 @@
+schema_version: 1.0.0
+product:
+  id: nvidia-b300
+  revision: 1
+  record_level: model
+  name: NVIDIA B300
+  entity_type: gpu
+  identity:
+    manufacturer: NVIDIA
+    model: B300
+    architecture: Blackwell Ultra
+  summary: NVIDIA B300 Blackwell Ultra GPU.
+  properties: {}
+  source_ids:
+  - official
+sources:
+- id: official
+  title: NVIDIA B300 official documentation
+  publisher: NVIDIA
+  url: https://www.nvidia.com/en-us/data-center/gb300-nvl72/
+  accessed: '2026-09-07'

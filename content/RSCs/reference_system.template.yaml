@@ -1,4 +1,31 @@
-schema_version: 1.3.0
+# Reference-System configuration template — schema 1.4.0.
+# entity_type uses the controlled vocabulary in reference_system.schema.json / README.md.
+# Tier 5 is one Internal Detail navigation band and may contain multiple same-tier containment levels.
+# Reusable reference-system configuration template.
+# Copy and replace values; remove branches that do not apply to the system being modeled.
+# Do not rely on YAML anchors/tags. Keep the document JSON-compatible.
+#
+# Inventory rules:
+# - For status: existing, category/item must exactly match Organizational_Content_Inventory.md.
+# - Use status: proposed_addition only for a genuine inventory gap; include inventory.note explaining the gap.
+# - Do not add a component simply because it exists in the inventory; include it only when it is relevant and supported.
+#
+# Entity identity rules:
+# - id is configuration-local physical/model identity.
+# - entity_type defines what the entity is and which structural/functional behavior applies.
+# - inventory is organizational/documentation classification and does not control behavior.
+# - product_identity is optional metadata for identifiable real products across configurations.
+# - Allowed product_identity fields: manufacturer, product_family, model, variant, generation, architecture, codename.
+# - Include only useful, source-supported fields. Omit a block/field instead of writing unknown/N/A/TBD/proprietary.
+# - Do not attach one singular product_identity to a heterogeneous aggregate containing multiple product models.
+#
+# Evidence rules:
+# - documented: explicitly supported by a listed source.
+# - inferred: a reasonable architectural inference; explain the inference in evidence.note.
+# - simplified: known architecture represented at reduced detail; explain what was simplified.
+# - unknown/proprietary: represent as black_box or omit; do not invent internals.
+
+schema_version: 1.4.0
 reference_system:
   id: example-system
   name: Example Reference System
@@ -12,6 +39,7 @@ reference_system:
   - Replace with a learning goal
   source_ids:
   - example-source
+
 sources:
 - id: example-source
   title: Primary architecture source
@@ -19,6 +47,7 @@ sources:
   url: https://example.invalid/architecture
   accessed: '2026-08-22'
   note: Replace with a primary or otherwise authoritative source.
+
 configurations:
 - id: example-baseline
   name: Example baseline configuration
@@ -27,6 +56,9 @@ configurations:
     id: baseline-normal-operation
     name: Baseline / normal operation
     description: Normal/baseline operation with no deliberately injected fault or bottleneck.
+  scenario_catalog:
+    path: scenarios/example-baseline.yaml
+    default_scenario_id: baseline-normal-operation
   scope_notes: Define what this configuration models and intentionally omits.
   modeling_notes:
   - Use documented facts where possible; black-box or omit unavailable details.
@@ -167,16 +199,39 @@ configurations:
       - example-source
       note: Replace with a real functional grouping when one is meaningful.
   concept_links:
-  - concept_id: latency
+  - concept_id: scale-up-versus-scale-out
     role: illustrates
     target:
-      type: entity
-      id: example-accelerator
+      type: connection
+      id: example-scaleup-link
+    note: Example canonical occurrence link from physical architecture to a global Concept.
   unknowns:
   - description: Example switch-tray internals are intentionally unavailable in this template.
     treatment: black_box
     affected_entity_ids:
     - example-switch-tray
-  scenario_catalog:
-    path: scenarios/example-baseline.yaml
-    default_scenario_id: baseline-normal-operation
+
+# 1.4.0 authoring examples (optional; apply only when supported)
+# An ordinary semantic entity may reference an exact Product Definition:
+# product_ref:
+#   id: nvidia-connectx-7
+#   revision: 1
+#
+# An enclosing entity may carry noninteractive physical-orientation depictions:
+# anatomy:
+#   - id: psu-bank
+#     label: Power-supply assembly
+#     description: Visible power-delivery hardware known to exist in this enclosure.
+#     inventory:
+#       category: Server-level hardware
+#       item: Power supplies
+#       status: existing
+#     evidence:
+#       status: documented
+#       source_ids: [source-id]
+#       note: Exact placement is not asserted.
+#     depiction_kind: power
+#     placement_basis: schematic
+#     count:
+#       value: 6
+#       basis: documented_fixed

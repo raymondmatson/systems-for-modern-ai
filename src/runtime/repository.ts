@@ -4,6 +4,7 @@ import type {
   ReferenceSystem,
   RuntimeConcept,
   RuntimeManifest,
+  ResolvedProduct,
 } from '../domain/types';
 
 export interface RuntimeOccurrence {
@@ -25,6 +26,7 @@ export interface BootContent {
   occurrences: Record<string, RuntimeOccurrence[]>;
   capabilities: CapabilityRegistry;
   propertyRegistry: PropertyRegistry;
+  products: Record<string, ResolvedProduct>;
 }
 
 async function getJson<T>(url: string): Promise<T> {
@@ -53,6 +55,18 @@ export class BrowserContentRepository {
       ] as const),
     );
 
+    const productIndex = manifest.productIds?.length
+      ? await getJson<Array<{id:string;revision:number}>>('./runtime/products/index.json')
+      : [];
+    const productEntries = await Promise.all(
+      (manifest.productIds ?? []).map(async (id) => {
+        const hit = productIndex.find((entry) => entry.id === id);
+        return hit
+          ? ([id, await getJson<ResolvedProduct>(`./runtime/products/${id}@${hit.revision}.json`)] as const)
+          : undefined;
+      }),
+    );
+
     const [occurrences, capabilities, propertyRegistry] = await Promise.all([
       getJson<Record<string, RuntimeOccurrence[]>>('./runtime/concepts/occurrences.json'),
       getJson<CapabilityRegistry>('./runtime/capabilities.json'),
@@ -66,6 +80,7 @@ export class BrowserContentRepository {
       occurrences,
       capabilities,
       propertyRegistry,
+      products: Object.fromEntries(productEntries.filter((entry): entry is readonly [string, ResolvedProduct] => Boolean(entry))),
     };
   }
 }

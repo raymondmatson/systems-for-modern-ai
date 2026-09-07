@@ -1,4 +1,4 @@
-schema_version: 1.3.0
+schema_version: 1.4.0
 reference_system:
   id: meta-h100-roce-24k
   name: Meta 24K H100 RoCE Training Cluster
@@ -7,7 +7,8 @@ reference_system:
   introduction:
     date_or_year: 2024
     lifecycle: current
-  summary: Production-scale H100 training cluster that contrasts Ethernet/RoCE scale-out with InfiniBand alternatives and exposes storage, scheduling, and operational concerns at very large scale.
+  summary: Production-scale H100 training cluster that contrasts Ethernet/RoCE scale-out with InfiniBand alternatives and
+    exposes storage, scheduling, and operational concerns at very large scale.
   learning_value:
   - Real production AI training deployment
   - RoCE/Ethernet accelerator fabric
@@ -34,9 +35,13 @@ configurations:
     id: baseline-normal-operation
     name: Baseline / normal operation
     description: Normal/baseline operation with no deliberately injected fault or bottleneck.
-  scope_notes: Models the RoCE cluster variant described by Meta, emphasizing the production Ethernet/RDMA fabric, Grand Teton compute platform, and flash-backed storage infrastructure.
+  scope_notes: Models the RoCE cluster variant described by Meta, emphasizing the production Ethernet/RDMA fabric, Grand Teton
+    compute platform, and flash-backed storage infrastructure.
   modeling_notes:
-  - Grand Teton internals and rack counts remain black-box/aggregate where Meta does not provide enough H100-specific layout detail in the selected source.
+  - Grand Teton internals and rack counts remain black-box/aggregate where Meta does not provide enough H100-specific layout
+    detail in the selected source.
+  - 'Meta storage service context: the physical YV3 tier is exposed through a Tectonic-backed FUSE path; software storage
+    abstractions are explanatory context, not physical child entities.'
   source_ids:
   - meta-genai
   - meta-grandteton
@@ -98,9 +103,6 @@ configurations:
         - id: meta-grand-teton
           name: Grand Teton GPU platform
           entity_type: compute_node
-          product_identity:
-            manufacturer: Meta
-            model: Grand Teton
           explore_tier: 3
           inventory:
             category: Physical infrastructure hierarchy
@@ -112,16 +114,14 @@ configurations:
             source_ids:
             - meta-genai
             - meta-grandteton
-            note: Grand Teton integrates power, control, compute and fabric into a chassis; exact H100-per-chassis layout is not asserted here.
+            note: Grand Teton remains a black-box chassis in this configuration. Meta documents integrated power, control,
+              compute, and fabric interfaces but the selected cluster source does not support a DGX-like internal decomposition
+              or exact H100 placement.
           properties: {}
           children:
           - id: meta-h100-gpus
             name: H100 GPUs
             entity_type: gpu
-            product_identity:
-              manufacturer: NVIDIA
-              model: H100
-              architecture: Hopper
             explore_tier: 4
             inventory:
               category: Server-level hardware
@@ -135,6 +135,57 @@ configurations:
               note: H100 accelerators are the cluster compute devices; per-chassis quantity is intentionally unknown here.
             properties: {}
             children: []
+            product_ref:
+              id: nvidia-h100
+              revision: 1
+          product_ref:
+            id: meta-grand-teton
+            revision: 1
+          anatomy:
+          - id: meta-grand-teton-power-support
+            label: Integrated power support
+            inventory:
+              category: Server-level hardware
+              item: Power supplies
+              status: existing
+            evidence:
+              status: documented
+              source_ids:
+              - meta-genai
+              - meta-grandteton
+              note: Meta describes Grand Teton as integrating power with compute/control/fabric interfaces; exact PSU count/model/placement
+                is not asserted.
+            depiction_kind: power
+            placement_basis: schematic
+          - id: meta-grand-teton-control-support
+            label: Integrated control support
+            inventory:
+              category: Server-level hardware
+              item: Baseboard management controllers
+              status: existing
+            evidence:
+              status: documented
+              source_ids:
+              - meta-genai
+              - meta-grandteton
+              note: The chassis integrates control interfaces; controller SKU and physical placement are not asserted.
+            depiction_kind: management
+            placement_basis: schematic
+          - id: meta-grand-teton-fabric-support
+            label: Integrated fabric interface support
+            inventory:
+              category: Server-level hardware
+              item: NICs
+              status: existing
+            evidence:
+              status: documented
+              source_ids:
+              - meta-genai
+              - meta-grandteton
+              note: Grand Teton integrates fabric interfaces as part of the monolithic system design; exact adapter count/topology
+                is not modeled here.
+            depiction_kind: network
+            placement_basis: schematic
       - id: meta-roce-switches
         name: RoCE fabric switches
         entity_type: network_switch
@@ -155,7 +206,65 @@ configurations:
             value:
               form: text
               text: Arista 7800, Wedge400, Minipack2
-        children: []
+        children:
+        - id: meta-arista-7800
+          name: Arista 7800 spine switches
+          entity_type: network_switch
+          explore_tier: 4
+          inventory:
+            category: Physical infrastructure hierarchy
+            item: Network switches
+            status: existing
+          representation: aggregate
+          evidence:
+            status: documented
+            source_ids:
+            - meta-genai
+            note: Meta identifies Arista 7800 switches as part of the RoCE fabric; exact deployment count/topology is not
+              asserted.
+          properties: {}
+          children: []
+          product_identity:
+            manufacturer: Arista
+            product_family: 7800 Series
+        - id: meta-wedge400
+          name: Wedge400 rack switches
+          entity_type: network_switch
+          explore_tier: 4
+          inventory:
+            category: Physical infrastructure hierarchy
+            item: Network switches
+            status: existing
+          representation: aggregate
+          evidence:
+            status: documented
+            source_ids:
+            - meta-genai
+            note: Wedge400 OCP rack switches are part of the RoCE fabric.
+          properties: {}
+          children: []
+          product_identity:
+            manufacturer: Meta
+            model: Wedge400
+        - id: meta-minipack2
+          name: Minipack2 rack switches
+          entity_type: network_switch
+          explore_tier: 4
+          inventory:
+            category: Physical infrastructure hierarchy
+            item: Network switches
+            status: existing
+          representation: aggregate
+          evidence:
+            status: documented
+            source_ids:
+            - meta-genai
+            note: Minipack2 OCP rack switches are part of the RoCE fabric.
+          properties: {}
+          children: []
+          product_identity:
+            manufacturer: Meta
+            model: Minipack2
       - id: meta-storage-racks
         name: Storage infrastructure
         entity_type: storage_group
@@ -169,7 +278,9 @@ configurations:
           status: documented
           source_ids:
           - meta-genai
-          note: Storage uses Tectonic and Hammerspace-backed deployments.
+          note: Physical YV3 storage supports training data and checkpointing. Meta exposes this through a FUSE API backed
+            by Tectonic and uses Hammerspace in the broader storage environment; software services are explanatory context
+            rather than physical children.
         properties: {}
         children:
         - id: meta-yv3
@@ -242,6 +353,40 @@ configurations:
       - meta-genai
       note: Tectonic/Hammerspace storage supports datasets and checkpointing.
     properties: {}
+  - id: meta-wedge-roce-link
+    name: Grand Teton to Wedge400 fabric segment
+    relationship_type: physical_connectivity
+    endpoints:
+    - meta-grand-teton
+    - meta-wedge400
+    directionality: undirected
+    inventory:
+      category: Network organization and fabrics
+      item: Backend / accelerator networks
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - meta-genai
+      note: The RoCE cluster uses 400 Gb/s endpoints through OCP rack switches; exact per-rack wiring is not asserted.
+    properties: {}
+  - id: meta-minipack-roce-link
+    name: Grand Teton to Minipack2 fabric segment
+    relationship_type: physical_connectivity
+    endpoints:
+    - meta-grand-teton
+    - meta-minipack2
+    directionality: undirected
+    inventory:
+      category: Network organization and fabrics
+      item: Backend / accelerator networks
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - meta-genai
+      note: Minipack2 participates in the documented RoCE switch fabric; exact placement is abstracted.
+    properties: {}
   functional_groups:
   - id: meta-backend-fabric
     name: RoCE backend accelerator fabric
@@ -297,7 +442,8 @@ configurations:
       id: meta-compute-racks
     note: Meta documents the cluster as using Open Rack with Grand Teton; exact rack generation and population remain simplified.
   unknowns:
-  - description: Exact Grand Teton H100 chassis internals and compute-rack population are not asserted in the public source used for this initial model.
+  - description: Exact Grand Teton H100 chassis internals and compute-rack population are not asserted in the public source
+      used for this initial model.
     treatment: black_box
     affected_entity_ids:
     - meta-grand-teton

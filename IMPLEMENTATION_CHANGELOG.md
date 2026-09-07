@@ -212,3 +212,14 @@ This log records implementation-level changes for the browser-based **Systems fo
 - **Validation or testing performed:** Full Python content validation passes for 16 systems / 18 configurations and 15 Concepts; initial-five validation reports zero errors; deterministic runtime check passes for 37 artifacts; runtime integrity reports zero errors; Property fixtures pass 5/5; strict browser-independent TypeScript passes; dependency-free semantic/view-model unit harness passes 19/19; real-data smoke covers 49 entities, 65 Explore/Detail contexts, 16 Representative Member Contexts, and 44 deeper-selection visibility checks; all local TypeScript imports resolve. A package-backed `npm ci` attempt was made but did not complete because registry access remained unavailable in this environment, so project Vitest/Vite/Playwright execution remains pending the normal dependency-capable environment.
 - **Result and any remaining limitations:** **All source/content gates available without npm dependencies pass.** No new product decision is required. The existing Documentation Confidence evidence dependency remains external and unchanged.
 - **Deployment status:** Not yet deployed; user will update GitHub and redeploy.
+
+
+## 2026-09-07 — Physical Orientation Baseline, Anatomy Depictions, and Product Catalog
+
+- **Change or issue addressed:** Implemented Source-of-Truth v0.8 physical-orientation requirements and Product Catalog migration across the supplied executable baseline.
+- **Reason:** Entered contexts must show source-supported physical anatomy without inventing entity identity; reusable product facts require exact revisioned references.
+- **Files added or modified:** RSC schemas/content, Scenario catalogs, Product Catalog, capability/property registries, compiler/validators/readiness tools, runtime artifacts, Explore/Detail/accessibility code, tests, benchmark/report artifacts, and this changelog.
+- **Summary:** Added additive RSC 1.4.0 support, exact `product_ref`, Product Definitions, noninteractive Anatomy Depictions, `system_memory`/`power_system`, initial-five and later-candidate reconciled content additions, physical-orientation readiness, and post-expansion Chromium density benchmarking.
+- **Validation/testing:** Full Python/content pipeline PASS; 16 systems/18 configs; 15 Concepts; 45 Properties; 54 deterministic runtime artifacts; branch coverage 75/0 errors; RDY-018 21/0 errors; Product/Anatomy tests 3/3; Concept tests 9/9; Property fixtures 5/5; Chromium benchmark PASS.
+- **Result/limitations:** Content/runtime implementation passes. npm-backed TypeScript/Vitest/Vite/Playwright gates are BLOCKED because `registry.npmjs.org` cannot resolve and the dependency tree is incomplete. Documentation Confidence evidence remains externally unavailable.
+- **Deployment status:** Not deployed by Implementation.

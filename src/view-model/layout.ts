@@ -138,7 +138,7 @@ function assemblyLayout(entities: Entity[]): LayoutResult {
     ['gpu', 'tpu', 'ai_accelerator', 'apu'].includes(entity.entityType),
   );
   const local = entities.filter((entity) =>
-    ['cpu', 'nic', 'smartnic', 'dpu', 'local_storage', 'hbm'].includes(entity.entityType),
+    ['cpu', 'nic', 'smartnic', 'dpu', 'local_storage', 'system_memory', 'hbm', 'power_system'].includes(entity.entityType),
   );
   const other = entities.filter(
     (entity) => !accelerators.includes(entity) && !local.includes(entity),

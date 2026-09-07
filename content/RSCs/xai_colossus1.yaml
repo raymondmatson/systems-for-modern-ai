@@ -7,8 +7,8 @@ reference_system:
   introduction:
     date_or_year: 2024
     lifecycle: current
-  summary: Very large production AI cluster using NVIDIA accelerators and Spectrum-X Ethernet networking; useful 
-    primarily as a scale and production-networking case study.
+  summary: Very large production AI cluster using NVIDIA accelerators and Spectrum-X Ethernet networking; useful primarily
+    as a scale and production-networking case study.
   learning_value:
   - Extreme production scale
   - Spectrum-X Ethernet/RDMA
@@ -35,8 +35,8 @@ configurations:
     id: baseline-normal-operation
     name: Baseline / normal operation
     description: Normal/baseline operation with no deliberately injected fault or bottleneck.
-  scope_notes: Uses current xAI GPU count/families but retains compute-rack/server layout as a black box. Network 
-    components are modeled from NVIDIA's published Spectrum-X deployment description.
+  scope_notes: Uses current xAI GPU count/families but retains compute-rack/server layout as a black box. Network components
+    are modeled from NVIDIA's published Spectrum-X deployment description.
   modeling_notes:
   - The current fleet mixes GPU generations; no per-rack distribution is inferred.
   source_ids:
@@ -78,8 +78,8 @@ configurations:
           status: documented
           source_ids:
           - xai-colossus
-          note: Overall accelerator families and scale are known; exact rack/server composition of the mixed-generation 
-            current system is not established in the selected sources.
+          note: Compute remains a high-level mixed-fleet boundary. The documented 100k Hopper-era 2024 baseline is historical
+            context, not a claim that the current fleet is homogeneous.
         properties: {}
         children:
         - id: colossus-gpus
@@ -118,7 +118,23 @@ configurations:
           note: Spectrum SN5600 switches and BlueField-3 SuperNICs were selected for Colossus networking.
         properties:
           switch_family: Spectrum SN5600
-        children: []
+        children:
+        - id: colossus-spectrum4
+          name: Spectrum-4 switch ASICs
+          entity_type: switch_asic
+          explore_tier: 4
+          inventory:
+            category: Network hardware
+            item: Switch ASICs
+            status: existing
+          representation: aggregate
+          evidence:
+            status: documented
+            source_ids:
+            - nv-colossus-net
+            note: NVIDIA identifies the SN5600/Spectrum-X switching used for Colossus as Spectrum-4 based.
+          properties: {}
+          children: []
       - id: colossus-supernic
         name: BlueField-3 SuperNICs
         entity_type: smartnic
@@ -155,7 +171,27 @@ configurations:
       status: documented
       source_ids:
       - nv-colossus-net
-      note: Spectrum-X provides Ethernet-based AI networking with RDMA-oriented features.
+      note: Spectrum-X provides Ethernet-based AI networking with RDMA-oriented features. BlueField-3 SuperNICs connect into
+        the SN5600/Spectrum-4 Spectrum-X Ethernet fabric.
+    properties: {}
+  - id: colossus-compute-supernic
+    name: Compute boundary to BlueField-3 SuperNIC path
+    relationship_type: data_communication_path
+    endpoints:
+    - colossus-compute
+    - colossus-supernic
+    directionality: undirected
+    inventory:
+      category: Network organization and fabrics
+      item: Backend / accelerator networks
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - xai-colossus
+      - nv-colossus-net
+      note: The compute fleet reaches the Spectrum-X backend through BlueField-3 SuperNICs; exact server/rack attachment remains
+        inside the documented high-level compute boundary.
     properties: {}
   functional_groups:
   - id: colossus-backend
@@ -189,8 +225,8 @@ configurations:
     - colossus1
     note: ''
   unknowns:
-  - description: Mixed-generation compute-node/rack organization and storage infrastructure are not sufficiently public 
-      in the selected current sources.
+  - description: Mixed-generation compute-node/rack organization and storage infrastructure are not sufficiently public in
+      the selected current sources.
     treatment: black_box
     affected_entity_ids:
     - colossus-compute

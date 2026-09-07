@@ -22,3 +22,25 @@ scenarios:
       health: degraded
       emphasis: congestion
       note: Congestion on the RoCE fabric highlights topology and transport sensitivity.
+- id: checkpoint-storage-burst
+  name: Checkpoint / storage burst
+  description: A synchronized checkpoint burst emphasizes the physical compute-to-storage path and storage service boundary
+    while the cluster topology remains fixed.
+  default: false
+  scenario_types:
+  - performance_bottleneck
+  effects:
+  - target:
+      type: connection
+      id: meta-storage-path
+    state:
+      operational: active
+      emphasis: checkpoint_io
+      note: Checkpoint traffic is emphasized on the storage path.
+  - target:
+      type: entity
+      id: meta-yv3
+    state:
+      health: healthy
+      emphasis: high_io
+      note: YV3 storage remains healthy under elevated checkpoint traffic.

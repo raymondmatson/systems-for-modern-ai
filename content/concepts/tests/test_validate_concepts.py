@@ -29,6 +29,10 @@ class ConceptValidationTests(unittest.TestCase):
             schema_path=root / "schemas" / "concept.schema.json",
         )
 
+    def test_default_inventory_path_uses_repository_docs(self):
+        from validate_concepts import default_inventory_path
+        self.assertEqual(default_inventory_path(CONCEPT_ROOT), PROJECT_ROOT / "docs" / "Organizational_Content_Inventory.md")
+
     def test_canonical_library_passes(self):
         result = self.validate(CONCEPT_ROOT)
         self.assertEqual(result.errors, [], "\n".join(result.errors))

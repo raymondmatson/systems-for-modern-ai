@@ -1,0 +1,21 @@
+schema_version: 1.0.0
+product:
+  id: nvidia-grace-cpu
+  revision: 1
+  record_level: model
+  name: NVIDIA Grace CPU
+  entity_type: cpu
+  identity:
+    manufacturer: NVIDIA
+    product_family: Grace
+    model: Grace CPU
+  summary: NVIDIA Grace data-center CPU.
+  properties: {}
+  source_ids:
+  - official
+sources:
+- id: official
+  title: NVIDIA Grace CPU official documentation
+  publisher: NVIDIA
+  url: https://www.nvidia.com/en-us/data-center/grace-cpu/
+  accessed: '2026-09-07'

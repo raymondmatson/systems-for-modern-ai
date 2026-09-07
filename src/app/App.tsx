@@ -388,7 +388,23 @@ function App({boot}: {boot: BootContent}) {
                     />
                   ))}
 
-                  {scene.nodes.length === 0 && (
+                  {scene.anatomyDepictions.map((item) => (
+                    <g
+                      key={`anatomy-${item.depiction.id}`}
+                      className={`anatomy-depiction anatomy-${item.depiction.depictionKind}`}
+                      transform={`translate(${item.x} ${item.y})`}
+                      aria-hidden="true"
+                      data-placement-basis={item.depiction.placementBasis}
+                    >
+                      <rect width={item.width} height={item.height} rx="8" />
+                      <text x="10" y="24">{item.depiction.label}</text>
+                      <text className="anatomy-meta" x="10" y="43">
+                        {item.depiction.placementBasis === 'schematic' ? 'schematic placement' : 'documented placement'}
+                      </text>
+                    </g>
+                  ))}
+
+                  {scene.nodes.length === 0 && scene.anatomyDepictions.length === 0 && (
                     <text className="empty-scene" x={scene.width / 2} y={scene.height / 2} textAnchor="middle">
                       No deeper modeled structure at this location.
                     </text>

@@ -1,0 +1,22 @@
+schema_version: 1.0.0
+product:
+  id: cerebras-cs-3
+  revision: 1
+  record_level: model
+  name: Cerebras CS-3
+  entity_type: compute_node
+  identity:
+    manufacturer: Cerebras
+    product_family: CS
+    model: CS-3
+    generation: 3rd generation
+  summary: Cerebras CS-3 wafer-scale AI system.
+  properties: {}
+  source_ids:
+  - official
+sources:
+- id: official
+  title: Cerebras CS-3 official documentation
+  publisher: Cerebras
+  url: https://www.cerebras.ai/blog/cerebras-cs3
+  accessed: '2026-09-07'

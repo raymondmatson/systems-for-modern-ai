@@ -1,4 +1,4 @@
-schema_version: 1.3.0
+schema_version: 1.4.0
 reference_system:
   id: google-tpu7x-ironwood
   name: Google Cloud TPU7x (Ironwood) Pod / Superpod
@@ -7,7 +7,8 @@ reference_system:
   introduction:
     date_or_year: 2025
     lifecycle: new
-  summary: Custom-accelerator pod architecture organized around four-chip hosts, 64-chip rack/cubes, 3D-torus ICI, and optical circuit switching between cubes.
+  summary: Custom-accelerator pod architecture organized around four-chip hosts, 64-chip rack/cubes, 3D-torus ICI, and optical
+    circuit switching between cubes.
   learning_value:
   - Custom accelerator alternative to GPUs
   - 3D torus plus optical reconfiguration
@@ -34,7 +35,8 @@ configurations:
     id: baseline-normal-operation
     name: Baseline / normal operation
     description: Normal/baseline operation with no deliberately injected fault or bottleneck.
-  scope_notes: Represents the published host → cube/rack → superpod organization and the distinction between direct ICI inside cubes and OCS connectivity between cubes.
+  scope_notes: Represents the published host → cube/rack → superpod organization and the distinction between direct ICI inside
+    cubes and OCS connectivity between cubes.
   modeling_notes:
   - The exact physical form of the OCS network is aggregated.
   - HBM stack count is not inferred from capacity.
@@ -127,14 +129,50 @@ configurations:
               basis: advertised
               scope: per_node
           children:
+          - id: ironwood-host-cpu
+            name: CPU host resources
+            entity_type: cpu
+            explore_tier: 4
+            inventory:
+              category: Server-level hardware
+              item: CPUs
+              status: existing
+            representation: black_box
+            evidence:
+              status: documented
+              source_ids:
+              - gcp-tpu7x
+              note: Each 4-chip TPU7x VM exposes 224 vCPUs across two NUMA nodes; the exact physical CPU product is not asserted.
+            properties: {}
+            children: []
+          - id: ironwood-host-memory
+            name: Host main memory
+            entity_type: system_memory
+            explore_tier: 4
+            inventory:
+              category: Memory hierarchy
+              item: Host memory
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - gcp-tpu7x
+              note: Each 4-chip TPU7x VM has 960 GB of host RAM.
+            properties:
+              memory_capacity:
+                status: known
+                value:
+                  form: scalar
+                  number: 960
+                  approximate: false
+                  unit: GB
+                basis: advertised
+                scope: per_node
+            children: []
           - id: ironwood-tpu
             name: TPU7x chip
             entity_type: tpu
-            product_identity:
-              manufacturer: Google
-              product_family: Ironwood
-              model: TPU7x
-              generation: 7th generation
             explore_tier: 4
             inventory:
               category: Server-level hardware
@@ -164,30 +202,138 @@ configurations:
                 basis: advertised
                 scope: per_device
             children:
-            - id: ironwood-tensorcores
-              name: TensorCores
-              entity_type: tensor_core
+            - id: ironwood-chiplets
+              name: TPU7x chiplets
+              entity_type: compute_assembly
               explore_tier: 5
               inventory:
                 category: Accelerator internals
-                item: Tensor cores
+                item: Chiplets
                 status: existing
               representation: aggregate
               evidence:
                 status: documented
                 source_ids:
                 - gcp-tpu7x
-                note: Two TensorCores per TPU chip.
-              properties:
-                quantity_per_chip:
-                  status: known
-                  value:
+                note: Each Ironwood chip contains two distinct chiplets, each with one TensorCore, two SparseCores, and 96
+                  GB HBM.
+              properties: {}
+              children:
+              - id: ironwood-tensorcores
+                name: TensorCore per representative chiplet
+                entity_type: tensor_core
+                explore_tier: 5
+                inventory:
+                  category: Accelerator internals
+                  item: Tensor cores
+                  status: existing
+                representation: aggregate
+                evidence:
+                  status: documented
+                  source_ids:
+                  - gcp-tpu7x
+                  note: Two TensorCores per TPU chip.
+                properties:
+                  quantity_per_chip:
+                    status: known
+                    value:
+                      form: scalar
+                      number: 1
+                      approximate: false
+                    basis: advertised
+                    scope: per_device
+                children: []
+                population:
+                  count:
+                    value: 1
                     form: scalar
-                    number: 2
-                    approximate: false
-                  basis: advertised
-                  scope: per_device
-              children: []
+                    basis: documented_fixed
+                  expansion_mode: aggregate_only
+                  individually_addressable: false
+                  member_entity_type: tensor_core
+              - id: ironwood-sparsecores
+                name: SparseCores per representative chiplet
+                entity_type: sparse_core
+                explore_tier: 5
+                inventory:
+                  category: Accelerator internals
+                  item: Sparse / embedding accelerator cores
+                  status: existing
+                representation: aggregate
+                evidence:
+                  status: documented
+                  source_ids:
+                  - gcp-tpu7x
+                  note: Four SparseCores per TPU chip.
+                properties:
+                  quantity_per_chip:
+                    status: known
+                    value:
+                      form: scalar
+                      number: 2
+                      approximate: false
+                    basis: advertised
+                    scope: per_device
+                children: []
+                population:
+                  count:
+                    value: 2
+                    form: scalar
+                    basis: documented_fixed
+                  expansion_mode: aggregate_only
+                  individually_addressable: false
+                  member_entity_type: sparse_core
+              - id: ironwood-hbm
+                name: HBM per representative chiplet
+                entity_type: hbm
+                explore_tier: 5
+                inventory:
+                  category: Accelerator internals
+                  item: HBM stacks
+                  status: existing
+                representation: aggregate
+                evidence:
+                  status: simplified
+                  source_ids:
+                  - gcp-tpu7x
+                  note: Each chiplet has 96 GB/GiB-class HBM; two chiplets provide 192 GiB per chip in Cloud TPU documentation.
+                properties:
+                  capacity_gib_per_chip:
+                    status: known
+                    value:
+                      form: scalar
+                      number: 96
+                      approximate: false
+                      unit: GiB
+                    basis: advertised
+                    scope: per_device
+                children: []
+              - id: ironwood-vmem
+                name: Vector memory (VMEM)
+                entity_type: on_chip_memory
+                explore_tier: 5
+                inventory:
+                  category: Memory hierarchy
+                  item: On-chip SRAM
+                  status: existing
+                representation: aggregate
+                evidence:
+                  status: documented
+                  source_ids:
+                  - gcp-tpu7x
+                  note: VMEM is high-bandwidth on-chip SRAM associated with TensorCore execution; Google documents 64 MiB
+                    per TensorCore.
+                properties:
+                  memory_capacity:
+                    status: known
+                    value:
+                      form: scalar
+                      number: 64
+                      approximate: false
+                      unit: MiB
+                    basis: advertised
+                    scope: per_device
+                children: []
               population:
                 count:
                   value: 2
@@ -195,63 +341,22 @@ configurations:
                   basis: documented_fixed
                 expansion_mode: representative_member
                 individually_addressable: false
-                member_entity_type: tensor_core
-            - id: ironwood-sparsecores
-              name: SparseCores
-              entity_type: sparse_core
-              explore_tier: 5
-              inventory:
-                category: Accelerator internals
-                item: Sparse / embedding accelerator cores
-                status: existing
-              representation: aggregate
-              evidence:
-                status: documented
-                source_ids:
-                - gcp-tpu7x
-                note: Four SparseCores per TPU chip.
-              properties:
-                quantity_per_chip:
-                  status: known
-                  value:
-                    form: scalar
-                    number: 4
-                    approximate: false
-                  basis: advertised
-                  scope: per_device
-              children: []
-              population:
-                count:
-                  value: 4
-                  form: scalar
-                  basis: documented_fixed
-                expansion_mode: representative_member
-                individually_addressable: false
-                member_entity_type: sparse_core
-            - id: ironwood-hbm
-              name: HBM
-              entity_type: hbm
-              explore_tier: 5
-              inventory:
-                category: Accelerator internals
-                item: HBM stacks
-                status: existing
-              representation: aggregate
-              evidence:
-                status: simplified
-                source_ids:
-                - gcp-tpu7x
-                note: HBM capacity is documented; stack count is not asserted here.
-              properties:
-                capacity_gib_per_chip:
-                  status: known
-                  value:
-                    form: scalar
-                    number: 192
-                    approximate: false
-                  basis: advertised
-                  scope: per_device
-              children: []
+                member_entity_type: compute_assembly
+              anatomy:
+              - id: ironwood-d2d-interface
+                label: Chiplet die-to-die interface
+                inventory:
+                  category: Accelerator internals
+                  item: Interconnect controllers
+                  status: existing
+                evidence:
+                  status: documented
+                  source_ids:
+                  - gcp-tpu7x
+                  note: The two chiplets are connected by a high-speed D2D interface. Because this aggregate exemplar does
+                    not create two addressable chiplet entities, the D2D path is depicted rather than modeled as a graph edge.
+                depiction_kind: io
+                placement_basis: schematic
             population:
               count:
                 value: 4
@@ -260,6 +365,9 @@ configurations:
               expansion_mode: representative_member
               individually_addressable: false
               member_entity_type: tpu
+            product_ref:
+              id: google-tpu7x-ironwood
+              revision: 1
       - id: ironwood-ocs
         name: Optical Circuit Switch network
         entity_type: optical_network
@@ -348,6 +456,75 @@ configurations:
       - gcp-ironwood-stack
       note: OCS connects cubes into larger pods/superpods.
     properties: {}
+  - id: ironwood-host-pcie
+    name: Host-to-TPU PCIe path
+    relationship_type: physical_connectivity
+    endpoints:
+    - ironwood-host-cpu
+    - ironwood-tpu
+    directionality: undirected
+    inventory:
+      category: Local server interconnects
+      item: PCI Express
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - gcp-tpu7x
+      note: Each set of four TPU chips connects to a CPU host through PCIe; exact lane/switch topology is not modeled.
+    properties: {}
+  - id: ironwood-host-memory-path
+    name: CPU host-memory path
+    relationship_type: data_communication_path
+    endpoints:
+    - ironwood-host-cpu
+    - ironwood-host-memory
+    directionality: undirected
+    inventory:
+      category: Memory hierarchy
+      item: Host memory
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - gcp-tpu7x
+      note: Host RAM provides a lower-bandwidth offload/staging tier relative to TPU HBM.
+    properties: {}
+  - id: ironwood-dcn-link
+    name: Ironwood pod to data-center network
+    relationship_type: physical_connectivity
+    endpoints:
+    - ironwood-cube
+    - ironwood-dcn
+    directionality: undirected
+    inventory:
+      category: Network organization and fabrics
+      item: Scale-out networks
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - gcp-tpu7x
+      note: Cloud TPU documentation specifies DCN bandwidth per TPU chip; the data-center network is a separate scale-out
+        boundary.
+    properties: {}
+  - id: ironwood-cooling-dependency
+    name: Ironwood liquid-cooling support
+    relationship_type: dependency_service
+    endpoints:
+    - ironwood-cooling
+    - ironwood-cube
+    directionality: undirected
+    inventory:
+      category: Thermal management
+      item: Liquid cooling
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - gcp-ironwood-stack
+      note: Liquid cooling supports the Ironwood rack/cube boundary; exact coolant routing is not modeled.
+    properties: {}
   functional_groups:
   - id: ironwood-scaleup
     name: ICI cube scale-up domain
@@ -397,7 +574,8 @@ configurations:
       id: ironwood-cube
     note: ''
   unknowns:
-  - description: OCS cabinet-level composition and facility deployment details are not specified in the high-level public material used here.
+  - description: OCS cabinet-level composition and facility deployment details are not specified in the high-level public
+      material used here.
     treatment: black_box
     affected_entity_ids:
     - ironwood-ocs

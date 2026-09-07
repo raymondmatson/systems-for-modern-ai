@@ -3,6 +3,7 @@ import type {
   Configuration,
   ContextLocator,
   Entity,
+  AnatomyDepiction,
 } from '../domain/types';
 import {layoutForContext} from './layout';
 import {
@@ -36,6 +37,14 @@ export interface SceneConnection {
   previewed: boolean;
   scenarioEmphasized: boolean;
   aggregated: boolean;
+}
+
+export interface SceneAnatomyDepiction {
+  depiction: AnatomyDepiction;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
 }
 
 export interface PreviewVM {
@@ -251,6 +260,7 @@ export function buildExploreScene(state: AppState, configuration: Configuration)
       nodes: [] as SceneNode[],
       connections: [] as SceneConnection[],
       contextConnections: [] as SceneConnection[],
+      anatomyDepictions: [] as SceneAnatomyDepiction[],
       width: 760,
       height: 360,
       layoutKind: 'generic' as const,
@@ -303,6 +313,18 @@ export function buildExploreScene(state: AppState, configuration: Configuration)
     };
   });
 
+  const anatomyDepictions: SceneAnatomyDepiction[] = (current.anatomyDepictions ?? []).map((depiction, index) => {
+    const columns = Math.min(4, Math.max(1, current.anatomyDepictions?.length ?? 1));
+    return {
+      depiction,
+      x: 42 + (index % columns) * 176,
+      y: layout.height + 28 + Math.floor(index / columns) * 82,
+      width: 154,
+      height: 58,
+    };
+  });
+  const anatomyRows = Math.ceil(anatomyDepictions.length / Math.min(4, Math.max(1, anatomyDepictions.length)));
+
   const connections: SceneConnection[] = [];
   const contextConnections: SceneConnection[] = [];
 
@@ -351,8 +373,9 @@ export function buildExploreScene(state: AppState, configuration: Configuration)
     nodes,
     connections,
     contextConnections,
-    width: layout.width,
-    height: layout.height,
+    anatomyDepictions,
+    width: Math.max(layout.width, anatomyDepictions.length ? 760 : layout.width),
+    height: layout.height + (anatomyRows ? 40 + anatomyRows * 82 : 0),
     layoutKind: layout.kind,
   };
 }

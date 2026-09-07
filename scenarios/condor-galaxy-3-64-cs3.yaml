@@ -22,3 +22,25 @@ scenarios:
       health: degraded
       emphasis: collective_path
       note: A degraded collective fabric highlights dependency on broadcast/reduction infrastructure.
+- id: memoryx-weight-stream-pressure
+  name: MemoryX / weight-stream pressure
+  description: Pressure on the external model-memory path emphasizes the MemoryX-to-CS-3 weight stream while the wafer-scale
+    compute structure remains fixed.
+  default: false
+  scenario_types:
+  - performance_bottleneck
+  effects:
+  - target:
+      type: connection
+      id: cg3-weight-stream
+    state:
+      operational: active
+      emphasis: weight_stream_pressure
+      note: Model-weight streaming becomes the emphasized data path.
+  - target:
+      type: entity
+      id: cg3-memoryx
+    state:
+      health: healthy
+      emphasis: memory_pressure
+      note: MemoryX remains available while model-memory demand is elevated.

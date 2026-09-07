@@ -1,0 +1,1 @@
+{"entityType":"nic","id":"nvidia-connectx-7","identity":{"manufacturer":"NVIDIA","model":"ConnectX-7","product_family":"ConnectX"},"name":"NVIDIA ConnectX-7","properties":{},"recordLevel":"model","revision":1,"sourceIds":["official"],"summary":"NVIDIA ConnectX-7 network adapter family used for high-speed AI/HPC networking."}

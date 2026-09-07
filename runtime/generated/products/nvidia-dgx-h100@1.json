@@ -1,0 +1,1 @@
+{"entityType":"compute_node","id":"nvidia-dgx-h100","identity":{"manufacturer":"NVIDIA","model":"DGX H100","product_family":"DGX"},"name":"NVIDIA DGX H100","properties":{},"recordLevel":"model","revision":1,"sourceIds":["official"],"summary":"NVIDIA DGX H100 eight-GPU AI system."}

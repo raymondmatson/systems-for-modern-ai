@@ -233,6 +233,12 @@ entity_types:
   inspectable: true
   enterability: contextual
   supports_concepts: true
+- entity_type: power_system
+  profile: support
+  selectable: true
+  inspectable: true
+  enterability: contextual
+  supports_concepts: true
 - entity_type: preprocess_server
   profile: support
   selectable: true
@@ -307,6 +313,12 @@ entity_types:
   supports_concepts: true
 - entity_type: switch_tray
   profile: assembly
+  selectable: true
+  inspectable: true
+  enterability: contextual
+  supports_concepts: true
+- entity_type: system_memory
+  profile: device
   selectable: true
   inspectable: true
   enterability: contextual

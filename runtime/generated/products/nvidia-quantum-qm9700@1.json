@@ -1,0 +1,1 @@
+{"entityType":"network_switch","id":"nvidia-quantum-qm9700","identity":{"manufacturer":"NVIDIA","model":"QM9700","product_family":"Quantum"},"name":"NVIDIA Quantum QM9700","properties":{},"recordLevel":"model","revision":1,"sourceIds":["official"],"summary":"NVIDIA Quantum InfiniBand switch family used in DGX SuperPOD fabrics."}

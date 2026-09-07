@@ -22,3 +22,24 @@ scenarios:
       operational: active
       emphasis: reconfigured_path
       note: Optical switching changes active connectivity while physical identities remain fixed.
+- id: memory-tier-pressure
+  name: HBM / host-memory pressure
+  description: Memory pressure emphasizes TPU HBM/VMEM and host-memory staging while preserving the fixed chip/host structure.
+  default: false
+  scenario_types:
+  - performance_bottleneck
+  effects:
+  - target:
+      type: entity
+      id: ironwood-hbm
+    state:
+      health: healthy
+      emphasis: capacity_pressure
+      note: HBM capacity pressure increases reliance on lower tiers.
+  - target:
+      type: connection
+      id: ironwood-host-pcie
+    state:
+      operational: active
+      emphasis: offload_path
+      note: Host-memory offload/staging traffic is emphasized.

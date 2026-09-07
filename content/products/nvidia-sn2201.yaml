@@ -1,0 +1,21 @@
+schema_version: 1.0.0
+product:
+  id: nvidia-sn2201
+  revision: 1
+  record_level: model
+  name: NVIDIA SN2201
+  entity_type: network_switch
+  identity:
+    manufacturer: NVIDIA
+    product_family: Spectrum
+    model: SN2201
+  summary: Rack-management Ethernet switch used for NVL72 out-of-band management.
+  properties: {}
+  source_ids:
+  - official
+sources:
+- id: official
+  title: "NVIDIA NVL72 AI Factory \u2014 Network Logical Architecture"
+  publisher: NVIDIA
+  url: https://docs.nvidia.com/enterprise-reference-architectures/nvl72-ai-factory/latest/network-logical-architecture.html
+  accessed: '2026-09-07'

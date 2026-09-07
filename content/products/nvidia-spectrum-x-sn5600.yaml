@@ -1,0 +1,21 @@
+schema_version: 1.0.0
+product:
+  id: nvidia-spectrum-x-sn5600
+  revision: 1
+  record_level: model
+  name: NVIDIA Spectrum-X SN5600
+  entity_type: network_switch
+  identity:
+    manufacturer: NVIDIA
+    product_family: Spectrum-X
+    model: SN5600
+  summary: NVIDIA Spectrum-X SN5600 Ethernet switch.
+  properties: {}
+  source_ids:
+  - official
+sources:
+- id: official
+  title: NVIDIA Spectrum-X SN5600 official documentation
+  publisher: NVIDIA
+  url: https://www.nvidia.com/en-us/networking/ethernet-switching/spectrum-x/
+  accessed: '2026-09-07'

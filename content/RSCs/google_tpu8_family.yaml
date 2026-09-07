@@ -7,8 +7,8 @@ reference_system:
   introduction:
     date_or_year: 2026
     lifecycle: new
-  summary: Eighth-generation TPU family deliberately split into training-oriented TPU 8t and inference-oriented TPU 8i 
-    configurations with different topology and on-chip specialization.
+  summary: Eighth-generation TPU family deliberately split into training-oriented TPU 8t and inference-oriented TPU 8i configurations
+    with different topology and on-chip specialization.
   learning_value:
   - Demonstrates multiple configurations within one system family
   - Training-versus-inference hardware specialization
@@ -107,6 +107,38 @@ configurations:
               note: SparseCore is a dedicated embedding/irregular-access accelerator.
             properties: {}
             children: []
+          - id: tpu8t-hbm
+            name: TPU 8t HBM
+            entity_type: hbm
+            explore_tier: 5
+            inventory:
+              category: Accelerator internals
+              item: HBM stacks
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - gcp-tpu8
+              note: TPU 8t integrates HBM; capacity is kept source-faithful in product/detail context.
+            properties: {}
+            children: []
+          - id: tpu8t-vmem
+            name: TPU 8t VMEM
+            entity_type: on_chip_memory
+            explore_tier: 5
+            inventory:
+              category: Memory hierarchy
+              item: On-chip SRAM
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - gcp-tpu8
+              note: TPU 8t exposes VMEM/on-chip memory in the documented memory hierarchy.
+            properties: {}
+            children: []
       - id: tpu8t-virgo
         name: Virgo scale-out fabric
         entity_type: network_fabric
@@ -121,6 +153,70 @@ configurations:
           source_ids:
           - gcp-tpu8
           note: Virgo is a flat two-layer non-blocking multi-planar scale-out network.
+        properties: {}
+        children: []
+      - id: tpu8t-host-support
+        name: Axion CPU host-support boundary
+        entity_type: compute_group
+        explore_tier: 2
+        inventory:
+          category: Physical infrastructure hierarchy
+          item: Management / head / login nodes
+          status: existing
+        representation: aggregate
+        evidence:
+          status: documented
+          source_ids:
+          - gcp-tpu8
+          note: TPU 8 deployments use Axion CPU header/host resources; exact per-chip mapping is not asserted.
+        properties: {}
+        children: []
+      - id: tpu8t-nic
+        name: TPU network-interface boundary
+        entity_type: nic
+        explore_tier: 3
+        inventory:
+          category: Network hardware
+          item: NICs
+          status: existing
+        representation: aggregate
+        evidence:
+          status: documented
+          source_ids:
+          - gcp-tpu8
+          note: TPUDirect uses accelerator/network-interface paths; exact NIC placement/count is summarized.
+        properties: {}
+        children: []
+      - id: tpu8t-jupiter
+        name: Jupiter north-south data-center network
+        entity_type: network_fabric
+        explore_tier: 2
+        inventory:
+          category: Network organization and fabrics
+          item: Frontend networks
+          status: existing
+        representation: aggregate
+        evidence:
+          status: documented
+          source_ids:
+          - gcp-tpu8
+          note: Jupiter provides north-south/data-center connectivity distinct from Virgo accelerator traffic.
+        properties: {}
+        children: []
+      - id: tpu8t-lustre
+        name: Managed Lustre storage boundary
+        entity_type: storage_system
+        explore_tier: 2
+        inventory:
+          category: Storage
+          item: Lustre
+          status: existing
+        representation: aggregate
+        evidence:
+          status: documented
+          source_ids:
+          - gcp-tpu8
+          note: TPU Direct Storage supports direct access to Managed Lustre.
         properties: {}
         children: []
   connections:
@@ -157,6 +253,74 @@ configurations:
       source_ids:
       - gcp-tpu8
       note: Virgo connects TPU 8t at large scale.
+    properties: {}
+  - id: tpu8t-tpudirect-rdma
+    relationship_type: data_communication_path
+    directionality: bidirectional
+    endpoints:
+    - tpu8t-chip
+    - tpu8t-nic
+    inventory:
+      category: Data movement as a unifying theme
+      item: Bandwidth
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - gcp-tpu8
+      note: TPUDirect RDMA accelerator-to-NIC path
+    properties: {}
+    name: TPUDirect RDMA accelerator-to-NIC path
+  - id: tpu8t-jupiter-path
+    relationship_type: physical_connectivity
+    directionality: bidirectional
+    endpoints:
+    - tpu8t-nic
+    - tpu8t-jupiter
+    inventory:
+      category: Physical infrastructure hierarchy
+      item: Network switches
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - gcp-tpu8
+      note: NIC to Jupiter north-south network
+    properties: {}
+    name: NIC to Jupiter north-south network
+  - id: tpu8t-tpudirect-storage
+    relationship_type: data_communication_path
+    directionality: bidirectional
+    endpoints:
+    - tpu8t-chip
+    - tpu8t-lustre
+    inventory:
+      category: Data movement as a unifying theme
+      item: Bandwidth
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - gcp-tpu8
+      note: TPU Direct Storage path to Managed Lustre
+    properties: {}
+    name: TPU Direct Storage path to Managed Lustre
+  - id: tpu8t-host-support-path
+    name: Axion host support to TPU rack
+    relationship_type: data_communication_path
+    endpoints:
+    - tpu8t-host-support
+    - tpu8t-racks
+    directionality: undirected
+    inventory:
+      category: Direct data movement and GPU I/O
+      item: Host-to-device transfer
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - gcp-tpu8
+      note: Axion host/header resources support TPU 8t operation; exact per-chip host mapping is intentionally not asserted.
     properties: {}
   functional_groups:
   - id: tpu8t-scaleup
@@ -213,8 +377,8 @@ configurations:
     description: Baseline serving/sampling state.
   scope_notes: Inference-oriented configuration emphasizing Boardfly topology and dedicated collectives acceleration.
   modeling_notes:
-  - Published sources describe up to 1,152 chips; Boardfly example active-chip counts can vary, so this model avoids 
-    inventing exact group population beyond documented building blocks.
+  - Published sources describe up to 1,152 chips; Boardfly example active-chip counts can vary, so this model avoids inventing
+    exact group population beyond documented building blocks.
   source_ids:
   - gcp-tpu8
   hierarchy:
@@ -308,6 +472,57 @@ configurations:
                 note: Dedicated hardware block accelerates aggregation/synchronization.
               properties: {}
               children: []
+            - id: tpu8i-tensorcores
+              name: TPU 8i TensorCores
+              entity_type: tensor_core
+              explore_tier: 5
+              inventory:
+                category: Accelerator internals
+                item: Tensor cores
+                status: existing
+              representation: aggregate
+              evidence:
+                status: documented
+                source_ids:
+                - gcp-tpu8
+                note: TPU 8i provides two TensorCores per chip.
+              properties:
+                quantity_per_chip: 2
+              children: []
+            - id: tpu8i-hbm
+              name: TPU 8i HBM
+              entity_type: hbm
+              explore_tier: 5
+              inventory:
+                category: Accelerator internals
+                item: HBM stacks
+                status: existing
+              representation: aggregate
+              evidence:
+                status: documented
+                source_ids:
+                - gcp-tpu8
+                note: TPU 8i provides 288 GB HBM.
+              properties:
+                capacity_gb: 288
+              children: []
+            - id: tpu8i-vmem
+              name: TPU 8i VMEM
+              entity_type: on_chip_memory
+              explore_tier: 5
+              inventory:
+                category: Memory hierarchy
+                item: On-chip SRAM
+                status: existing
+              representation: aggregate
+              evidence:
+                status: documented
+                source_ids:
+                - gcp-tpu8
+                note: TPU 8i provides 384 MB VMEM.
+              properties:
+                capacity_mb: 384
+              children: []
       - id: tpu8i-ocs
         name: Optical circuit switching
         entity_type: optical_network
@@ -324,24 +539,90 @@ configurations:
           note: OCS links higher-level Boardfly groups.
         properties: {}
         children: []
+      - id: tpu8i-host-support
+        name: Axion CPU host-support boundary
+        entity_type: compute_group
+        explore_tier: 2
+        inventory:
+          category: Physical infrastructure hierarchy
+          item: Management / head / login nodes
+          status: existing
+        representation: aggregate
+        evidence:
+          status: documented
+          source_ids:
+          - gcp-tpu8
+          note: TPU 8 family materials document Axion host/header support without a fixed per-tray mapping here.
+        properties: {}
+        children: []
   connections:
-  - id: tpu8i-boardfly-link
-    name: Boardfly ICI
+  - id: tpu8i-local-copper-ring
     relationship_type: physical_connectivity
+    directionality: bidirectional
     endpoints:
     - tpu8i-chip
-    - tpu8i-board-groups
-    - tpu8i-ocs
-    directionality: undirected
+    - tpu8i-trays
     inventory:
-      category: Local server interconnects
-      item: TPU Inter-Chip Interconnect (ICI)
+      category: Physical infrastructure hierarchy
+      item: Network switches
       status: existing
     evidence:
       status: documented
       source_ids:
       - gcp-tpu8
-      note: Hierarchical Boardfly fabric uses copper local links and OCS between groups.
+      note: Four-chip local copper Boardfly connectivity
+    properties: {}
+    name: Four-chip local copper Boardfly connectivity
+  - id: tpu8i-group-copper
+    relationship_type: physical_connectivity
+    directionality: bidirectional
+    endpoints:
+    - tpu8i-trays
+    - tpu8i-board-groups
+    inventory:
+      category: Physical infrastructure hierarchy
+      item: Network switches
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - gcp-tpu8
+      note: Eight-board group connectivity
+    properties: {}
+    name: Eight-board group connectivity
+  - id: tpu8i-group-ocs
+    relationship_type: physical_connectivity
+    directionality: bidirectional
+    endpoints:
+    - tpu8i-board-groups
+    - tpu8i-ocs
+    inventory:
+      category: Physical infrastructure hierarchy
+      item: Network switches
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - gcp-tpu8
+      note: Boardfly group to OCS optical connectivity
+    properties: {}
+    name: Boardfly group to OCS optical connectivity
+  - id: tpu8i-host-support-path
+    name: Axion host support to Boardfly groups
+    relationship_type: data_communication_path
+    endpoints:
+    - tpu8i-host-support
+    - tpu8i-board-groups
+    directionality: undirected
+    inventory:
+      category: Direct data movement and GPU I/O
+      item: Host-to-device transfer
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - gcp-tpu8
+      note: Axion host/header resources support TPU 8i operation; exact per-board host mapping is intentionally not asserted.
     properties: {}
   functional_groups:
   - id: tpu8i-scaleup
@@ -384,8 +665,8 @@ configurations:
     - tpu8i-ocs
     note: Boardfly describes the hierarchical topology; the underlying TPU-to-TPU physical interconnect is ICI.
   unknowns:
-  - description: Exact deployment-specific active-chip population and mechanical rack mapping can differ from the 
-      topology examples.
+  - description: Exact deployment-specific active-chip population and mechanical rack mapping can differ from the topology
+      examples.
     treatment: simplified
     affected_entity_ids:
     - tpu8i-board-groups

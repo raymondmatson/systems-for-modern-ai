@@ -1,0 +1,21 @@
+schema_version: 1.0.0
+product:
+  id: nvidia-h100
+  revision: 1
+  record_level: model
+  name: NVIDIA H100
+  entity_type: gpu
+  identity:
+    manufacturer: NVIDIA
+    model: H100
+    architecture: Hopper
+  summary: NVIDIA H100 Tensor Core GPU
+  properties: {}
+  source_ids:
+  - official
+sources:
+- id: official
+  title: NVIDIA H100 official documentation
+  publisher: NVIDIA
+  url: https://www.nvidia.com/en-us/data-center/h100/
+  accessed: '2026-09-07'

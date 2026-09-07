@@ -18,7 +18,7 @@ const configuration: Configuration = {
   scopeNotes: 'Fixture scope explains the modeled learning boundary.',
   modelingNotes: ['Fixture modeling note preserves an explicit simplification.'],
   entities: {
-    root: entity('root', 'System', 'compute_cluster', 1, undefined, ['rack-a', 'fabric', 'orphan']),
+    root: {...entity('root', 'System', 'compute_cluster', 1, undefined, ['rack-a', 'fabric', 'orphan']), anatomyDepictions: [{id:'psu-bank', label:'Power-supply assembly', inventory:{category:'Server-level hardware', item:'Power supplies'}, evidence:{status:'documented', sourceIds:['source-a'], note:'Placement schematic.'}, depictionKind:'power', placementBasis:'schematic'}]},
     'rack-a': entity('rack-a', 'Rack A', 'rack', 2, 'root', ['node-bank']),
     fabric: entity('fabric', 'Backend Fabric', 'network_fabric', 2, 'root', ['switch']),
     'node-bank': {
@@ -40,7 +40,7 @@ const configuration: Configuration = {
         },
       },
     },
-    gpu: entity('gpu', 'H100 GPU', 'gpu', 4, 'node-bank', []),
+    gpu: {...entity('gpu', 'H100 GPU', 'gpu', 4, 'node-bank', []), productRef:{id:'nvidia-h100', revision:1}, resolvedProduct:{id:'nvidia-h100', revision:1, recordLevel:'model', name:'NVIDIA H100', entityType:'gpu', identity:{manufacturer:'NVIDIA', model:'H100', architecture:'Hopper'}, summary:'H100 GPU', properties:{}}},
     switch: entity('switch', 'Fabric switch', 'network_switch', 3, 'fabric', []),
     orphan: entity('orphan', 'Unconnected device', 'gpu', 4, 'root', []),
   },
@@ -222,6 +222,22 @@ describe('Explore and Detail view models', () => {
       ['Arrived from', 'Rack A'],
       ['Via relationship', 'Backend accelerator path'],
     ]);
+  });
+
+
+  it('renders authored anatomy as non-semantic scene data and exposes it through enclosing Detail', () => {
+    const scene = buildExploreScene(state, configuration);
+    expect(scene.anatomyDepictions).toHaveLength(1);
+    expect(scene.anatomyDepictions[0]?.depiction.id).toBe('psu-bank');
+    const detail = buildDetailVM(state, configuration, {capabilities, propertyRegistry, concepts});
+    expect(detail.containment).toContainEqual(['Visible anatomy', 'Power-supply assembly (schematic)']);
+  });
+
+  it('uses the resolved Product Catalog identity in Detail without changing entity identity', () => {
+    const selectedState: AppState = {...state, explore:{...state.explore, selection:{kind:'entity', systemId:'system', configurationId:'cfg', entityId:'gpu'}}};
+    const detail = buildDetailVM(selectedState, configuration, {capabilities, propertyRegistry, concepts});
+    expect(detail.identity).toContainEqual(['Product', 'NVIDIA H100 (catalog rev 1)']);
+    expect(detail.identity).toContainEqual(['Manufacturer', 'NVIDIA']);
   });
 
   it('does not expose Enter for a leaf with no deeper structure or architectural relationship', () => {

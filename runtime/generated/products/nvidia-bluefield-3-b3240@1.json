@@ -1,0 +1,1 @@
+{"entityType":"dpu","id":"nvidia-bluefield-3-b3240","identity":{"manufacturer":"NVIDIA","model":"BlueField-3 B3240","product_family":"BlueField"},"name":"NVIDIA BlueField-3 B3240","properties":{},"recordLevel":"model","revision":1,"sourceIds":["official"],"summary":"Dual-port BlueField-3 DPU used for North/South storage, customer, and infrastructure traffic in GB300 NVL72."}

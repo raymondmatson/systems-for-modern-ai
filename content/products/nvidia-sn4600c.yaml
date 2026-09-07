@@ -1,0 +1,21 @@
+schema_version: 1.0.0
+product:
+  id: nvidia-sn4600c
+  revision: 1
+  record_level: model
+  name: NVIDIA SN4600C
+  entity_type: network_switch
+  identity:
+    manufacturer: NVIDIA
+    product_family: Spectrum
+    model: SN4600C
+  summary: Ethernet switch family used for DGX SuperPOD in-band management connectivity.
+  properties: {}
+  source_ids:
+  - official
+sources:
+- id: official
+  title: DGX SuperPOD Network Fabrics
+  publisher: NVIDIA
+  url: https://docs.nvidia.com/dgx-superpod/reference-architecture-scalable-infrastructure-h100/latest/network-fabrics.html
+  accessed: '2026-09-07'

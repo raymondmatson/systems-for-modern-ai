@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/systems-modern-ai/product-1.0.0.schema.json",
+  "title": "Systems for Modern AI Product Definition 1.0.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "product", "sources"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "product": {"$ref": "#/$defs/product"},
+    "sources": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/source"}}
+  },
+  "$defs": {
+    "slug": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+    "source": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "title", "publisher", "url", "accessed"],
+      "properties": {
+        "id": {"$ref": "#/$defs/slug"}, "title": {"type": "string", "minLength": 1},
+        "publisher": {"type": "string", "minLength": 1}, "url": {"type": "string", "format": "uri"},
+        "accessed": {"type": "string", "format": "date"}
+      }
+    },
+    "identity": {
+      "type": "object", "additionalProperties": false, "required": ["manufacturer"],
+      "properties": {
+        "manufacturer": {"type": "string", "minLength": 1}, "product_family": {"type": "string", "minLength": 1},
+        "model": {"type": "string", "minLength": 1}, "variant": {"type": "string", "minLength": 1},
+        "generation": {"type": "string", "minLength": 1}, "architecture": {"type": "string", "minLength": 1},
+        "codename": {"type": "string", "minLength": 1}
+      },
+      "anyOf": [
+        {"required": ["product_family"]}, {"required": ["model"]}, {"required": ["variant"]},
+        {"required": ["generation"]}, {"required": ["architecture"]}, {"required": ["codename"]}
+      ]
+    },
+    "evidence": {
+      "type": "object", "additionalProperties": false, "required": ["status", "source_ids"],
+      "properties": {
+        "status": {"enum": ["documented", "inferred", "simplified", "unknown", "proprietary"]},
+        "source_ids": {"type": "array", "items": {"$ref": "#/$defs/slug"}, "uniqueItems": true},
+        "note": {"type": "string"}
+      }
+    },
+    "propertyMagnitude": {
+      "oneOf": [
+        {"type": "object", "additionalProperties": false, "required": ["form", "number", "unit", "approximate"], "properties": {"form": {"const": "scalar"}, "number": {"type": ["number", "integer", "string"]}, "unit": {"type": "string", "minLength": 1}, "approximate": {"type": "boolean"}}},
+        {"type": "object", "additionalProperties": false, "required": ["form", "min", "max", "unit", "approximate"], "properties": {"form": {"const": "range"}, "min": {"type": ["number", "integer", "string"]}, "max": {"type": ["number", "integer", "string"]}, "unit": {"type": "string", "minLength": 1}, "approximate": {"type": "boolean"}}},
+        {"type": "object", "additionalProperties": false, "required": ["form", "text"], "properties": {"form": {"const": "text"}, "text": {"type": "string", "minLength": 1}}}
+      ]
+    },
+    "propertyValue": {
+      "type": "object", "additionalProperties": false, "required": ["status"],
+      "properties": {
+        "status": {"enum": ["known", "unknown", "not_applicable", "not_disclosed"]},
+        "value": {"$ref": "#/$defs/propertyMagnitude"},
+        "basis": {"enum": ["advertised", "measured", "derived", "representative", "configured"]},
+        "scope": {"enum": ["per_device", "per_node", "per_rack", "per_system", "per_link", "aggregate"]},
+        "directional_basis": {"enum": ["unidirectional", "bidirectional_aggregate", "not_applicable"]},
+        "derivation": {"type": "string"}, "evidence": {"$ref": "#/$defs/evidence"}
+      }
+    },
+    "product": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "revision", "record_level", "name", "entity_type", "identity", "summary", "properties", "source_ids"],
+      "properties": {
+        "id": {"$ref": "#/$defs/slug"}, "revision": {"type": "integer", "minimum": 1},
+        "record_level": {"enum": ["family", "model", "variant"]}, "name": {"type": "string", "minLength": 1},
+        "entity_type": {"type": "string", "minLength": 1}, "identity": {"$ref": "#/$defs/identity"},
+        "summary": {"type": "string", "minLength": 1},
+        "properties": {"type": "object", "additionalProperties": {"$ref": "#/$defs/propertyValue"}},
+        "source_ids": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/slug"}, "uniqueItems": true}
+      }
+    }
+  }
+}

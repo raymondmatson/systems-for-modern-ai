@@ -1,0 +1,1 @@
+{"entityType":"network_switch","id":"nvidia-sn2201","identity":{"manufacturer":"NVIDIA","model":"SN2201","product_family":"Spectrum"},"name":"NVIDIA SN2201","properties":{},"recordLevel":"model","revision":1,"sourceIds":["official"],"summary":"Rack-management Ethernet switch used for NVL72 out-of-band management."}

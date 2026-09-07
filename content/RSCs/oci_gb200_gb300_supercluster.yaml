@@ -1,4 +1,4 @@
-schema_version: 1.2.0
+schema_version: 1.4.0
 reference_system:
   id: oci-gb200-gb300-supercluster
   name: OCI GB200 / GB300 NVL72 Supercluster
@@ -7,8 +7,8 @@ reference_system:
   introduction:
     date_or_year: 2025
     lifecycle: current
-  summary: Cloud-scale NVL72 deployment combining rack-scale NVLink domains with OCI high-performance InfiniBand or RoCE
-    networking and cloud-level rack management.
+  summary: Cloud-scale NVL72 deployment combining rack-scale NVLink domains with OCI high-performance InfiniBand or RoCE networking
+    and cloud-level rack management.
   learning_value:
   - Cloud realization of rack-scale NVL72
   - RoCE versus InfiniBand scale-out options
@@ -45,6 +45,16 @@ sources:
   publisher: Oracle Cloud Infrastructure
   url: https://blogs.oracle.com/cloud-infrastructure/oci-achieves-nvidia-exemplar-cloud-nvidia-gb200
   accessed: '2026-08-22'
+- id: oracle-ai-infra
+  title: AI Infrastructure
+  publisher: Oracle
+  url: https://www.oracle.com/ai-infrastructure/
+  accessed: '2026-09-07'
+- id: oracle-blackwell
+  title: Scale NVIDIA GB200 NVL72 deployments with dedicated OCI APIs
+  publisher: Oracle
+  url: https://blogs.oracle.com/cloud-infrastructure/behind-the-scenes-scale-nvidia-gb200-nvl72-deployments
+  accessed: '2026-09-07'
 configurations:
 - id: oci-gb200-supercluster
   name: GB200 Blackwell NVL72 OCI Supercluster
@@ -53,8 +63,8 @@ configurations:
     id: baseline-normal-operation
     name: Baseline / normal operation
     description: Normal/baseline operation with no deliberately injected fault or bottleneck.
-  scope_notes: Models the rack-scale NVL72 unit plus OCI scale-out network. The GB300 variant is intentionally less 
-    detailed where OCI-specific physical node details are not yet public.
+  scope_notes: Models the rack-scale NVL72 unit plus OCI scale-out network. The GB300 variant is intentionally less detailed
+    where OCI-specific physical node details are not yet public.
   modeling_notes:
   - Cloud control-plane/API behavior is not part of the physical hierarchy.
   source_ids:
@@ -101,7 +111,13 @@ configurations:
           - oci-gb200
           note: Rack contains 72 GPUs.
         properties:
-          gpus: 72
+          gpus:
+            status: known
+            value:
+              form: scalar
+              number: 72
+              approximate: false
+            basis: advertised
         children:
         - id: oci-gb200-hosts
           name: Rack compute hosts / trays
@@ -116,10 +132,16 @@ configurations:
             status: documented
             source_ids:
             - oci-gb200
-            note: GB200 has 18 hosts; GB300 representation uses NVIDIA rack-level structure without asserting 
-              OCI-specific host details.
+            note: GB200 has 18 hosts; GB300 representation uses NVIDIA rack-level structure without asserting OCI-specific
+              host details.
           properties:
-            quantity_per_gb200_rack: 18
+            quantity_per_gb200_rack:
+              status: known
+              value:
+                form: scalar
+                number: 18
+                approximate: false
+              basis: advertised
           children:
           - id: oci-gb200-gpus
             name: GB200 Blackwell GPUs
@@ -159,7 +181,8 @@ configurations:
               source_ids:
               - oci-gb200
               - oci-gb200-exemplar
-              note: OCI documents four NVIDIA ConnectX-8 RDMA NICs per GB200 compute node; the cluster supports InfiniBand or Spectrum-X/RoCE scale-out.
+              note: OCI documents four NVIDIA ConnectX-8 RDMA NICs per GB200 compute node; the cluster supports InfiniBand
+                or Spectrum-X/RoCE scale-out.
             properties: {}
             children: []
       - id: oci-gb200-scaleout
@@ -175,13 +198,91 @@ configurations:
           status: documented
           source_ids:
           - oci-network
-          note: OCI documents lossless 3-tier Clos RoCEv2 as a major cluster-network option, while NVL72 also supports 
-            InfiniBand.
+          note: OCI documents lossless 3-tier Clos RoCEv2 as a major cluster-network option, while NVL72 also supports InfiniBand.
         properties:
-          topology: 3-tier Clos (RoCE option)
+          topology:
+            status: known
+            value:
+              form: text
+              text: 3-tier Clos (RoCE option)
           options:
-          - RoCEv2 Ethernet
-          - NVIDIA InfiniBand
+            status: known
+            value:
+              form: text
+              text: '[''RoCEv2 Ethernet'', ''NVIDIA InfiniBand'']'
+        children: []
+      - id: oci-gb200-lustre
+        name: External Oracle-managed Lustre storage boundary
+        entity_type: storage_system
+        explore_tier: 2
+        inventory:
+          category: Storage
+          item: Lustre
+          status: existing
+        representation: aggregate
+        evidence:
+          status: documented
+          source_ids:
+          - oracle-ai-infra
+          note: OCI AI infrastructure provides Oracle-managed Lustre file storage; exact rack placement is not asserted.
+        properties: {}
+        children: []
+      - id: oci-gb200-cooling
+        name: Direct-to-chip liquid-cooling support
+        entity_type: cooling_system
+        explore_tier: 2
+        inventory:
+          category: Physical infrastructure hierarchy
+          item: Cooling infrastructure
+          status: existing
+        representation: aggregate
+        evidence:
+          status: documented
+          source_ids:
+          - oracle-blackwell
+          note: OCI Blackwell infrastructure uses direct-to-chip liquid cooling; support topology is summarized.
+        properties: {}
+        children: []
+      - id: oci-gb200-management
+        name: OCI management / monitoring boundary
+        entity_type: management_node
+        explore_tier: 2
+        inventory:
+          category: Physical infrastructure hierarchy
+          item: Management / head / login nodes
+          status: existing
+        representation: black_box
+        evidence:
+          status: documented
+          source_ids:
+          - oracle-ai-infra
+          note: OCI provides management/monitoring around the Supercluster; service internals are not physical containment.
+        properties: {}
+        children: []
+      - id: oci-gb200-power
+        name: GB200 rack high-density power-delivery support
+        entity_type: power_system
+        explore_tier: 2
+        inventory:
+          category: Power infrastructure
+          item: Rack PDUs
+          status: existing
+        representation: aggregate
+        evidence:
+          status: documented
+          source_ids:
+          - oracle-blackwell
+          note: OCI documents >120 kW peak GB200 rack demand and high-density three-phase/PDU upgrades.
+        properties:
+          rack_power:
+            status: known
+            value:
+              form: scalar
+              number: 120
+              approximate: true
+              unit: kW
+            basis: advertised
+            scope: per_rack
         children: []
   connections:
   - id: oci-gb200-nvlink
@@ -219,6 +320,74 @@ configurations:
       - oci-network
       note: OCI supports InfiniBand or RoCE RDMA for rack-to-rack scaling.
     properties: {}
+  - id: oci-gb200-storage-path
+    relationship_type: data_communication_path
+    directionality: bidirectional
+    endpoints:
+    - oci-gb200-rack
+    - oci-gb200-lustre
+    inventory:
+      category: Data movement as a unifying theme
+      item: Bandwidth
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - oracle-ai-infra
+      note: Compute rack to Lustre storage path
+    properties: {}
+    name: Compute rack to Lustre storage path
+  - id: oci-gb200-cooling-dependency
+    relationship_type: dependency_service
+    directionality: source_to_target
+    endpoints:
+    - oci-gb200-cooling
+    - oci-gb200-rack
+    inventory:
+      category: Thermal management
+      item: Direct-to-chip cooling
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - oracle-blackwell
+      note: Direct-to-chip cooling is required for the modeled dense Blackwell rack.
+    properties: {}
+    name: Direct-to-chip cooling supports the NVL72 rack
+  - id: oci-gb200-management-control
+    relationship_type: control_management
+    directionality: bidirectional
+    endpoints:
+    - oci-gb200-management
+    - oci-gb200-rack
+    inventory:
+      category: Monitoring and observability
+      item: Telemetry
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - oracle-ai-infra
+      note: Management/monitoring context applies to the Supercluster rack.
+    properties: {}
+    name: OCI management and monitoring relationship
+  - id: oci-gb200-power-dependency
+    relationship_type: dependency_service
+    directionality: source_to_target
+    endpoints:
+    - oci-gb200-power
+    - oci-gb200-rack
+    inventory:
+      category: Power infrastructure
+      item: Rack PDUs
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - oracle-blackwell
+      note: OCI high-density power delivery supports GB200 NVL72 racks.
+    properties: {}
+    name: High-density power delivery supports the GB200 rack
   functional_groups:
   - id: oci-gb200-scaleup-domain
     name: NVL72 scale-up domain
@@ -260,11 +429,14 @@ configurations:
     - oci-gb200-scaleout
     note: ''
   unknowns:
-  - description: Deployment-specific rack counts, storage topology, and the full GB300 OCI physical node layout are 
-      intentionally not inferred.
+  - description: Deployment-specific rack counts, storage topology, and the full GB300 OCI physical node layout are intentionally
+      not inferred.
     treatment: simplified
     affected_entity_ids:
     - oci-gb200-cluster
+  scenario_catalog:
+    path: scenarios/oci-gb200-supercluster.yaml
+    default_scenario_id: baseline-normal-operation
 - id: oci-gb300-supercluster
   name: GB300 Blackwell Ultra NVL72 OCI Supercluster
   configuration_status: emerging
@@ -272,8 +444,8 @@ configurations:
     id: baseline-normal-operation
     name: Baseline / normal operation
     description: Normal/baseline operation with no deliberately injected fault or bottleneck.
-  scope_notes: Models the rack-scale NVL72 unit plus OCI scale-out network. The GB300 variant is intentionally less 
-    detailed where OCI-specific physical node details are not yet public.
+  scope_notes: Models the rack-scale NVL72 unit plus OCI scale-out network. The GB300 variant is intentionally less detailed
+    where OCI-specific physical node details are not yet public.
   modeling_notes:
   - Cloud control-plane/API behavior is not part of the physical hierarchy.
   source_ids:
@@ -319,7 +491,13 @@ configurations:
           - nv-gb300-oci-support
           note: Rack contains 72 GPUs.
         properties:
-          gpus: 72
+          gpus:
+            status: known
+            value:
+              form: scalar
+              number: 72
+              approximate: false
+            basis: advertised
         children:
         - id: oci-gb300-hosts
           name: Rack compute hosts / trays
@@ -334,8 +512,8 @@ configurations:
             status: documented
             source_ids:
             - nv-gb300-oci-support
-            note: GB200 has 18 hosts; GB300 representation uses NVIDIA rack-level structure without asserting 
-              OCI-specific host details.
+            note: GB200 has 18 hosts; GB300 representation uses NVIDIA rack-level structure without asserting OCI-specific
+              host details.
           properties: {}
           children:
           - id: oci-gb300-gpus
@@ -376,7 +554,8 @@ configurations:
               status: documented
               source_ids:
               - oci-gb300
-              note: OCI identifies NVIDIA ConnectX-8 SuperNICs for GB300 NVL72; exact deployment-specific node placement and count remain simplified.
+              note: OCI identifies NVIDIA ConnectX-8 SuperNICs for GB300 NVL72; exact deployment-specific node placement and
+                count remain simplified.
             properties: {}
             children: []
       - id: oci-gb300-scaleout
@@ -392,13 +571,66 @@ configurations:
           status: documented
           source_ids:
           - oci-network
-          note: OCI documents lossless 3-tier Clos RoCEv2 as a major cluster-network option, while NVL72 also supports 
-            InfiniBand.
+          note: OCI documents lossless 3-tier Clos RoCEv2 as a major cluster-network option, while NVL72 also supports InfiniBand.
         properties:
-          topology: 3-tier Clos (RoCE option)
+          topology:
+            status: known
+            value:
+              form: text
+              text: 3-tier Clos (RoCE option)
           options:
-          - RoCEv2 Ethernet
-          - NVIDIA InfiniBand
+            status: known
+            value:
+              form: text
+              text: '[''RoCEv2 Ethernet'', ''NVIDIA InfiniBand'']'
+        children: []
+      - id: oci-gb300-lustre
+        name: External Oracle-managed Lustre storage boundary
+        entity_type: storage_system
+        explore_tier: 2
+        inventory:
+          category: Storage
+          item: Lustre
+          status: existing
+        representation: aggregate
+        evidence:
+          status: documented
+          source_ids:
+          - oracle-ai-infra
+          note: OCI AI infrastructure provides Oracle-managed Lustre file storage; exact rack placement is not asserted.
+        properties: {}
+        children: []
+      - id: oci-gb300-cooling
+        name: Direct-to-chip liquid-cooling support
+        entity_type: cooling_system
+        explore_tier: 2
+        inventory:
+          category: Physical infrastructure hierarchy
+          item: Cooling infrastructure
+          status: existing
+        representation: aggregate
+        evidence:
+          status: documented
+          source_ids:
+          - oracle-blackwell
+          note: OCI Blackwell infrastructure uses direct-to-chip liquid cooling; support topology is summarized.
+        properties: {}
+        children: []
+      - id: oci-gb300-management
+        name: OCI management / monitoring boundary
+        entity_type: management_node
+        explore_tier: 2
+        inventory:
+          category: Physical infrastructure hierarchy
+          item: Management / head / login nodes
+          status: existing
+        representation: black_box
+        evidence:
+          status: documented
+          source_ids:
+          - oracle-ai-infra
+          note: OCI provides management/monitoring around the Supercluster; service internals are not physical containment.
+        properties: {}
         children: []
   connections:
   - id: oci-gb300-nvlink
@@ -436,6 +668,57 @@ configurations:
       - oci-network
       note: OCI supports InfiniBand or RoCE RDMA for rack-to-rack scaling.
     properties: {}
+  - id: oci-gb300-storage-path
+    relationship_type: data_communication_path
+    directionality: bidirectional
+    endpoints:
+    - oci-gb300-rack
+    - oci-gb300-lustre
+    inventory:
+      category: Data movement as a unifying theme
+      item: Bandwidth
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - oracle-ai-infra
+      note: Compute rack to Lustre storage path
+    properties: {}
+    name: Compute rack to Lustre storage path
+  - id: oci-gb300-cooling-dependency
+    relationship_type: dependency_service
+    directionality: source_to_target
+    endpoints:
+    - oci-gb300-cooling
+    - oci-gb300-rack
+    inventory:
+      category: Thermal management
+      item: Direct-to-chip cooling
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - oracle-blackwell
+      note: Direct-to-chip cooling is required for the modeled dense Blackwell rack.
+    properties: {}
+    name: Direct-to-chip cooling supports the NVL72 rack
+  - id: oci-gb300-management-control
+    relationship_type: control_management
+    directionality: bidirectional
+    endpoints:
+    - oci-gb300-management
+    - oci-gb300-rack
+    inventory:
+      category: Monitoring and observability
+      item: Telemetry
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - oracle-ai-infra
+      note: Management/monitoring context applies to the Supercluster rack.
+    properties: {}
+    name: OCI management and monitoring relationship
   functional_groups:
   - id: oci-gb300-scaleup-domain
     name: NVL72 scale-up domain
@@ -477,8 +760,11 @@ configurations:
     - oci-gb300-scaleout
     note: ''
   unknowns:
-  - description: Deployment-specific rack counts, storage topology, and the full GB300 OCI physical node layout are 
-      intentionally not inferred.
+  - description: Deployment-specific rack counts, storage topology, and the full GB300 OCI physical node layout are intentionally
+      not inferred.
     treatment: simplified
     affected_entity_ids:
     - oci-gb300-cluster
+  scenario_catalog:
+    path: scenarios/oci-gb300-supercluster.yaml
+    default_scenario_id: baseline-normal-operation

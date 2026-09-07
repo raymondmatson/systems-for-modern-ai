@@ -1,0 +1,1 @@
+{"entityType":"network_switch","id":"nvidia-spectrum-x-sn5600","identity":{"manufacturer":"NVIDIA","model":"SN5600","product_family":"Spectrum-X"},"name":"NVIDIA Spectrum-X SN5600","properties":{},"recordLevel":"model","revision":1,"sourceIds":["official"],"summary":"NVIDIA Spectrum-X SN5600 Ethernet switch."}

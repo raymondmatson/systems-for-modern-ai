@@ -147,3 +147,7 @@ python concepts/validate_concepts.py --reference-systems path/to/RSCs
 ```
 
 See `MIGRATION.md` for the compatibility direction.
+
+## Canonical inventory path
+
+The validator's default inventory is the repository-level `docs/Organizational_Content_Inventory.md`. Do not copy the inventory into `content/`. `--inventory <path>` remains available for explicit validation of alternate working layouts.

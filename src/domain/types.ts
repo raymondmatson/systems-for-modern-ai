@@ -48,6 +48,33 @@ export interface PropertyValue {
   evidence?: Evidence;
 }
 
+export interface ProductRef {
+  id: Id;
+  revision: number;
+}
+
+export interface ResolvedProduct {
+  id: Id;
+  revision: number;
+  recordLevel: 'family' | 'model' | 'variant';
+  name: string;
+  entityType: string;
+  identity: Record<string, string>;
+  summary: string;
+  properties: Record<Id, PropertyValue>;
+}
+
+export interface AnatomyDepiction {
+  id: Id;
+  label: string;
+  description?: string;
+  inventory: {category: string; item: string};
+  evidence: Evidence;
+  depictionKind: 'compute' | 'memory' | 'io' | 'network' | 'storage' | 'support' | 'power' | 'cooling' | 'management' | 'structural' | 'other';
+  placementBasis: 'schematic' | 'documented';
+  count?: {value?: string; basis: string};
+}
+
 export interface Entity {
   id: Id;
   name: string;
@@ -61,6 +88,9 @@ export interface Entity {
   parentId?: Id;
   population?: Population;
   productIdentity?: Record<string, string>;
+  productRef?: ProductRef;
+  resolvedProduct?: ResolvedProduct;
+  anatomyDepictions?: AnatomyDepiction[];
 }
 
 export interface Connection {
@@ -125,6 +155,8 @@ export interface RuntimeManifest {
   initialSystemIds: Id[];
   systemIds: Id[];
   conceptIds: Id[];
+  productIds?: Id[];
+  productCatalogSchemaVersion?: string;
 }
 
 export interface RuntimeConcept {

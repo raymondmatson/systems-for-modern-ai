@@ -49,6 +49,18 @@ class ValidationResult:
 def default_root() -> Path:
     return Path(__file__).resolve().parent
 
+def default_inventory_path(root: Path | None = None) -> Path:
+    """Resolve the single canonical repository inventory without duplicating it under content/."""
+    concept_root = (root or default_root()).resolve()
+    candidates = [
+        concept_root.parents[1] / "docs" / "Organizational_Content_Inventory.md",
+        concept_root.parent / "docs" / "Organizational_Content_Inventory.md",
+    ]
+    for candidate in candidates:
+        if candidate.is_file():
+            return candidate
+    return candidates[0]
+
 
 def load_schema(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
@@ -273,7 +285,7 @@ def validate_library(
     metadata_dir = root / "metadata"
     content_dir = root / "content"
     schema_path = schema_path or root / "schemas" / "concept.schema.json"
-    inventory_path = inventory_path or root.parent / "Organizational_Content_Inventory.md"
+    inventory_path = inventory_path or default_inventory_path(root)
 
     if not metadata_dir.is_dir():
         return ValidationResult([f"missing metadata directory: {metadata_dir}"], warnings)

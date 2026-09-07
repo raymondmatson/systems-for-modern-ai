@@ -1,5 +1,10 @@
 schema_version: 1.0.0
 properties:
+  aggregate_bandwidth:
+    id: aggregate_bandwidth
+    name: Aggregate bandwidth
+    value_kind: number
+    canonical_unit: Gb/s
   aggregate_hbm_gb:
     id: aggregate_hbm_gb
     name: Aggregate Hbm Gb
@@ -67,11 +72,26 @@ properties:
     id: hosts_per_cube
     name: Hosts Per Cube
     value_kind: number
+  link_rate:
+    id: link_rate
+    name: Link rate
+    value_kind: number
+    canonical_unit: Gb/s
   max_link_gbps:
     id: max_link_gbps
     name: Max Link Gbps
     value_kind: number
     canonical_unit: Gb/s
+  memory_bandwidth:
+    id: memory_bandwidth
+    name: Memory bandwidth
+    value_kind: number
+    canonical_unit: GB/s
+  memory_capacity:
+    id: memory_capacity
+    name: Memory capacity
+    value_kind: number
+    canonical_unit: GiB
   nominal_dgx_systems_per_su:
     id: nominal_dgx_systems_per_su
     name: Nominal Dgx Systems Per Su
@@ -81,6 +101,15 @@ properties:
     name: On Chip Sram Gb
     value_kind: number
     canonical_unit: GB
+  port_count:
+    id: port_count
+    name: Port count
+    value_kind: number
+  power_capacity:
+    id: power_capacity
+    name: Power capacity
+    value_kind: number
+    canonical_unit: kW
   quantity:
     id: quantity
     name: Quantity
@@ -117,6 +146,11 @@ properties:
     id: quantity_per_wse3
     name: Quantity Per Wse3
     value_kind: number
+  rack_power:
+    id: rack_power
+    name: Rack power
+    value_kind: number
+    canonical_unit: kW
   rack_standard:
     id: rack_standard
     name: Rack Standard
@@ -125,6 +159,16 @@ properties:
     id: reference_architecture_scale
     name: Reference Architecture Scale
     value_kind: text
+  sram_bandwidth:
+    id: sram_bandwidth
+    name: SRAM bandwidth
+    value_kind: number
+    canonical_unit: PB/s
+  storage_capacity:
+    id: storage_capacity
+    name: Storage capacity
+    value_kind: number
+    canonical_unit: TB
   switch_families:
     id: switch_families
     name: Switch Families

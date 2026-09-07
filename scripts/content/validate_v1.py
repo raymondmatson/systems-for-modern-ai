@@ -9,7 +9,7 @@ def walk(e):
  for c in e.get('children',[]):yield from walk(c)
 for sid,fn in INITIAL.items():
  d=yaml.safe_load((RSC/fn).read_text());
- if d['schema_version']!='1.3.0':errors.append(f'{sid}: must use RSC 1.3.0')
+ if d['schema_version']!='1.4.0':errors.append(f'{sid}: must use RSC 1.4.0 after Product/Anatomy migration')
  if d['reference_system']['id']!=sid:errors.append(f'{sid}: id/file mismatch')
  for cfg in d['configurations']:
   ents={e['id']:e for e in walk(cfg['hierarchy']['root'])};cons={c['id']:c for c in cfg['connections']}

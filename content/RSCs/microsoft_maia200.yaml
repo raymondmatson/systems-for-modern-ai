@@ -7,8 +7,8 @@ reference_system:
   introduction:
     date_or_year: 2026
     lifecycle: new
-  summary: Purpose-built inference accelerator system organized around four-accelerator trays and an Ethernet-based 
-    two-tier scale-up network.
+  summary: Purpose-built inference accelerator system organized around four-accelerator trays and an Ethernet-based two-tier
+    scale-up network.
   learning_value:
   - Inference-specialized custom accelerator
   - Direct intra-tray links plus multi-tier scale-up
@@ -29,8 +29,8 @@ configurations:
     id: baseline-normal-operation
     name: Baseline / normal operation
     description: Baseline inference-serving state with normal request load and no injected bottleneck.
-  scope_notes: Models the documented four-accelerator tray and two-tier Ethernet-based scale-up architecture; host and 
-    switch details remain black-boxed.
+  scope_notes: Models the documented four-accelerator tray and two-tier Ethernet-based scale-up architecture; host and switch
+    details remain black-boxed.
   modeling_notes:
   - The network is intentionally represented as a black box beyond documented protocol/topology behavior.
   source_ids:
@@ -125,6 +125,24 @@ configurations:
               note: Specialized DMA engine and NoC support data movement.
             properties: {}
             children: []
+          - id: maia200-hbm
+            name: HBM3e memory
+            entity_type: hbm
+            explore_tier: 5
+            inventory:
+              category: Accelerator internals
+              item: HBM stacks
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - ms-maia200
+              note: Maia 200 integrates 216 GB HBM3e at 7 TB/s.
+            properties:
+              capacity_gb: 216
+              bandwidth_tbps: 7
+            children: []
       - id: maia200-scaleup-network
         name: Two-tier Maia scale-up network
         entity_type: network_fabric
@@ -138,10 +156,11 @@ configurations:
           status: documented
           source_ids:
           - ms-maia200
-          note: Two-tier scale-up network uses standard Ethernet plus custom transport; detailed switch/rack composition
-            is not published in this source.
+          note: Two-tier scale-up network uses standard Ethernet plus custom transport; detailed switch/rack composition is
+            not published in this source.
         properties:
           transport: Maia AI transport over Ethernet
+          bidirectional_tbps_per_accelerator: 2.8
         children: []
       - id: maia200-cooling
         name: Liquid-cooling infrastructure
@@ -157,6 +176,23 @@ configurations:
           source_ids:
           - ms-maia200
           note: Microsoft describes a second-generation closed-loop heat exchanger unit for liquid cooling.
+        properties: {}
+        children: []
+      - id: maia200-management
+        name: Azure accelerator management / telemetry boundary
+        entity_type: management_node
+        explore_tier: 2
+        inventory:
+          category: Physical infrastructure hierarchy
+          item: Management / head / login nodes
+          status: existing
+        representation: black_box
+        evidence:
+          status: documented
+          source_ids:
+          - ms-maia200
+          note: Azure provides accelerator telemetry, diagnostic and control functions; software internals are not modeled
+            as physical containment.
         properties: {}
         children: []
   connections:
@@ -194,6 +230,59 @@ configurations:
       - ms-maia200
       note: Same communication protocols extend intra-rack/inter-rack via custom transport over Ethernet.
     properties: {}
+  - id: maia200-onchip-data
+    relationship_type: data_communication_path
+    directionality: bidirectional
+    endpoints:
+    - maia200-dma
+    - maia200-sram
+    - maia200-hbm
+    - maia200-chip
+    inventory:
+      category: Data movement as a unifying theme
+      item: Bandwidth
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - ms-maia200
+      note: Hierarchical DMA/NoC data movement among SRAM, HBM and accelerator
+    properties: {}
+    name: Hierarchical DMA/NoC data movement among SRAM, HBM and accelerator
+  - id: maia200-management-control
+    relationship_type: control_management
+    directionality: bidirectional
+    endpoints:
+    - maia200-management
+    - maia200-trays
+    inventory:
+      category: Monitoring and observability
+      item: Telemetry
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - ms-maia200
+      note: Management boundary observes and controls accelerator trays.
+    properties: {}
+    name: Management and telemetry control relationship
+  - id: maia200-cooling-dependency
+    name: Maia liquid-cooling support
+    relationship_type: dependency_service
+    endpoints:
+    - maia200-cooling
+    - maia200-trays
+    directionality: undirected
+    inventory:
+      category: Thermal management
+      item: Liquid cooling
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - ms-maia200
+      note: Closed-loop liquid cooling supports the Maia tray population; exact coolant routing is not modeled.
+    properties: {}
   functional_groups:
   - id: maia-scaleup-domain
     name: Maia scale-up domain
@@ -227,8 +316,8 @@ configurations:
     - maia200-chip
     note: ''
   unknowns:
-  - description: Host CPU, rack population, and detailed switching implementation are not disclosed in the public 
-      overview used here.
+  - description: Host CPU, rack population, and detailed switching implementation are not disclosed in the public overview
+      used here.
     treatment: black_box
     affected_entity_ids:
     - maia200-scaleup-network

@@ -7,8 +7,8 @@ reference_system:
   introduction:
     date_or_year: 2024
     lifecycle: current
-  summary: Inference-oriented LPU rack architecture emphasizing large aggregate on-chip SRAM and deterministic 
-    accelerator serving, with many physical internals left proprietary.
+  summary: Inference-oriented LPU rack architecture emphasizing large aggregate on-chip SRAM and deterministic accelerator
+    serving, with many physical internals left proprietary.
   learning_value:
   - SRAM-centric inference architecture
   - Example of responsible black-box modeling
@@ -29,11 +29,11 @@ configurations:
     id: baseline-normal-operation
     name: Baseline / normal operation
     description: Baseline inference-serving state with normal load.
-  scope_notes: Deliberately minimal physical model because the public source clearly documents rack-level LPU count and 
-    SRAM but not the internal server/tray/network hierarchy.
+  scope_notes: Deliberately minimal physical model because the public source clearly documents rack-level LPU count and SRAM
+    but not the internal server/tray/network hierarchy.
   modeling_notes:
-  - The hierarchy continues through an explicit black-box assembly so users can see that lower-level organization is 
-    unavailable rather than invented.
+  - The hierarchy continues through an explicit black-box assembly so users can see that lower-level organization is unavailable
+    rather than invented.
   source_ids:
   - groq-platform
   hierarchy:
@@ -72,6 +72,9 @@ configurations:
         properties:
           lpu_count: 256
           on_chip_sram_per_rack_gb: 128
+          on_chip_sram_gb: 128
+          sram_bandwidth_pb_s: 40
+          fp8_compute_pflops: 315
         children:
         - id: groq-rack-internals
           name: Undocumented rack-internal host/tray organization
@@ -86,7 +89,8 @@ configurations:
             status: unknown
             source_ids:
             - groq-platform
-            note: Public platform page does not establish the server/tray containment used for the 256 LPUs.
+            note: Public current-generation rack documentation does not establish a trustworthy host/tray decomposition; this
+              boundary remains intentionally black-boxed rather than borrowing older LPU internals.
           properties: {}
           children:
           - id: groq-lpus
@@ -142,7 +146,24 @@ configurations:
             note: Detailed network architecture is not given on the public platform page used here.
           properties: {}
           children: []
-  connections: []
+  connections:
+  - id: groq-network-path
+    relationship_type: data_communication_path
+    directionality: bidirectional
+    endpoints:
+    - groq-rack-internals
+    - groq-network-blackbox
+    inventory:
+      category: Data movement as a unifying theme
+      item: Bandwidth
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - groq-platform
+      note: Rack compute to data-center networking boundary
+    properties: {}
+    name: Rack compute to data-center networking boundary
   functional_groups:
   - id: groq-serving-domain
     name: Rack-level inference compute domain
@@ -174,8 +195,8 @@ configurations:
     - groq-sram
     note: ''
   unknowns:
-  - description: Internal server/tray organization and detailed interconnect/network topology are not publicly 
-      established by the selected Groq source.
+  - description: Internal server/tray organization and detailed interconnect/network topology are not publicly established
+      by the selected Groq source.
     treatment: black_box
     affected_entity_ids:
     - groq-rack-internals

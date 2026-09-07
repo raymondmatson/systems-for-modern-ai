@@ -1,0 +1,1 @@
+{"entityType":"nic","id":"nvidia-connectx-8","identity":{"manufacturer":"NVIDIA","model":"ConnectX-8","product_family":"ConnectX"},"name":"NVIDIA ConnectX-8","properties":{},"recordLevel":"model","revision":1,"sourceIds":["official"],"summary":"NVIDIA ConnectX-8 SuperNIC/network adapter family."}

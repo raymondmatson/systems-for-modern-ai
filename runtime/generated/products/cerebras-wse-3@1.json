@@ -1,0 +1,1 @@
+{"entityType":"ai_accelerator","id":"cerebras-wse-3","identity":{"generation":"3rd generation","manufacturer":"Cerebras","model":"WSE-3","product_family":"Wafer-Scale Engine"},"name":"Cerebras WSE-3","properties":{},"recordLevel":"model","revision":1,"sourceIds":["official"],"summary":"Cerebras third-generation Wafer-Scale Engine."}

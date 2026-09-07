@@ -1,0 +1,1 @@
+{"entityType":"tpu","id":"google-tpu7x-ironwood","identity":{"generation":"7th generation","manufacturer":"Google","model":"TPU7x","product_family":"Ironwood"},"name":"Google TPU7x (Ironwood)","properties":{},"recordLevel":"model","revision":1,"sourceIds":["official"],"summary":"Google Cloud seventh-generation Ironwood TPU."}

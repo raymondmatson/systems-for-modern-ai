@@ -7,8 +7,8 @@ reference_system:
   introduction:
     date_or_year: 2025
     lifecycle: current
-  summary: Cloud AI cluster using GB200 NVL72 rack-scale domains, Quantum-2 InfiniBand, BlueField-3 DPUs, accelerated 
-    storage, and direct-to-chip cooling.
+  summary: Cloud AI cluster using GB200 NVL72 rack-scale domains, Quantum-2 InfiniBand, BlueField-3 DPUs, accelerated storage,
+    and direct-to-chip cooling.
   learning_value:
   - Neocloud realization of NVL72
   - Rail-optimized InfiniBand at very large scale
@@ -20,14 +20,18 @@ sources:
 - id: cw-gb200
   title: CoreWeave GB200 NVL72 General Availability
   publisher: CoreWeave
-  url: 
-    https://www.coreweave.com/blog/coreweave-becomes-the-first-cloud-provider-with-generally-available-nvidia-gb200-nvl72-instances
+  url: https://www.coreweave.com/blog/coreweave-becomes-the-first-cloud-provider-with-generally-available-nvidia-gb200-nvl72-instances
   accessed: '2026-08-19'
 - id: cw-dc
   title: CoreWeave AI Data Centers
   publisher: CoreWeave
   url: https://www.coreweave.com/ai-data-centers
   accessed: '2026-08-19'
+- id: coreweave-lota
+  title: Local Object Transport Accelerator (LOTA)
+  publisher: CoreWeave
+  url: https://docs.coreweave.com/products/storage/object-storage/improving-performance/about-lota
+  accessed: '2026-09-07'
 configurations:
 - id: coreweave-gb200-nvl72-cluster
   name: CoreWeave GB200 NVL72 cluster
@@ -36,11 +40,11 @@ configurations:
     id: baseline-normal-operation
     name: Baseline / normal operation
     description: Normal/baseline operation with no deliberately injected fault or bottleneck.
-  scope_notes: Models the GB200 NVL72 rack, Quantum-2 InfiniBand scale-out, BlueField-3 DPU cloud networking, storage, 
-    and liquid cooling at a high level.
+  scope_notes: Models the GB200 NVL72 rack, Quantum-2 InfiniBand scale-out, BlueField-3 DPU cloud networking, storage, and
+    liquid cooling at a high level.
   modeling_notes:
-  - Exact physical storage topology and internal tray arrangement are simplified where the CoreWeave sources do not 
-    provide the same detail as NVIDIA platform documentation.
+  - Exact physical storage topology and internal tray arrangement are simplified where the CoreWeave sources do not provide
+    the same detail as NVIDIA platform documentation.
   source_ids:
   - cw-gb200
   - cw-dc
@@ -98,8 +102,8 @@ configurations:
             status: simplified
             source_ids:
             - cw-gb200
-            note: CoreWeave source establishes rack-level architecture; detailed tray population is inherited only at 
-              aggregate level, not reasserted.
+            note: CoreWeave source establishes rack-level architecture; detailed tray population is inherited only at aggregate
+              level, not reasserted.
           properties: {}
           children:
           - id: cw-gb200-gpus
@@ -142,6 +146,46 @@ configurations:
               note: BlueField-3 DPUs support cloud networking and data access.
             properties: {}
             children: []
+          - id: cw-grace-cpus
+            name: Grace CPUs
+            entity_type: cpu
+            explore_tier: 4
+            inventory:
+              category: Server-level hardware
+              item: CPUs
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - cw-gb200
+              note: CoreWeave GB200 instances expose two Grace CPUs per four-GPU instance.
+            properties:
+              grace_cpus_per_4gpu_instance: 2
+            children: []
+            product_identity:
+              manufacturer: NVIDIA
+              product_family: Grace
+              model: Grace CPU
+          - id: cw-local-nvme
+            name: Node-local NVMe / LOTA cache storage
+            entity_type: local_storage
+            explore_tier: 4
+            inventory:
+              category: Server-level hardware
+              item: NVMe SSDs
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - cw-gb200
+              - coreweave-lota
+              note: CoreWeave GB200 instances expose 30.72 TB local storage; LOTA can use node-local NVMe as a cache for AI
+                Object Storage.
+            properties:
+              storage_capacity_tb_per_4gpu_instance: 30.72
+            children: []
       - id: cw-ib
         name: Quantum-2 InfiniBand fabric
         entity_type: network_fabric
@@ -164,9 +208,11 @@ configurations:
         properties:
           per_gpu_gbps: 400
           topology: rail-optimized
+          link_rate_gbps_per_gpu: 400
+          topology_context: rail-optimized Quantum-2 InfiniBand
         children: []
       - id: cw-storage
-        name: CoreWeave accelerated storage
+        name: CoreWeave AI Object / accelerated storage boundary
         entity_type: storage_system
         explore_tier: 2
         inventory:
@@ -178,8 +224,8 @@ configurations:
           status: documented
           source_ids:
           - cw-dc
-          note: CoreWeave provides AI-optimized object and file storage; detailed physical storage servers are not 
-            modeled.
+          note: Remote storage is represented as a service-level physical boundary; LOTA caches eligible object reads on node-local
+            storage without making the software proxy a physical entity.
         properties: {}
         children: []
       - id: cw-cooling
@@ -250,6 +296,57 @@ configurations:
       - cw-dc
       note: AI-optimized object/file storage services.
     properties: {}
+  - id: cw-local-cache-path
+    relationship_type: data_communication_path
+    directionality: bidirectional
+    endpoints:
+    - cw-gb200-gpus
+    - cw-local-nvme
+    inventory:
+      category: Data movement as a unifying theme
+      item: Bandwidth
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - coreweave-lota
+      note: GPU/compute host to node-local cache path
+    properties: {}
+    name: GPU/compute host to node-local cache path
+  - id: cw-remote-storage-cache-fill
+    relationship_type: data_communication_path
+    directionality: bidirectional
+    endpoints:
+    - cw-storage
+    - cw-local-nvme
+    inventory:
+      category: Data movement as a unifying theme
+      item: Bandwidth
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - coreweave-lota
+      note: Remote storage to node-local cache fill path
+    properties: {}
+    name: Remote storage to node-local cache fill path
+  - id: cw-cooling-dependency
+    name: Direct-to-chip cooling support
+    relationship_type: dependency_service
+    endpoints:
+    - cw-cooling
+    - cw-gb200-rack
+    directionality: undirected
+    inventory:
+      category: Thermal management
+      item: Direct-to-chip cooling
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - cw-dc
+      note: Cooling is a physical support dependency of the liquid-cooled GB200 rack; exact loop routing is not modeled.
+    properties: {}
   functional_groups:
   - id: cw-scaleup-domain
     name: GB200 NVL72 scale-up domain
@@ -291,8 +388,7 @@ configurations:
     - cw-ib
     note: ''
   unknowns:
-  - description: Detailed storage-server layout and some rack-internal host/tray organization are simplified rather than
-      inferred.
+  - description: Detailed storage-server layout and some rack-internal host/tray organization are simplified rather than inferred.
     treatment: simplified
     affected_entity_ids:
     - cw-storage

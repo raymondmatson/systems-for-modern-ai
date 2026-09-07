@@ -1,0 +1,10 @@
+schema_version: 1.0.0
+configuration_id: oci-gb200-supercluster
+scenarios:
+- id: baseline-normal-operation
+  name: Baseline / normal operation
+  description: Normal/baseline operation with no deliberately injected fault or bottleneck.
+  default: true
+  scenario_types:
+  - baseline
+  effects: []

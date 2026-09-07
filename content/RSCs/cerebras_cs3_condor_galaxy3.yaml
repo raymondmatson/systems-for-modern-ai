@@ -1,4 +1,4 @@
-schema_version: 1.3.0
+schema_version: 1.4.0
 reference_system:
   id: cerebras-cs3-condor-galaxy3
   name: Cerebras CS-3 / Condor Galaxy 3
@@ -7,7 +7,8 @@ reference_system:
   introduction:
     date_or_year: 2024
     lifecycle: current
-  summary: Wafer-scale AI supercomputer architecture that decouples compute from external model-weight memory and uses dedicated SwarmX/MemoryX infrastructure.
+  summary: Wafer-scale AI supercomputer architecture that decouples compute from external model-weight memory and uses dedicated
+    SwarmX/MemoryX infrastructure.
   learning_value:
   - Wafer-scale compute alternative
   - Disaggregated model-weight memory
@@ -15,6 +16,7 @@ reference_system:
   source_ids:
   - cerebras-cs3
   - cerebras-cluster
+  - cerebras-filing
 sources:
 - id: cerebras-cs3
   title: Cerebras CS-3
@@ -26,6 +28,11 @@ sources:
   publisher: Cerebras
   url: https://training-docs.cerebras.ai/rel-2.5.0/concepts/cerebras-wafer-scale-cluster
   accessed: '2026-08-19'
+- id: cerebras-filing
+  title: Cerebras Systems registration statement — cluster scaling technologies
+  publisher: Cerebras Systems
+  url: https://investors.cerebras.ai/static-files/60fcd26a-35b2-42ac-af25-aff76d76519a
+  accessed: '2026-09-07'
 configurations:
 - id: condor-galaxy-3-64-cs3
   name: Condor Galaxy 3 — 64 CS-3 systems
@@ -34,12 +41,15 @@ configurations:
     id: baseline-normal-operation
     name: Baseline / normal operation
     description: Normal/baseline operation with no deliberately injected fault or bottleneck.
-  scope_notes: 'Represents the distinctive decoupled compute/weight-memory architecture: CS-3/WSE-3 compute, MemoryX model memory, SwarmX collective fabric, input preprocessing, and management.'
+  scope_notes: 'Represents the distinctive decoupled compute/weight-memory architecture: CS-3/WSE-3 compute, MemoryX model
+    memory, SwarmX collective fabric, input preprocessing, and management.'
   modeling_notes:
-  - Rack placement and quantities of MemoryX/SwarmX/preprocessing/management appliances are not asserted where public sources do not specify them.
+  - Rack placement and quantities of MemoryX/SwarmX/preprocessing/management appliances are not asserted where public sources
+    do not specify them.
   source_ids:
   - cerebras-cs3
   - cerebras-cluster
+  - cerebras-filing
   hierarchy:
     root:
       id: cg3
@@ -68,11 +78,6 @@ configurations:
       - id: cg3-cs3
         name: CS-3 systems
         entity_type: compute_node
-        product_identity:
-          manufacturer: Cerebras
-          product_family: CS
-          model: CS-3
-          generation: 3rd generation
         explore_tier: 3
         inventory:
           category: Physical infrastructure hierarchy
@@ -96,11 +101,6 @@ configurations:
         - id: cg3-wse3
           name: WSE-3 wafer-scale accelerator
           entity_type: ai_accelerator
-          product_identity:
-            manufacturer: Cerebras
-            product_family: Wafer-Scale Engine
-            model: WSE-3
-            generation: 3rd generation
           explore_tier: 4
           inventory:
             category: Server-level hardware
@@ -158,7 +158,7 @@ configurations:
                 value: 900000
                 form: scalar
                 basis: documented_fixed
-              expansion_mode: representative_member
+              expansion_mode: aggregate_only
               individually_addressable: false
               member_entity_type: compute_core
           - id: cg3-sram
@@ -185,6 +185,26 @@ configurations:
                   unit: GB
                 basis: advertised
             children: []
+          - id: cg3-wafer-mesh
+            name: On-wafer 2D mesh fabric
+            entity_type: network_fabric
+            explore_tier: 5
+            inventory:
+              category: Network topologies
+              item: Mesh
+              status: existing
+            representation: aggregate
+            evidence:
+              status: documented
+              source_ids:
+              - cerebras-cs3
+              - cerebras-cluster
+              note: WSE-3 integrates a wafer-scale on-chip mesh connecting distributed compute and local memory resources.
+            properties: {}
+            children: []
+          product_ref:
+            id: cerebras-wse-3
+            revision: 1
         population:
           count:
             value: 64
@@ -193,6 +213,26 @@ configurations:
           expansion_mode: representative_member
           individually_addressable: false
           member_entity_type: compute_node
+        product_ref:
+          id: cerebras-cs-3
+          revision: 1
+        anatomy:
+        - id: cg3-cs3-enclosure-support
+          label: CS-3 enclosure power / cooling / interface support
+          inventory:
+            category: Physical infrastructure hierarchy
+            item: Power infrastructure
+            status: existing
+          evidence:
+            status: documented
+            source_ids:
+            - cerebras-cs3
+            note: CS-3 is a complete wafer-scale system enclosure. Public sources establish the system boundary but do not
+              support a conventional-server internal BOM; this depiction intentionally remains generic.
+          depiction_kind: support
+          placement_basis: schematic
+          description: Generic enclosure support hardware needed to operate and connect the wafer-scale accelerator; exact
+            internal layout remains outside the evidence boundary.
       - id: cg3-memoryx
         name: MemoryX external model-memory appliance
         entity_type: memory_appliance
@@ -211,6 +251,8 @@ configurations:
           - cerebras-cluster
           - cerebras-cs3
           note: MemoryX stores and streams model weights; available capacity can scale to very large external memory configurations.
+            MemoryX decouples model-parameter capacity from wafer compute; public cluster materials support multi-trillion-parameter
+            scaling, but the exact CG3 selected capacity is not asserted.
         properties: {}
         children: []
       - id: cg3-swarmx
@@ -229,8 +271,26 @@ configurations:
           status: documented
           source_ids:
           - cerebras-cluster
-          note: SwarmX broadcasts weights and reduces gradients across CS systems.
-        properties: {}
+          - cerebras-filing
+          note: Cerebras corporate filing documents SwarmX 400G/800G links for CS-3 wafer-scale clusters; exact Condor Galaxy
+            3 link population is not asserted.
+        properties:
+          link_rate:
+            status: known
+            value:
+              form: range
+              min: 400
+              max: 800
+              unit: Gb/s
+              approximate: false
+            basis: advertised
+            scope: per_link
+            evidence:
+              status: documented
+              source_ids:
+              - cerebras-filing
+              note: Corporate filing describes 400G and 800G SwarmX links for CS-3 wafer-scale clusters; exact CG3 population
+                is not asserted.
         children: []
       - id: cg3-preprocess
         name: Input preprocessing servers
@@ -317,6 +377,59 @@ configurations:
       - cerebras-cluster
       note: Input preprocessing servers feed CS systems.
     properties: {}
+  - id: cg3-core-mesh
+    name: AI cores to wafer mesh
+    relationship_type: physical_connectivity
+    endpoints:
+    - cg3-ai-cores
+    - cg3-wafer-mesh
+    directionality: undirected
+    inventory:
+      category: Accelerator internals
+      item: Interconnect controllers
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - cerebras-cs3
+      - cerebras-cluster
+      note: Cores communicate across the WSE on-wafer fabric.
+    properties: {}
+  - id: cg3-sram-mesh
+    name: On-chip SRAM to wafer mesh
+    relationship_type: data_communication_path
+    endpoints:
+    - cg3-sram
+    - cg3-wafer-mesh
+    directionality: undirected
+    inventory:
+      category: Data movement as a unifying theme
+      item: Locality
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - cerebras-cs3
+      - cerebras-cluster
+      note: Distributed SRAM is locally associated with wafer compute; the edge summarizes the on-wafer data path.
+    properties: {}
+  - id: cg3-management-control
+    name: Management control relationship
+    relationship_type: control_management
+    endpoints:
+    - cg3-management
+    - cg3-cs3
+    directionality: undirected
+    inventory:
+      category: Physical infrastructure hierarchy
+      item: Management / head / login nodes
+      status: existing
+    evidence:
+      status: documented
+      source_ids:
+      - cerebras-cluster
+      note: Management servers control/coordinate the CS-3 cluster without becoming a containment parent.
+    properties: {}
   functional_groups:
   - id: cg3-compute-domain
     name: Wafer-scale compute domain
@@ -361,7 +474,8 @@ configurations:
       id: cg3-swarmx
     note: ''
   unknowns:
-  - description: Physical rack/cabinet layout and exact appliance counts for MemoryX, SwarmX, preprocessing, and management are not specified in the public architecture overview used here.
+  - description: Physical rack/cabinet layout and exact appliance counts for MemoryX, SwarmX, preprocessing, and management
+      are not specified in the public architecture overview used here.
     treatment: simplified
     affected_entity_ids:
     - cg3-memoryx

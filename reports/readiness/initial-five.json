@@ -1,10 +1,13 @@
 {
+  "concept_library_revision": "1.0.0-v1-implementation",
   "content_readiness": "PASS",
   "errors": [],
   "pending_release_evidence": [
     "documentation_confidence: unavailable_in_shared_sources: The Source of Truth requires Documentation Confidence >= 3, but the current shared-source set does not contain the candidate-comparison ratings artifact needed to reproduce that score.",
     "browser_e2e: pending_environment: Chromium is available for the renderer benchmark; installed Firefox/WebKit Playwright browsers and npm dependency resolution are unavailable in this offline container."
   ],
+  "product_catalog_revision": "1.0.0@2026-09-07",
+  "product_catalog_schema_version": "1.0.0",
   "release_evidence": {
     "browser_e2e": {
       "note": "Chromium is available for the renderer benchmark; installed Firefox/WebKit Playwright browsers and npm dependency resolution are unavailable in this offline container.",
@@ -15,7 +18,13 @@
       "status": "unavailable_in_shared_sources"
     }
   },
+  "runtime_format_version": "1.1.0",
+  "runtime_source_schema_versions": [
+    "1.2.0",
+    "1.4.0"
+  ],
   "ship_ready": "PENDING",
+  "source_of_truth_version": "0.8",
   "systems": {
     "cerebras-cs3-condor-galaxy3": {
       "claims": [
@@ -68,7 +77,12 @@
           "valid": true
         }
       },
-      "scenario_count": 2
+      "physical_orientation": {
+        "criterion": "DEP-033 / RDY-018",
+        "note": "Reviewed after 1.4 physical-anatomy migration. Major known orientation-critical constituents/paths are modeled as entities, authored Anatomy Depictions, explicit black-box boundaries, or documented scope limits; schematic anatomy remains noninteractive and accessible through enclosing Detail.",
+        "status": "PASS"
+      },
+      "scenario_count": 3
     },
     "google-tpu7x-ironwood": {
       "claims": [
@@ -121,7 +135,12 @@
           "valid": true
         }
       },
-      "scenario_count": 2
+      "physical_orientation": {
+        "criterion": "DEP-033 / RDY-018",
+        "note": "Reviewed after 1.4 physical-anatomy migration. Major known orientation-critical constituents/paths are modeled as entities, authored Anatomy Depictions, explicit black-box boundaries, or documented scope limits; schematic anatomy remains noninteractive and accessible through enclosing Detail.",
+        "status": "PASS"
+      },
+      "scenario_count": 3
     },
     "meta-h100-roce-24k": {
       "claims": [
@@ -150,7 +169,7 @@
           "valid": true
         },
         "management_control": {
-          "status": "not_material",
+          "status": "modeled",
           "valid": true
         },
         "memory": {
@@ -158,7 +177,7 @@
           "valid": true
         },
         "power_cooling": {
-          "status": "not_material",
+          "status": "modeled",
           "valid": true
         },
         "scale_out_network": {
@@ -174,7 +193,12 @@
           "valid": true
         }
       },
-      "scenario_count": 2
+      "physical_orientation": {
+        "criterion": "DEP-033 / RDY-018",
+        "note": "Reviewed after 1.4 physical-anatomy migration. Major known orientation-critical constituents/paths are modeled as entities, authored Anatomy Depictions, explicit black-box boundaries, or documented scope limits; schematic anatomy remains noninteractive and accessible through enclosing Detail.",
+        "status": "PASS"
+      },
+      "scenario_count": 3
     },
     "nvidia-dgx-gb300-nvl72-superpod": {
       "claims": [
@@ -203,7 +227,7 @@
           "valid": true
         },
         "management_control": {
-          "status": "not_material",
+          "status": "modeled",
           "valid": true
         },
         "memory": {
@@ -227,7 +251,12 @@
           "valid": true
         }
       },
-      "scenario_count": 2
+      "physical_orientation": {
+        "criterion": "DEP-033 / RDY-018",
+        "note": "Reviewed after 1.4 physical-anatomy migration. Major known orientation-critical constituents/paths are modeled as entities, authored Anatomy Depictions, explicit black-box boundaries, or documented scope limits; schematic anatomy remains noninteractive and accessible through enclosing Detail.",
+        "status": "PASS"
+      },
+      "scenario_count": 4
     },
     "nvidia-dgx-h100-superpod": {
       "claims": [
@@ -264,7 +293,7 @@
           "valid": true
         },
         "power_cooling": {
-          "status": "not_material",
+          "status": "modeled",
           "valid": true
         },
         "scale_out_network": {
@@ -280,7 +309,13 @@
           "valid": true
         }
       },
-      "scenario_count": 2
+      "physical_orientation": {
+        "criterion": "DEP-033 / RDY-018",
+        "note": "Reviewed after 1.4 physical-anatomy migration. Major known orientation-critical constituents/paths are modeled as entities, authored Anatomy Depictions, explicit black-box boundaries, or documented scope limits; schematic anatomy remains noninteractive and accessible through enclosing Detail.",
+        "status": "PASS"
+      },
+      "scenario_count": 3
     }
-  }
+  },
+  "target_rsc_schema": "1.4.0"
 }
