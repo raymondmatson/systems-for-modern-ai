@@ -108,15 +108,15 @@ const state: AppState = {
 };
 
 const capabilities: CapabilityRegistry = {
-  schema_version: '1.0.0',
+  schemaVersion: '1.0.0',
   profiles: {
-    structural_group: {detail_sections: ['overview', 'properties', 'containment', 'connections', 'concepts', 'evidence', 'actions'], scenario_state_categories: [], structural_role: 'group'},
-    device: {detail_sections: ['overview', 'properties', 'scenario', 'connections', 'concepts', 'evidence', 'actions'], scenario_state_categories: [], structural_role: 'device'},
+    structural_group: {detailSections: ['overview', 'properties', 'containment', 'connections', 'concepts', 'evidence', 'actions'], scenarioStateCategories: [], structuralRole: 'group'},
+    device: {detailSections: ['overview', 'properties', 'scenario', 'connections', 'concepts', 'evidence', 'actions'], scenarioStateCategories: [], structuralRole: 'device'},
   },
-  entity_types: [
-    {entity_type: 'compute_node', profile: 'structural_group', selectable: true, inspectable: true, enterability: 'contextual', supports_concepts: true},
-    {entity_type: 'gpu', profile: 'device', selectable: true, inspectable: true, enterability: 'contextual', supports_concepts: true},
-  ],
+  entityTypes: {
+    compute_node: {entityType: 'compute_node', profile: 'structural_group', selectable: true, inspectable: true, enterability: 'contextual', supportsConcepts: true},
+    gpu: {entityType: 'gpu', profile: 'device', selectable: true, inspectable: true, enterability: 'contextual', supportsConcepts: true},
+  },
 };
 
 const propertyRegistry: PropertyRegistry = {

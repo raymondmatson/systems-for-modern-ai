@@ -56,6 +56,8 @@ Vendor- or deployment-specific boundaries remain explicit black boxes where phys
 
 `python scripts/content/build_runtime.py` writes deterministic runtime assets to `runtime/generated/` and mirrors them into `public/runtime/`. The generated manifest includes source/runtime revisions, initial/default system IDs, Concept IDs, and checksums.
 
+The generated capability registry is part of that normalized runtime contract: it uses camelCase keys (`schemaVersion`, `entityTypes`, `entityType`, `supportsConcepts`, `detailSections`, `scenarioStateCategories`, and `structuralRole`). Browser/domain consumers must read that generated shape directly rather than reusing the snake_case canonical YAML field names. Runtime-shape unit coverage exercises the generated registry through initial Detail rendering so compiler/consumer drift fails before deployment.
+
 Do not edit generated JSON directly.
 
 ## Tests

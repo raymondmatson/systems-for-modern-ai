@@ -178,9 +178,7 @@ function locatorLabel(configuration: Configuration, locator: ContextLocator): st
 }
 
 function capabilityFor(resources: DetailResources, entity: Entity) {
-  const capability = resources.capabilities.entity_types.find(
-    (candidate) => candidate.entity_type === entity.entityType,
-  );
+  const capability = resources.capabilities.entityTypes[entity.entityType];
   const profile = capability
     ? resources.capabilities.profiles[capability.profile]
     : undefined;
@@ -298,7 +296,7 @@ export function buildDetailVM(
     if (entity) {
       const representative = target.kind === 'representative_member';
       const resolvedCapability = capabilityFor(resources, entity);
-      sections = [...(resolvedCapability.profile?.detail_sections ?? sections)];
+      sections = [...(resolvedCapability.profile?.detailSections ?? sections)];
       if ((entity.childIds.length > 0 || entity.population) && !sections.includes('containment')) sections.push('containment');
       title = representative ? representativeEntityLabel(entity) : entity.name;
       subtitle = entityTypeLabel(entity.entityType);

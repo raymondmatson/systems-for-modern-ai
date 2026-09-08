@@ -173,24 +173,24 @@ export interface RuntimeConcept {
 }
 
 export interface CapabilityProfile {
-  detail_sections: string[];
-  scenario_state_categories: string[];
-  structural_role: string;
+  detailSections: string[];
+  scenarioStateCategories: string[];
+  structuralRole: string;
 }
 
 export interface EntityTypeCapability {
-  entity_type: string;
+  entityType: string;
   profile: string;
   selectable: boolean;
   inspectable: boolean;
   enterability: 'contextual' | string;
-  supports_concepts: boolean;
+  supportsConcepts: boolean;
 }
 
 export interface CapabilityRegistry {
-  schema_version: string;
+  schemaVersion: string;
   profiles: Record<string, CapabilityProfile>;
-  entity_types: EntityTypeCapability[];
+  entityTypes: Record<string, EntityTypeCapability>;
 }
 
 export interface PropertyDefinition {

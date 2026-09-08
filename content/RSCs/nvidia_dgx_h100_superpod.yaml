@@ -200,7 +200,7 @@ configurations:
                 value: 8
                 form: scalar
                 basis: documented_fixed
-              expansion_mode: aggregate_only
+              expansion_mode: representative_member
               individually_addressable: false
               member_entity_type: gpu
             product_ref:
