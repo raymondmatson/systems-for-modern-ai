@@ -229,6 +229,9 @@ describe('Explore and Detail view models', () => {
     const scene = buildExploreScene(state, configuration);
     expect(scene.anatomyDepictions).toHaveLength(1);
     expect(scene.anatomyDepictions[0]?.depiction.id).toBe('psu-bank');
+    expect(scene.anatomyDepictions[0]?.evidenceLabel).toBe('verified');
+    expect(scene.anatomyDepictions[0]?.placementLabel).toBe('schematic placement');
+    expect(scene.anatomyDepictions[0]?.labelLines.length).toBeLessThanOrEqual(2);
     const detail = buildDetailVM(state, configuration, {capabilities, propertyRegistry, concepts});
     expect(detail.containment).toContainEqual(['Visible anatomy', 'Power-supply assembly (schematic)']);
   });
@@ -250,5 +253,44 @@ describe('Explore and Detail view models', () => {
     };
     const detail = buildDetailVM(selectedState, configuration, {capabilities, propertyRegistry, concepts});
     expect(detail.actions.some((action) => action.kind === 'enter')).toBe(false);
+  });
+
+  it('exposes Enter for a terminal device with authored physical anatomy', () => {
+    const anatomicalConfiguration = structuredClone(configuration);
+    anatomicalConfiguration.entities.orphan.anatomyDepictions = [{
+      id: 'orphan-controller',
+      label: 'Representative device controller electronics',
+      inventory: {category: 'Server-level hardware', item: 'PCIe switches'},
+      evidence: {
+        status: 'simplified',
+        sourceIds: ['source-a'],
+        note: 'Representative terminal-device anatomy.',
+      },
+      depictionKind: 'compute',
+      placementBasis: 'schematic',
+      count: {basis: 'representative_educational'},
+    }];
+    const selectedState: AppState = {
+      ...state,
+      explore: {
+        ...state.explore,
+        selection: {kind: 'entity', systemId: 'system', configurationId: 'cfg', entityId: 'orphan'},
+      },
+    };
+    const detail = buildDetailVM(selectedState, anatomicalConfiguration, {capabilities, propertyRegistry, concepts});
+    expect(detail.actions.some((action) => action.kind === 'enter')).toBe(true);
+
+    const enteredState: AppState = {
+      ...state,
+      explore: {
+        ...state.explore,
+        structuralLocation: {kind: 'entity', systemId: 'system', configurationId: 'cfg', entityId: 'orphan'},
+        selection: undefined,
+      },
+    };
+    const scene = buildExploreScene(enteredState, anatomicalConfiguration);
+    expect(scene.anatomyDepictions).toHaveLength(1);
+    expect(scene.anatomyDepictions[0]?.evidenceLabel).toBe('representative');
+    expect(scene.anatomyDepictions[0]?.width).toBe(214);
   });
 });

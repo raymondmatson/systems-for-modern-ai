@@ -388,19 +388,38 @@ function App({boot}: {boot: BootContent}) {
                     />
                   ))}
 
+                  {scene.anatomyDepictions.length > 0 && (
+                    <text
+                      className="anatomy-section-label"
+                      x="40"
+                      y={Math.min(...scene.anatomyDepictions.map((item) => item.y)) - 18}
+                      aria-hidden="true"
+                    >
+                      Physical anatomy · noninteractive
+                    </text>
+                  )}
+
                   {scene.anatomyDepictions.map((item) => (
                     <g
                       key={`anatomy-${item.depiction.id}`}
-                      className={`anatomy-depiction anatomy-${item.depiction.depictionKind}`}
+                      className={`anatomy-depiction anatomy-${item.depiction.depictionKind} evidence-${item.depiction.evidence.status}`}
                       transform={`translate(${item.x} ${item.y})`}
                       aria-hidden="true"
                       data-placement-basis={item.depiction.placementBasis}
+                      data-evidence-status={item.depiction.evidence.status}
                     >
                       <rect width={item.width} height={item.height} rx="8" />
-                      <text x="10" y="24">{item.depiction.label}</text>
-                      <text className="anatomy-meta" x="10" y="43">
-                        {item.depiction.placementBasis === 'schematic' ? 'schematic placement' : 'documented placement'}
+                      <text className="anatomy-label" x="12" y="23">
+                        {item.labelLines.map((line, index) => (
+                          <tspan key={`${item.depiction.id}-line-${index}`} x="12" dy={index === 0 ? 0 : 16}>{line}</tspan>
+                        ))}
                       </text>
+                      <text className="anatomy-meta" x="12" y="61">
+                        {item.evidenceLabel} · {item.placementLabel}
+                      </text>
+                      {item.countLabel && (
+                        <text className="anatomy-count" x="12" y="78">{item.countLabel}</text>
+                      )}
                     </g>
                   ))}
 

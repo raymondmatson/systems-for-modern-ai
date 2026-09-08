@@ -7,8 +7,8 @@ reference_system:
   introduction:
     date_or_year: 2022
     lifecycle: mature
-  summary: Server-centered Hopper GPU cluster reference architecture using DGX H100 nodes, NVLink/NVSwitch scale-up, InfiniBand
-    scale-out, management fabrics, and certified storage.
+  summary: Server-centered Hopper GPU cluster reference architecture using DGX H100 nodes, NVLink/NVSwitch scale-up, 
+    InfiniBand scale-out, management fabrics, and certified storage.
   learning_value:
   - Baseline server-centered GPU cluster
   - Clear scale-up versus scale-out boundary
@@ -21,18 +21,61 @@ sources:
 - id: nv-h100-ra
   title: DGX SuperPOD Architecture
   publisher: NVIDIA
-  url: https://docs.nvidia.com/dgx-superpod/reference-architecture-scalable-infrastructure-h100/latest/dgx-superpod-architecture.html
+  url: 
+    https://docs.nvidia.com/dgx-superpod/reference-architecture-scalable-infrastructure-h100/latest/dgx-superpod-architecture.html
   accessed: '2026-08-19'
 - id: nv-h100-fabrics
   title: Network Fabrics — DGX SuperPOD
   publisher: NVIDIA
-  url: https://docs.nvidia.com/dgx-superpod/reference-architecture-scalable-infrastructure-h100/latest/network-fabrics.html
+  url: 
+    https://docs.nvidia.com/dgx-superpod/reference-architecture-scalable-infrastructure-h100/latest/network-fabrics.html
   accessed: '2026-08-19'
 - id: nv-dgx-h100
   title: Introduction to NVIDIA DGX H100/H200 Systems
   publisher: NVIDIA
   url: https://docs.nvidia.com/dgx/dgxh100-user-guide/introduction-to-dgxh100.html
   accessed: '2026-08-19'
+- id: nv-h100-components
+  title: Major Components — NVIDIA DGX SuperPOD H100
+  publisher: NVIDIA
+  url: https://docs.nvidia.com/dgx-superpod/reference-architecture-scalable-infrastructure-h100/latest/components.html
+  accessed: '2026-09-07'
+- id: nv-h100-gpu
+  title: NVIDIA H100 Tensor Core GPU
+  publisher: NVIDIA
+  url: https://www.nvidia.com/en-us/data-center/h100/
+  accessed: '2026-09-07'
+- id: intel-xeon-8480c
+  title: Intel Xeon Platinum 8480C Processor Specifications
+  publisher: Intel
+  url: 
+    https://www.intel.com/content/www/us/en/products/sku/231746/intel-xeon-platinum-8480c-processor-105m-cache-2-00-ghz/specifications.html
+  accessed: '2026-09-07'
+- id: nv-cx7-hw
+  title: NVIDIA ConnectX-7 Adapter Cards User Manual
+  publisher: NVIDIA
+  url: https://docs.nvidia.com/networking/display/connectx7vpi
+  accessed: '2026-09-07'
+- id: nv-qm9700-hw
+  title: QM97xx 1U NDR 400Gb/s InfiniBand Switch Systems User Manual
+  publisher: NVIDIA
+  url: https://docs.nvidia.com/networking/display/qm97xx-1u-ndr-400gbps-infiniband-switch-systems-user-manual.pdf
+  accessed: '2026-09-07'
+- id: nv-sn4600c-hw
+  title: NVIDIA Spectrum-3 SN4000 Switch Systems Hardware User Manual
+  publisher: NVIDIA
+  url: https://docs.nvidia.com/networking/display/sn4000pub
+  accessed: '2026-09-07'
+- id: nv-sn2201-hw
+  title: SN2201 and SN2201_M 1G Management Switch Systems User Manual
+  publisher: NVIDIA
+  url: https://docs.nvidia.com/sn2201-and-sn2201-m-1g-management-switch-systems-user-manual.pdf
+  accessed: '2026-09-07'
+- id: nvme-ssd-architecture
+  title: NVM Express — NVMe Technology Overview
+  publisher: NVM Express
+  url: https://nvmexpress.org/specifications/
+  accessed: '2026-09-07'
 configurations:
 - id: h100-superpod-4su-reference
   name: H100 SuperPOD 4-SU reference architecture
@@ -41,8 +84,8 @@ configurations:
     id: baseline-normal-operation
     name: Baseline / normal operation
     description: Normal/baseline operation with no deliberately injected fault or bottleneck.
-  scope_notes: Initial educational model of the documented H100 SuperPOD reference architecture. Rack placement is intentionally
-    not fixed because NVIDIA permits rack-layout variation for power/cooling constraints.
+  scope_notes: Initial educational model of the documented H100 SuperPOD reference architecture. Rack placement is 
+    intentionally not fixed because NVIDIA permits rack-layout variation for power/cooling constraints.
   modeling_notes:
   - Physical rack placement is simplified; the SU is modeled as the stable Tier-2 grouping.
   - Storage partner internals remain a black box.
@@ -163,6 +206,62 @@ configurations:
             product_ref:
               id: nvidia-h100
               revision: 1
+            anatomy:
+            - id: h100-gpu-package
+              label: H100 GPU package / compute silicon
+              inventory:
+                category: Accelerator internals
+                item: GPU / accelerator dies
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - nv-h100-gpu
+                note: NVIDIA documents the H100 GPU compute package; exact die floorplan is not reproduced.
+              depiction_kind: compute
+              placement_basis: schematic
+            - id: h100-gpu-hbm
+              label: HBM3 memory stacks
+              inventory:
+                category: Accelerator internals
+                item: HBM stacks
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - nv-h100-gpu
+                note: H100 SXM uses on-package high-bandwidth memory; placement is schematic.
+              depiction_kind: memory
+              placement_basis: schematic
+            - id: h100-gpu-nvlink
+              label: Fourth-generation NVLink interfaces
+              inventory:
+                category: Network hardware
+                item: Switch ASICs
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - nv-h100-gpu
+                - nv-dgx-h100
+                note: H100 provides fourth-generation NVLink connectivity to the DGX NVSwitch fabric.
+              depiction_kind: network
+              placement_basis: schematic
+            - id: h100-gpu-host-interface
+              label: SXM / PCIe host-I/O interface
+              inventory:
+                category: Server-level hardware
+                item: PCIe switches
+                status: existing
+              evidence:
+                status: simplified
+                source_ids:
+                - nv-h100-gpu
+                - nv-dgx-h100
+                note: The DGX H100 GPU module participates in the documented host-I/O topology; this card represents the
+                  external module/host interface rather than an asserted lane map.
+              depiction_kind: io
+              placement_basis: schematic
           - id: h100-cpus
             name: Intel Xeon 8480C CPUs
             entity_type: cpu
@@ -200,6 +299,66 @@ configurations:
               expansion_mode: aggregate_only
               individually_addressable: false
               member_entity_type: cpu
+            anatomy:
+            - id: h100-cpu-package
+              label: Xeon Platinum 8480C processor package
+              inventory:
+                category: Server-level hardware
+                item: CPUs
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - intel-xeon-8480c
+                - nv-dgx-h100
+                note: The DGX H100 uses Intel Xeon Platinum 8480C processors.
+              depiction_kind: compute
+              placement_basis: schematic
+            - id: h100-cpu-cores
+              label: 56 CPU cores / 112 threads per processor
+              inventory:
+                category: Accelerator internals
+                item: Compute cores
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - intel-xeon-8480c
+                note: Intel specifies 56 cores and 112 threads for the Xeon Platinum 8480C.
+              depiction_kind: compute
+              placement_basis: schematic
+              count:
+                value: 56
+                basis: documented_fixed
+            - id: h100-cpu-memory-controllers
+              label: Eight DDR5 memory channels per processor
+              inventory:
+                category: Memory hierarchy
+                item: Host memory
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - intel-xeon-8480c
+                note: Intel specifies eight memory channels with DDR5 support.
+              depiction_kind: memory
+              placement_basis: schematic
+              count:
+                value: 8
+                basis: documented_fixed
+            - id: h100-cpu-pcie-upi
+              label: PCIe Gen5 / UPI host interconnects
+              inventory:
+                category: Server-level hardware
+                item: PCIe switches
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - intel-xeon-8480c
+                note: The processor exposes PCIe Gen5 I/O and UPI links; exact DGX lane allocation is not asserted.
+              depiction_kind: io
+              placement_basis: schematic
           - id: h100-nvswitch
             name: NVSwitch devices
             entity_type: scale_up_switch
@@ -236,6 +395,47 @@ configurations:
               expansion_mode: aggregate_only
               individually_addressable: false
               member_entity_type: scale_up_switch
+            anatomy:
+            - id: h100-nvswitch-asic
+              label: Third-generation NVSwitch switching silicon
+              inventory:
+                category: Network hardware
+                item: Switch ASICs
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - nv-dgx-h100
+                note: DGX H100 uses third-generation NVSwitch devices.
+              depiction_kind: network
+              placement_basis: schematic
+            - id: h100-nvswitch-nvlink-ports
+              label: NVLink port interfaces
+              inventory:
+                category: Network hardware
+                item: Switch ASICs
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - nv-dgx-h100
+                note: NVSwitch provides the switching endpoints for the in-system NVLink fabric.
+              depiction_kind: network
+              placement_basis: schematic
+            - id: h100-nvswitch-board-interface
+              label: GPU-baseboard interconnect interface
+              inventory:
+                category: Server-level hardware
+                item: Motherboards / baseboards
+                status: existing
+              evidence:
+                status: simplified
+                source_ids:
+                - nv-dgx-h100
+                note: NVSwitch devices are integrated into the DGX GPU baseboard; exact trace and connector placement is
+                  intentionally not asserted.
+              depiction_kind: io
+              placement_basis: schematic
           - id: h100-cx7
             name: ConnectX-7 compute HCAs
             entity_type: nic
@@ -280,6 +480,47 @@ configurations:
             product_ref:
               id: nvidia-connectx-7
               revision: 1
+            anatomy:
+            - id: h100-cx7-controller
+              label: ConnectX-7 networking controller
+              inventory:
+                category: Network hardware
+                item: NICs
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - nv-cx7-hw
+                note: ConnectX-7 adapter hardware centers on the ConnectX-7 networking controller.
+              depiction_kind: network
+              placement_basis: schematic
+            - id: h100-cx7-pcie
+              label: PCIe Gen5 x16 host interface
+              inventory:
+                category: Server-level hardware
+                item: PCIe switches
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - nv-cx7-hw
+                note: ConnectX-7 adapters connect to the host through PCIe Gen5 x16.
+              depiction_kind: io
+              placement_basis: schematic
+            - id: h100-cx7-ports
+              label: High-speed network port interface(s)
+              inventory:
+                category: Server-level hardware
+                item: NICs
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - nv-cx7-hw
+                note: ConnectX-7 adapter variants expose high-speed InfiniBand/Ethernet ports; exact connector variant 
+                  used in each DGX position is not asserted here.
+              depiction_kind: network
+              placement_basis: schematic
           - id: h100-storage-cx7
             name: ConnectX-7 storage / in-band Ethernet cards
             entity_type: nic
@@ -324,6 +565,47 @@ configurations:
             product_ref:
               id: nvidia-connectx-7
               revision: 1
+            anatomy:
+            - id: h100-storage-cx7-controller
+              label: ConnectX-7 networking controller
+              inventory:
+                category: Network hardware
+                item: NICs
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - nv-cx7-hw
+                note: ConnectX-7 adapter hardware centers on the ConnectX-7 networking controller.
+              depiction_kind: network
+              placement_basis: schematic
+            - id: h100-storage-cx7-pcie
+              label: PCIe Gen5 x16 host interface
+              inventory:
+                category: Server-level hardware
+                item: PCIe switches
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - nv-cx7-hw
+                note: ConnectX-7 adapters connect to the host through PCIe Gen5 x16.
+              depiction_kind: io
+              placement_basis: schematic
+            - id: h100-storage-cx7-ports
+              label: High-speed network port interface(s)
+              inventory:
+                category: Server-level hardware
+                item: NICs
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - nv-cx7-hw
+                note: ConnectX-7 adapter variants expose high-speed InfiniBand/Ethernet ports; exact connector variant 
+                  used in each DGX position is not asserted here.
+              depiction_kind: network
+              placement_basis: schematic
           - id: h100-os-nvme
             name: OS NVMe SSDs
             entity_type: local_storage
@@ -365,6 +647,52 @@ configurations:
               expansion_mode: aggregate_only
               individually_addressable: false
               member_entity_type: local_storage
+            anatomy:
+            - id: h100-os-nvme-controller
+              label: NVMe SSD controller
+              inventory:
+                category: Server-level hardware
+                item: NVMe SSDs
+                status: existing
+              evidence:
+                status: simplified
+                source_ids:
+                - nvme-ssd-architecture
+                - nv-dgx-h100
+                note: OS NVMe SSD model/vendor is not selected in the reference; controller presence is representative 
+                  of the documented NVMe device class.
+              depiction_kind: storage
+              placement_basis: schematic
+            - id: h100-os-nvme-flash
+              label: Nonvolatile flash media
+              inventory:
+                category: Server-level hardware
+                item: NVMe SSDs
+                status: existing
+              evidence:
+                status: simplified
+                source_ids:
+                - nvme-ssd-architecture
+                - nv-dgx-h100
+                note: OS NVMe SSD is modeled with generic solid-state media; NAND type and package count are not 
+                  asserted.
+              depiction_kind: storage
+              placement_basis: schematic
+            - id: h100-os-nvme-pcie
+              label: PCIe / NVMe host interface
+              inventory:
+                category: Server-level hardware
+                item: NVMe SSDs
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - nvme-ssd-architecture
+                - nv-dgx-h100
+                note: NVMe storage communicates over PCIe using the NVMe interface; lane/connector details remain 
+                  device-specific.
+              depiction_kind: io
+              placement_basis: schematic
           - id: h100-local-nvme
             name: Data-cache NVMe SSDs
             entity_type: local_storage
@@ -406,6 +734,52 @@ configurations:
               expansion_mode: aggregate_only
               individually_addressable: false
               member_entity_type: local_storage
+            anatomy:
+            - id: h100-local-nvme-controller
+              label: NVMe SSD controller
+              inventory:
+                category: Server-level hardware
+                item: NVMe SSDs
+                status: existing
+              evidence:
+                status: simplified
+                source_ids:
+                - nvme-ssd-architecture
+                - nv-dgx-h100
+                note: Data-cache NVMe SSD model/vendor is not selected in the reference; controller presence is 
+                  representative of the documented NVMe device class.
+              depiction_kind: storage
+              placement_basis: schematic
+            - id: h100-local-nvme-flash
+              label: Nonvolatile flash media
+              inventory:
+                category: Server-level hardware
+                item: NVMe SSDs
+                status: existing
+              evidence:
+                status: simplified
+                source_ids:
+                - nvme-ssd-architecture
+                - nv-dgx-h100
+                note: Data-cache NVMe SSD is modeled with generic solid-state media; NAND type and package count are not
+                  asserted.
+              depiction_kind: storage
+              placement_basis: schematic
+            - id: h100-local-nvme-pcie
+              label: PCIe / NVMe host interface
+              inventory:
+                category: Server-level hardware
+                item: NVMe SSDs
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - nvme-ssd-architecture
+                - nv-dgx-h100
+                note: NVMe storage communicates over PCIe using the NVMe interface; lane/connector details remain 
+                  device-specific.
+              depiction_kind: io
+              placement_basis: schematic
           - id: h100-system-memory
             name: 2 TB host system memory
             entity_type: system_memory
@@ -439,6 +813,36 @@ configurations:
               expansion_mode: aggregate_only
               individually_addressable: false
               member_entity_type: system_memory
+            anatomy:
+            - id: h100-memory-dimms
+              label: DDR5 DIMM population
+              inventory:
+                category: Memory hierarchy
+                item: Host memory
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - nv-dgx-h100
+                note: DGX H100 provides 2 TB of DDR5 system memory; this depiction does not assert DIMM vendor or slot 
+                  population.
+              depiction_kind: memory
+              placement_basis: schematic
+            - id: h100-memory-channel-interface
+              label: CPU memory-channel interfaces
+              inventory:
+                category: Memory hierarchy
+                item: Host memory
+                status: existing
+              evidence:
+                status: simplified
+                source_ids:
+                - intel-xeon-8480c
+                - nv-dgx-h100
+                note: Host DRAM attaches through the CPU memory channels; the drawing is a schematic grouping rather 
+                  than a channel-to-slot map.
+              depiction_kind: io
+              placement_basis: schematic
           - id: h100-bmc
             name: Baseboard management controller
             entity_type: management_node
@@ -455,6 +859,48 @@ configurations:
               note: The DGX H100 BMC provides the out-of-band management endpoint through a 1 GbE RJ45 interface.
             properties: {}
             children: []
+            anatomy:
+            - id: h100-bmc-controller
+              label: BMC service processor / controller
+              inventory:
+                category: Server-level hardware
+                item: Baseboard management controllers
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - nv-dgx-h100
+                note: DGX H100 includes a BMC for platform management; exact controller silicon is not asserted.
+              depiction_kind: management
+              placement_basis: schematic
+            - id: h100-bmc-network
+              label: Dedicated management-network interface
+              inventory:
+                category: Server-level hardware
+                item: NICs
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - nv-dgx-h100
+                - nv-h100-fabrics
+                note: The BMC exposes the dedicated out-of-band management endpoint.
+              depiction_kind: network
+              placement_basis: schematic
+            - id: h100-bmc-platform-io
+              label: Platform telemetry and control interfaces
+              inventory:
+                category: Server-level hardware
+                item: Motherboards / baseboards
+                status: existing
+              evidence:
+                status: simplified
+                source_ids:
+                - nv-dgx-h100
+                note: This represents the BMC's platform-monitoring/control connectivity without asserting board-level 
+                  buses or sensor placement.
+              depiction_kind: io
+              placement_basis: schematic
           population:
             count:
               value: 32
@@ -477,8 +923,8 @@ configurations:
               status: documented
               source_ids:
               - nv-dgx-h100
-              note: Six 3.3 kW PSUs are documented. Placement in this schematic is illustrative rather than a mechanical slot
-                map.
+              note: Six 3.3 kW PSUs are documented. Placement in this schematic is illustrative rather than a mechanical
+                slot map.
             depiction_kind: power
             placement_basis: schematic
             description: Redundant hot-serviceable power conversion hardware within the DGX chassis.
@@ -495,8 +941,8 @@ configurations:
               status: documented
               source_ids:
               - nv-dgx-h100
-              note: The DGX H100 service documentation distinguishes motherboard and GPU baseboard/tray assemblies; exact
-                PCB geometry is not modeled.
+              note: The DGX H100 service documentation distinguishes motherboard and GPU baseboard/tray assemblies; 
+                exact PCB geometry is not modeled.
             depiction_kind: structural
             placement_basis: schematic
             description: Board-level structural context for CPUs, GPUs, NVSwitches, PCIe and network modules.
@@ -510,8 +956,8 @@ configurations:
               status: documented
               source_ids:
               - nv-dgx-h100
-              note: DGX H100 service and BMC documentation establishes fan hardware and fan-speed monitoring; exact fan placement
-                is not asserted here.
+              note: DGX H100 service and BMC documentation establishes fan hardware and fan-speed monitoring; exact fan 
+                placement is not asserted here.
             depiction_kind: cooling
             placement_basis: schematic
             description: Chassis airflow hardware supporting the air-cooled server.
@@ -525,8 +971,8 @@ configurations:
               status: documented
               source_ids:
               - nv-dgx-h100
-              note: The published system-topology diagram shows PCIe switches and network-module interposer connectivity;
-                exact lane routing is intentionally omitted.
+              note: The published system-topology diagram shows PCIe switches and network-module interposer 
+                connectivity; exact lane routing is intentionally omitted.
             depiction_kind: io
             placement_basis: schematic
             description: Schematic host I/O fabric tying CPUs to network modules, GPU-side I/O, and local storage.
@@ -568,6 +1014,81 @@ configurations:
         product_ref:
           id: nvidia-quantum-qm9700
           revision: 1
+        anatomy:
+        - id: qm9700-switch-silicon
+          label: Quantum-2 switch silicon
+          inventory:
+            category: Network hardware
+            item: Switch ASICs
+            status: existing
+          evidence:
+            status: documented
+            source_ids:
+            - nv-qm9700-hw
+            note: QM9700 is an NVIDIA Quantum-2 NDR InfiniBand switch.
+          depiction_kind: network
+          placement_basis: schematic
+        - id: qm9700-osfp-bank
+          label: 32 OSFP cages / 64 NDR ports
+          inventory:
+            category: Server-level hardware
+            item: NICs
+            status: existing
+          evidence:
+            status: documented
+            source_ids:
+            - nv-qm9700-hw
+            note: The managed QM9700 exposes 32 OSFP cages carrying 64 NDR ports.
+          depiction_kind: network
+          placement_basis: schematic
+          count:
+            value: 32
+            basis: documented_fixed
+        - id: qm9700-management-io
+          label: Front management, console and USB interfaces
+          inventory:
+            category: Server-level hardware
+            item: Baseboard management controllers
+            status: existing
+          evidence:
+            status: documented
+            source_ids:
+            - nv-qm9700-hw
+            note: The QM9700 user manual documents front MGT, console, and USB interfaces.
+          depiction_kind: management
+          placement_basis: schematic
+        - id: qm9700-psus
+          label: Replaceable power supplies
+          inventory:
+            category: Server-level hardware
+            item: Power supplies
+            status: existing
+          evidence:
+            status: documented
+            source_ids:
+            - nv-qm9700-hw
+            note: QM9700 has two replaceable AC power supplies.
+          depiction_kind: power
+          placement_basis: schematic
+          count:
+            value: 2
+            basis: documented_fixed
+        - id: qm9700-fans
+          label: Replaceable fan modules
+          inventory:
+            category: Server-level hardware
+            item: Fans
+            status: existing
+          evidence:
+            status: documented
+            source_ids:
+            - nv-qm9700-hw
+            note: QM9700 has seven replaceable fan modules.
+          depiction_kind: cooling
+          placement_basis: schematic
+          count:
+            value: 7
+            basis: documented_fixed
       - id: h100-management
         name: UFM and management services
         entity_type: management_node
@@ -584,6 +1105,81 @@ configurations:
           note: Management/UFM services are modeled separately from the physical OOB switch fabric.
         properties: {}
         children: []
+        anatomy:
+        - id: h100-mgmt-server-platform
+          label: Management x86 server platform
+          inventory:
+            category: Physical infrastructure hierarchy
+            item: Management / head / login nodes
+            status: existing
+          evidence:
+            status: documented
+            source_ids:
+            - nv-h100-components
+            note: The H100 SuperPOD major-components table specifies an Intel x86 dual-socket management-server profile;
+              this aggregate also includes separate UFM appliances.
+          depiction_kind: compute
+          placement_basis: schematic
+        - id: h100-mgmt-memory
+          label: 384 GB management-server RAM
+          inventory:
+            category: Memory hierarchy
+            item: Host memory
+            status: existing
+          evidence:
+            status: documented
+            source_ids:
+            - nv-h100-components
+            note: The reference management-server profile specifies 384 GB RAM.
+          depiction_kind: memory
+          placement_basis: schematic
+        - id: h100-mgmt-storage
+          label: Mirrored OS SSDs plus 7.68 TB NVMe
+          inventory:
+            category: Server-level hardware
+            item: NVMe SSDs
+            status: existing
+          evidence:
+            status: documented
+            source_ids:
+            - nv-h100-components
+            note: The reference management-server profile specifies two 480 GB OS SSDs in RAID1 and 7.68 TB raw NVMe 
+              storage.
+          depiction_kind: storage
+          placement_basis: schematic
+        - id: h100-mgmt-network
+          label: Four HDR200 VPI interfaces
+          inventory:
+            category: Server-level hardware
+            item: NICs
+            status: existing
+          evidence:
+            status: documented
+            source_ids:
+            - nv-h100-components
+            note: The reference management-server profile specifies four HDR200 VPI ports.
+          depiction_kind: network
+          placement_basis: schematic
+          count:
+            value: 4
+            basis: documented_fixed
+        - id: h100-ufm-appliance-boundary
+          label: UFM appliance hardware boundary
+          inventory:
+            category: Physical infrastructure hierarchy
+            item: Management / head / login nodes
+            status: existing
+          evidence:
+            status: documented
+            source_ids:
+            - nv-h100-components
+            note: The four UFM appliances are distinct physical management devices; their internal BOM is not expanded 
+              because the selected source does not publish it.
+          depiction_kind: management
+          placement_basis: schematic
+          count:
+            value: 4
+            basis: documented_fixed
       - id: h100-storage-switches
         name: Storage-fabric InfiniBand switches
         entity_type: network_switch
@@ -597,13 +1193,88 @@ configurations:
           status: documented
           source_ids:
           - nv-h100-fabrics
-          note: DGX SuperPOD separates the storage fabric from the compute fabric; switch count depends on the selected reference
-            scale.
+          note: DGX SuperPOD separates the storage fabric from the compute fabric; switch count depends on the selected 
+            reference scale.
         properties: {}
         children: []
         product_ref:
           id: nvidia-quantum-qm9700
           revision: 1
+        anatomy:
+        - id: h100-storage-qm9700-switch-silicon
+          label: Quantum-2 switch silicon
+          inventory:
+            category: Network hardware
+            item: Switch ASICs
+            status: existing
+          evidence:
+            status: documented
+            source_ids:
+            - nv-qm9700-hw
+            note: QM9700 is an NVIDIA Quantum-2 NDR InfiniBand switch.
+          depiction_kind: network
+          placement_basis: schematic
+        - id: h100-storage-qm9700-osfp-bank
+          label: 32 OSFP cages / 64 NDR ports
+          inventory:
+            category: Server-level hardware
+            item: NICs
+            status: existing
+          evidence:
+            status: documented
+            source_ids:
+            - nv-qm9700-hw
+            note: The managed QM9700 exposes 32 OSFP cages carrying 64 NDR ports.
+          depiction_kind: network
+          placement_basis: schematic
+          count:
+            value: 32
+            basis: documented_fixed
+        - id: h100-storage-qm9700-management-io
+          label: Front management, console and USB interfaces
+          inventory:
+            category: Server-level hardware
+            item: Baseboard management controllers
+            status: existing
+          evidence:
+            status: documented
+            source_ids:
+            - nv-qm9700-hw
+            note: The QM9700 user manual documents front MGT, console, and USB interfaces.
+          depiction_kind: management
+          placement_basis: schematic
+        - id: h100-storage-qm9700-psus
+          label: Replaceable power supplies
+          inventory:
+            category: Server-level hardware
+            item: Power supplies
+            status: existing
+          evidence:
+            status: documented
+            source_ids:
+            - nv-qm9700-hw
+            note: QM9700 has two replaceable AC power supplies.
+          depiction_kind: power
+          placement_basis: schematic
+          count:
+            value: 2
+            basis: documented_fixed
+        - id: h100-storage-qm9700-fans
+          label: Replaceable fan modules
+          inventory:
+            category: Server-level hardware
+            item: Fans
+            status: existing
+          evidence:
+            status: documented
+            source_ids:
+            - nv-qm9700-hw
+            note: QM9700 has seven replaceable fan modules.
+          depiction_kind: cooling
+          placement_basis: schematic
+          count:
+            value: 7
+            basis: documented_fixed
       - id: h100-inband-switches
         name: In-band management Ethernet switches
         entity_type: network_switch
@@ -617,12 +1288,83 @@ configurations:
           status: documented
           source_ids:
           - nv-h100-fabrics
-          note: SN4600C-class switching provides the in-band management network in the H100 SuperPOD reference architecture.
+          note: SN4600C-class switching provides the in-band management network in the H100 SuperPOD reference 
+            architecture.
         properties: {}
         children: []
         product_ref:
           id: nvidia-sn4600c
           revision: 1
+        anatomy:
+        - id: sn4600c-switch-silicon
+          label: Spectrum-3 switching silicon
+          inventory:
+            category: Network hardware
+            item: Switch ASICs
+            status: existing
+          evidence:
+            status: documented
+            source_ids:
+            - nv-sn4600c-hw
+            note: SN4600C is a Spectrum-3 switch platform.
+          depiction_kind: network
+          placement_basis: schematic
+        - id: sn4600c-port-bank
+          label: 64 QSFP28 100GbE port positions
+          inventory:
+            category: Server-level hardware
+            item: NICs
+            status: existing
+          evidence:
+            status: documented
+            source_ids:
+            - nv-sn4600c-hw
+            - nv-h100-components
+            note: The H100 SuperPOD SN4600C configuration exposes 64 QSFP28 ports.
+          depiction_kind: network
+          placement_basis: schematic
+          count:
+            value: 64
+            basis: documented_fixed
+        - id: sn4600c-management-io
+          label: Management / console / USB interfaces
+          inventory:
+            category: Server-level hardware
+            item: Baseboard management controllers
+            status: existing
+          evidence:
+            status: documented
+            source_ids:
+            - nv-sn4600c-hw
+            note: The switch platform includes dedicated management, console and service interfaces.
+          depiction_kind: management
+          placement_basis: schematic
+        - id: sn4600c-psus
+          label: Redundant power-supply modules
+          inventory:
+            category: Server-level hardware
+            item: Power supplies
+            status: existing
+          evidence:
+            status: documented
+            source_ids:
+            - nv-sn4600c-hw
+            note: SN4600C hardware provides redundant field-serviceable power. Exact PSU option is not asserted.
+          depiction_kind: power
+          placement_basis: schematic
+        - id: sn4600c-fans
+          label: Replaceable fan modules
+          inventory:
+            category: Server-level hardware
+            item: Fans
+            status: existing
+          evidence:
+            status: documented
+            source_ids:
+            - nv-sn4600c-hw
+            note: SN4600C includes field-serviceable fan modules; airflow option/placement is not drawn mechanically.
+          depiction_kind: cooling
+          placement_basis: schematic
       - id: h100-oob-switches
         name: Out-of-band management network
         entity_type: network_switch
@@ -642,6 +1384,84 @@ configurations:
         product_ref:
           id: nvidia-sn2201
           revision: 1
+        anatomy:
+        - id: sn2201-switch-silicon
+          label: Spectrum switching silicon / control plane
+          inventory:
+            category: Network hardware
+            item: Switch ASICs
+            status: existing
+          evidence:
+            status: documented
+            source_ids:
+            - nv-sn2201-hw
+            note: SN2201 is an NVIDIA Spectrum management-switch platform with an x86 control plane.
+          depiction_kind: network
+          placement_basis: schematic
+        - id: sn2201-rj45-bank
+          label: 48 RJ45 1GbE ports
+          inventory:
+            category: Server-level hardware
+            item: NICs
+            status: existing
+          evidence:
+            status: documented
+            source_ids:
+            - nv-sn2201-hw
+            note: The SN2201 exposes 48 1GBase-T RJ45 switch ports.
+          depiction_kind: network
+          placement_basis: schematic
+          count:
+            value: 48
+            basis: documented_fixed
+        - id: sn2201-qsfp-bank
+          label: Four QSFP28 100GbE uplink cages
+          inventory:
+            category: Server-level hardware
+            item: NICs
+            status: existing
+          evidence:
+            status: documented
+            source_ids:
+            - nv-sn2201-hw
+            note: The SN2201 exposes four QSFP28 high-speed interfaces.
+          depiction_kind: network
+          placement_basis: schematic
+          count:
+            value: 4
+            basis: documented_fixed
+        - id: sn2201-psus
+          label: Redundant power-supply units
+          inventory:
+            category: Server-level hardware
+            item: Power supplies
+            status: existing
+          evidence:
+            status: documented
+            source_ids:
+            - nv-sn2201-hw
+            note: SN2201 has two AC power supplies / inlets for redundancy.
+          depiction_kind: power
+          placement_basis: schematic
+          count:
+            value: 2
+            basis: documented_fixed
+        - id: sn2201-fans
+          label: Rear fan modules
+          inventory:
+            category: Server-level hardware
+            item: Fans
+            status: existing
+          evidence:
+            status: documented
+            source_ids:
+            - nv-sn2201-hw
+            note: SN2201 documents four rear fan units.
+          depiction_kind: cooling
+          placement_basis: schematic
+          count:
+            value: 4
+            basis: documented_fixed
       - id: h100-storage
         name: Certified storage subsystem
         entity_type: storage_system
@@ -804,8 +1624,8 @@ configurations:
       status: documented
       source_ids:
       - nv-dgx-h100
-      note: Published DGX topology shows CPU-connected PCIe switching/network/storage paths; the edge is a simplified topology
-        relationship, not a lane map.
+      note: Published DGX topology shows CPU-connected PCIe switching/network/storage paths; the edge is a simplified 
+        topology relationship, not a lane map.
     properties: {}
   - id: h100-management-oob-services
     name: Management services over OOB fabric
@@ -823,8 +1643,8 @@ configurations:
       source_ids:
       - nv-h100-ra
       - nv-h100-fabrics
-      note: Management/UFM services are associated with the dedicated OOB management transport without implying service containment
-        inside the switches.
+      note: Management/UFM services are associated with the dedicated OOB management transport without implying service 
+        containment inside the switches.
     properties: {}
   functional_groups:
   - id: h100-compute-fabric-group
@@ -889,7 +1709,8 @@ configurations:
       id: h100-cx7
     note: ''
   unknowns:
-  - description: Certified storage-vendor internals differ by installation and are not fixed by the reference architecture.
+  - description: Certified storage-vendor internals differ by installation and are not fixed by the reference 
+      architecture.
     treatment: black_box
     affected_entity_ids:
     - h100-storage

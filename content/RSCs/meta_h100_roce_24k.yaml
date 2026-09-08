@@ -7,8 +7,8 @@ reference_system:
   introduction:
     date_or_year: 2024
     lifecycle: current
-  summary: Production-scale H100 training cluster that contrasts Ethernet/RoCE scale-out with InfiniBand alternatives and
-    exposes storage, scheduling, and operational concerns at very large scale.
+  summary: Production-scale H100 training cluster that contrasts Ethernet/RoCE scale-out with InfiniBand alternatives 
+    and exposes storage, scheduling, and operational concerns at very large scale.
   learning_value:
   - Real production AI training deployment
   - RoCE/Ethernet accelerator fabric
@@ -27,6 +27,36 @@ sources:
   publisher: Meta Engineering
   url: https://engineering.fb.com/2024/10/15/data-infrastructure/metas-open-ai-hardware-vision/
   accessed: '2026-08-19'
+- id: meta-wedge400-spec
+  title: Wedge 400 Design Specification
+  publisher: Open Compute Project
+  url: https://www.opencompute.org/documents/wedge400-ocp-specification-v0-3-pdf
+  accessed: '2026-09-07'
+- id: meta-ocp-networking
+  title: 'OCP Summit 2021: Open networking hardware lays the groundwork for the metaverse'
+  publisher: Meta
+  url: https://engineering.fb.com/2021/11/09/data-center-engineering/ocp-summit-2021/
+  accessed: '2026-09-07'
+- id: ocp-minipack2
+  title: Minipack2 Generic OCP Specification
+  publisher: Open Compute Project
+  url: https://www.opencompute.org/documents/minipack2-generic-ocp-specification-rev1-0-pdf
+  accessed: '2026-09-07'
+- id: arista-7800r3
+  title: Arista 7800R3 Series Data Sheet
+  publisher: Arista Networks
+  url: https://www.arista.com/assets/data/pdf/Datasheets/7800R3-Data-Sheet.pdf
+  accessed: '2026-09-07'
+- id: nv-h100-gpu
+  title: NVIDIA H100 Tensor Core GPU
+  publisher: NVIDIA
+  url: https://www.nvidia.com/en-us/data-center/h100/
+  accessed: '2026-09-07'
+- id: nvme-ssd-architecture
+  title: NVM Express — NVMe Technology Overview
+  publisher: NVM Express
+  url: https://nvmexpress.org/specifications/
+  accessed: '2026-09-07'
 configurations:
 - id: meta-24576-h100-roce
   name: Meta 24,576-H100 RoCE training cluster
@@ -35,11 +65,11 @@ configurations:
     id: baseline-normal-operation
     name: Baseline / normal operation
     description: Normal/baseline operation with no deliberately injected fault or bottleneck.
-  scope_notes: Models the RoCE cluster variant described by Meta, emphasizing the production Ethernet/RDMA fabric, Grand Teton
-    compute platform, and flash-backed storage infrastructure.
+  scope_notes: Models the RoCE cluster variant described by Meta, emphasizing the production Ethernet/RDMA fabric, Grand
+    Teton compute platform, and flash-backed storage infrastructure.
   modeling_notes:
-  - Grand Teton internals and rack counts remain black-box/aggregate where Meta does not provide enough H100-specific layout
-    detail in the selected source.
+  - Grand Teton internals and rack counts remain black-box/aggregate where Meta does not provide enough H100-specific 
+    layout detail in the selected source.
   - 'Meta storage service context: the physical YV3 tier is exposed through a Tectonic-backed FUSE path; software storage
     abstractions are explanatory context, not physical child entities.'
   source_ids:
@@ -114,9 +144,9 @@ configurations:
             source_ids:
             - meta-genai
             - meta-grandteton
-            note: Grand Teton remains a black-box chassis in this configuration. Meta documents integrated power, control,
-              compute, and fabric interfaces but the selected cluster source does not support a DGX-like internal decomposition
-              or exact H100 placement.
+            note: Grand Teton remains a black-box chassis in this configuration. Meta documents integrated power, 
+              control, compute, and fabric interfaces but the selected cluster source does not support a DGX-like 
+              internal decomposition or exact H100 placement.
           properties: {}
           children:
           - id: meta-h100-gpus
@@ -132,12 +162,69 @@ configurations:
               status: documented
               source_ids:
               - meta-genai
-              note: H100 accelerators are the cluster compute devices; per-chassis quantity is intentionally unknown here.
+              note: H100 accelerators are the cluster compute devices; per-chassis quantity is intentionally unknown 
+                here.
             properties: {}
             children: []
             product_ref:
               id: nvidia-h100
               revision: 1
+            anatomy:
+            - id: meta-h100-gpu-package
+              label: H100 GPU package / compute silicon
+              inventory:
+                category: Accelerator internals
+                item: GPU / accelerator dies
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - nv-h100-gpu
+                - meta-genai
+                note: Meta documents H100 GPUs in the cluster; NVIDIA documents the H100 package architecture.
+              depiction_kind: compute
+              placement_basis: schematic
+            - id: meta-h100-hbm
+              label: HBM3 memory stacks
+              inventory:
+                category: Accelerator internals
+                item: HBM stacks
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - nv-h100-gpu
+                note: H100 uses on-package high-bandwidth memory; exact stack placement is schematic.
+              depiction_kind: memory
+              placement_basis: schematic
+            - id: meta-h100-nvlink
+              label: Fourth-generation NVLink interfaces
+              inventory:
+                category: Network hardware
+                item: Switch ASICs
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - nv-h100-gpu
+                - meta-grandteton
+                note: Grand Teton integrates H100 accelerators with NVLink/NVSwitch scale-up connectivity.
+              depiction_kind: network
+              placement_basis: schematic
+            - id: meta-h100-host-io
+              label: SXM / host-I/O interface
+              inventory:
+                category: Server-level hardware
+                item: PCIe switches
+                status: existing
+              evidence:
+                status: simplified
+                source_ids:
+                - nv-h100-gpu
+                - meta-grandteton
+                note: This depicts the GPU module's host/platform interface without asserting Meta board lane routing.
+              depiction_kind: io
+              placement_basis: schematic
           product_ref:
             id: meta-grand-teton
             revision: 1
@@ -153,8 +240,8 @@ configurations:
               source_ids:
               - meta-genai
               - meta-grandteton
-              note: Meta describes Grand Teton as integrating power with compute/control/fabric interfaces; exact PSU count/model/placement
-                is not asserted.
+              note: Meta describes Grand Teton as integrating power with compute/control/fabric interfaces; exact PSU 
+                count/model/placement is not asserted.
             depiction_kind: power
             placement_basis: schematic
           - id: meta-grand-teton-control-support
@@ -182,8 +269,8 @@ configurations:
               source_ids:
               - meta-genai
               - meta-grandteton
-              note: Grand Teton integrates fabric interfaces as part of the monolithic system design; exact adapter count/topology
-                is not modeled here.
+              note: Grand Teton integrates fabric interfaces as part of the monolithic system design; exact adapter 
+                count/topology is not modeled here.
             depiction_kind: network
             placement_basis: schematic
       - id: meta-roce-switches
@@ -220,13 +307,74 @@ configurations:
             status: documented
             source_ids:
             - meta-genai
-            note: Meta identifies Arista 7800 switches as part of the RoCE fabric; exact deployment count/topology is not
-              asserted.
+            note: Meta identifies Arista 7800 switches as part of the RoCE fabric; exact deployment count/topology is 
+              not asserted.
           properties: {}
           children: []
           product_identity:
             manufacturer: Arista
             product_family: 7800 Series
+          anatomy:
+          - id: meta-arista-linecards
+            label: Representative modular line-card slots
+            inventory:
+              category: Physical infrastructure hierarchy
+              item: Switch trays / fabric switch trays
+              status: existing
+            evidence:
+              status: simplified
+              source_ids:
+              - meta-genai
+              - arista-7800r3
+              note: Meta identifies the Arista 7800 family but not the exact chassis/generation. 7800R3 documentation is
+                used only as representative family anatomy, not as proof of the deployed Meta model.
+            depiction_kind: network
+            placement_basis: schematic
+          - id: meta-arista-fabric-modules
+            label: Representative switch-fabric modules
+            inventory:
+              category: Network hardware
+              item: Switch ASICs
+              status: existing
+            evidence:
+              status: simplified
+              source_ids:
+              - meta-genai
+              - arista-7800r3
+              note: Modular 7800-family chassis anatomy is represented generically; exact fabric module model/count 
+                requires the specific Meta chassis.
+            depiction_kind: network
+            placement_basis: schematic
+          - id: meta-arista-supervisors
+            label: Representative supervisor / control modules
+            inventory:
+              category: Server-level hardware
+              item: Baseboard management controllers
+              status: existing
+            evidence:
+              status: simplified
+              source_ids:
+              - meta-genai
+              - arista-7800r3
+              note: This is representative modular control-plane anatomy; exact supervisor generation/count is not 
+                asserted.
+            depiction_kind: management
+            placement_basis: schematic
+          - id: meta-arista-power-cooling
+            label: Representative redundant power / cooling modules
+            inventory:
+              category: Physical infrastructure hierarchy
+              item: Power infrastructure
+              status: existing
+            evidence:
+              status: simplified
+              source_ids:
+              - meta-genai
+              - arista-7800r3
+              note: Arista modular chassis provide replaceable power/cooling support, but exact Meta model and FRU count
+                are not known.
+            depiction_kind: support
+            placement_basis: schematic
         - id: meta-wedge400
           name: Wedge400 rack switches
           entity_type: network_switch
@@ -246,6 +394,75 @@ configurations:
           product_identity:
             manufacturer: Meta
             model: Wedge400
+          anatomy:
+          - id: meta-wedge400-th3
+            label: Broadcom Tomahawk 3 switch ASIC
+            inventory:
+              category: Network hardware
+              item: Switch ASICs
+              status: existing
+            evidence:
+              status: documented
+              source_ids:
+              - meta-wedge400-spec
+              - meta-ocp-networking
+              note: The Wedge400 design uses Broadcom BCM56980 / Tomahawk 3 switching silicon.
+            depiction_kind: network
+            placement_basis: schematic
+          - id: meta-wedge400-port-bank
+            label: 16 QSFP-DD + 32 QSFP56 traffic ports
+            inventory:
+              category: Server-level hardware
+              item: NICs
+              status: existing
+            evidence:
+              status: documented
+              source_ids:
+              - meta-wedge400-spec
+              note: The Wedge400 specification documents 16 QSFP-DD and 32 QSFP56 traffic ports.
+            depiction_kind: network
+            placement_basis: schematic
+          - id: meta-wedge400-scm
+            label: Field-replaceable system-controller / CPU module
+            inventory:
+              category: Server-level hardware
+              item: Motherboards / baseboards
+              status: existing
+            evidence:
+              status: documented
+              source_ids:
+              - meta-wedge400-spec
+              - meta-ocp-networking
+              note: Wedge400 includes a field-replaceable CPU/system-controller subsystem.
+            depiction_kind: management
+            placement_basis: schematic
+          - id: meta-wedge400-bmc
+            label: BMC / management interfaces
+            inventory:
+              category: Server-level hardware
+              item: Baseboard management controllers
+              status: existing
+            evidence:
+              status: documented
+              source_ids:
+              - meta-wedge400-spec
+              note: The switch main board includes an Aspeed BMC plus console/OOB management interfaces.
+            depiction_kind: management
+            placement_basis: schematic
+          - id: meta-wedge400-power-cooling
+            label: Power and fan support modules
+            inventory:
+              category: Physical infrastructure hierarchy
+              item: Power infrastructure
+              status: existing
+            evidence:
+              status: simplified
+              source_ids:
+              - meta-wedge400-spec
+              note: The public design includes chassis power and thermal support; this card keeps those service 
+                components grouped rather than asserting deployment-specific FRU revisions.
+            depiction_kind: support
+            placement_basis: schematic
         - id: meta-minipack2
           name: Minipack2 rack switches
           entity_type: network_switch
@@ -265,6 +482,79 @@ configurations:
           product_identity:
             manufacturer: Meta
             model: Minipack2
+          anatomy:
+          - id: meta-minipack2-switch-asic
+            label: Broadcom Tomahawk 4 switch ASIC
+            inventory:
+              category: Network hardware
+              item: Switch ASICs
+              status: existing
+            evidence:
+              status: documented
+              source_ids:
+              - meta-ocp-networking
+              - ocp-minipack2
+              note: Minipack2 uses the high-capacity OCP modular switching design; the selected generic OCP 
+                specification documents the switch ASIC platform.
+            depiction_kind: network
+            placement_basis: schematic
+          - id: meta-minipack2-pims
+            label: Eight port-interface modules (PIMs)
+            inventory:
+              category: Physical infrastructure hierarchy
+              item: Switch trays / fabric switch trays
+              status: existing
+            evidence:
+              status: documented
+              source_ids:
+              - ocp-minipack2
+              note: The generic Minipack2 OCP design uses eight pluggable port-interface modules.
+            depiction_kind: structural
+            placement_basis: schematic
+            count:
+              value: 8
+              basis: documented_fixed
+          - id: meta-minipack2-port-bank
+            label: High-density QSFP56 / 400G front-panel interfaces
+            inventory:
+              category: Server-level hardware
+              item: NICs
+              status: existing
+            evidence:
+              status: documented
+              source_ids:
+              - ocp-minipack2
+              note: The OCP Minipack2 design provides a high-density modular front-panel port field; exact configured 
+                breakout mode in Meta's cluster is not asserted.
+            depiction_kind: network
+            placement_basis: schematic
+          - id: meta-minipack2-bmc
+            label: RunBMC management module
+            inventory:
+              category: Server-level hardware
+              item: Baseboard management controllers
+              status: existing
+            evidence:
+              status: documented
+              source_ids:
+              - ocp-minipack2
+              note: The generic OCP Minipack2 specification includes a RunBMC management module.
+            depiction_kind: management
+            placement_basis: schematic
+          - id: meta-minipack2-power-cooling
+            label: Redundant power and fan modules
+            inventory:
+              category: Physical infrastructure hierarchy
+              item: Power infrastructure
+              status: existing
+            evidence:
+              status: documented
+              source_ids:
+              - ocp-minipack2
+              note: The generic OCP Minipack2 design includes redundant power and forced-air cooling modules; exact 
+                deployed FRU revisions are not asserted.
+            depiction_kind: support
+            placement_basis: schematic
       - id: meta-storage-racks
         name: Storage infrastructure
         entity_type: storage_group
@@ -278,9 +568,9 @@ configurations:
           status: documented
           source_ids:
           - meta-genai
-          note: Physical YV3 storage supports training data and checkpointing. Meta exposes this through a FUSE API backed
-            by Tectonic and uses Hammerspace in the broader storage environment; software services are explanatory context
-            rather than physical children.
+          note: Physical YV3 storage supports training data and checkpointing. Meta exposes this through a FUSE API 
+            backed by Tectonic and uses Hammerspace in the broader storage environment; software services are 
+            explanatory context rather than physical children.
         properties: {}
         children:
         - id: meta-yv3
@@ -318,6 +608,51 @@ configurations:
               note: Storage servers use high-capacity E1.S SSDs.
             properties: {}
             children: []
+            anatomy:
+            - id: meta-e1s-controller
+              label: NVMe SSD controller
+              inventory:
+                category: Server-level hardware
+                item: NVMe SSDs
+                status: existing
+              evidence:
+                status: simplified
+                source_ids:
+                - nvme-ssd-architecture
+                - meta-genai
+                note: Meta identifies high-capacity E1.S SSDs but not the selected vendor/model; controller presence is 
+                  represented generically.
+              depiction_kind: storage
+              placement_basis: schematic
+            - id: meta-e1s-flash
+              label: Nonvolatile flash media
+              inventory:
+                category: Server-level hardware
+                item: NVMe SSDs
+                status: existing
+              evidence:
+                status: simplified
+                source_ids:
+                - nvme-ssd-architecture
+                - meta-genai
+                note: Generic solid-state media is shown without asserting NAND generation, package count, or capacity 
+                  per device.
+              depiction_kind: storage
+              placement_basis: schematic
+            - id: meta-e1s-pcie
+              label: PCIe / NVMe host interface
+              inventory:
+                category: Server-level hardware
+                item: NVMe SSDs
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - nvme-ssd-architecture
+                - meta-genai
+                note: The E1.S SSDs are NVMe devices; exact lane/connector wiring in YV3 is not modeled.
+              depiction_kind: io
+              placement_basis: schematic
   connections:
   - id: meta-roce-link
     name: 400-Gb/s RoCE accelerator fabric
@@ -440,10 +775,11 @@ configurations:
     target:
       type: entity
       id: meta-compute-racks
-    note: Meta documents the cluster as using Open Rack with Grand Teton; exact rack generation and population remain simplified.
+    note: Meta documents the cluster as using Open Rack with Grand Teton; exact rack generation and population remain 
+      simplified.
   unknowns:
-  - description: Exact Grand Teton H100 chassis internals and compute-rack population are not asserted in the public source
-      used for this initial model.
+  - description: Exact Grand Teton H100 chassis internals and compute-rack population are not asserted in the public 
+      source used for this initial model.
     treatment: black_box
     affected_entity_ids:
     - meta-grand-teton

@@ -197,6 +197,7 @@ function isEnterable(
   if (!capability || capability.enterability !== 'contextual') return false;
   if (entity.population?.expansionMode === 'representative_member') return true;
   if (entity.childIds.length > 0) return true;
+  if ((entity.anatomyDepictions?.length ?? 0) > 0) return true;
   if (entity.representation === 'black_box') return false;
   const hasArchitecturalRelationships = Object.values(configuration.connections).some(
     (connection) => connection.endpointIds.includes(entity.id),

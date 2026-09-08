@@ -1,0 +1,1 @@
+{"entityType":"network_switch","id":"nvidia-sn4600c","identity":{"manufacturer":"NVIDIA","model":"SN4600C","product_family":"Spectrum"},"name":"NVIDIA SN4600C","properties":{},"recordLevel":"model","revision":1,"sourceIds":["official"],"summary":"Ethernet switch family used for DGX SuperPOD in-band management connectivity."}

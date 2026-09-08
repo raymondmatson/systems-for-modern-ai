@@ -28,7 +28,7 @@ The semantic core stores project IDs and typed Context Locators. It does not sto
 - `src/view-model/` — deterministic Explore layout/scene and Detail view models.
 - `src/runtime/repository.ts` — browser transport adapter for generated runtime JSON.
 - `src/app/App.tsx` — browser presentation and semantic action dispatch.
-- `scripts/content/` — canonical validation, 1.3 migration/runtime compilation, runtime integrity, property fixtures, and readiness.
+- `scripts/content/` — canonical validation, 1.4 physical-anatomy/Product-Catalog migration/runtime compilation, runtime integrity, property fixtures, and readiness.
 
 ## Rendering decision
 
@@ -39,8 +39,18 @@ Renderer optimization may change visual materialization only; it may not change 
 ## Schema state
 
 - Later-candidate RSC content remains valid under the preserved 1.2.0 schema.
-- The five Version-1 systems use the coordinated additive 1.3.0 migration covering population metadata, canonical Concept occurrence links, Scenario catalog identity, and structured properties.
+- The five Version-1 systems use the coordinated additive 1.4.0 migration. It retains the 1.3.0 population/Concept/Scenario/property model and adds exact revisioned Product Catalog references plus noninteractive Anatomy Depictions for source-supported physical orientation.
 - Concept metadata remains separately versioned at 1.0.0.
+
+## Device-interior physical coverage
+
+Explore contextual Entry is intentionally broader than semantic containment: a contextual-capability entity may be enterable because it has representative-member expansion, semantic children, authored Anatomy Depictions, or a direct architectural relationship. The physical-orientation audit mirrors those UI rules so relationship endpoints cannot silently open to an empty scene.
+
+For the initial five Reference Systems, terminal devices with useful physical detail now use authored Anatomy Depictions when a deeper interactive entity hierarchy would add little semantic value. Examples include accelerator packages and attached memory, CPU/memory interfaces, NIC/DPU controllers and external interfaces, NVMe controller/media/interface groupings, switch silicon/port banks/management I/O/power/fan assemblies, rack power/cooling support, optical/DCN boundaries, Cerebras appliance internals at published generality, and Meta switch/storage internals.
+
+An Anatomy Depiction remains noninteractive and does not become an Entity, Selection target, Scenario target, Concept occurrence, or independent accessibility focus target. A terminal entity with authored anatomy may nevertheless expose **Enter** so the user can inspect its physical interior. Explore renders these depictions in a three-column card grid with visible evidence status, placement basis, and authored count basis/value where available. Device-specific documented details are labeled as verified; inferred/simplified details are labeled representative. Detail remains the accessible semantic summary and carries the fuller evidence note.
+
+Vendor- or deployment-specific boundaries remain explicit black boxes where physical internals cannot be established reliably. The renderer must not infer a standard server/switch/storage anatomy merely from `entity_type`.
 
 ## Generated artifacts
 

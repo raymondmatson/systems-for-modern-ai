@@ -16,6 +16,7 @@ REPORT = ROOT / 'reports' / 'readiness' / 'physical-orientation-initial-five.jso
 def main() -> None:
     manifest = json.loads((OUT / 'manifest.json').read_text())
     readiness = yaml.safe_load(READINESS.read_text())
+    capabilities = json.loads((OUT / 'capabilities.json').read_text()).get('entityTypes', {})
     errors: list[str] = []
     contexts: list[dict[str, object]] = []
     checked = 0
@@ -27,8 +28,20 @@ def main() -> None:
             errors.append(f'{sid}: no PASS qualitative DEP-033 / RDY-018 review is recorded')
         for cfg in system.get('configurations', {}).values():
             connections = list(cfg.get('connections', {}).values())
+            endpoint_ids = {endpoint for connection in connections for endpoint in connection.get('endpointIds', [])}
             for entity in cfg.get('entities', {}).values():
-                enterable = bool(entity.get('childIds')) or entity.get('population', {}).get('expansionMode') == 'representative_member'
+                capability = capabilities.get(entity.get('entityType'), {})
+                contextual = capability.get('enterability') == 'contextual'
+                has_children = bool(entity.get('childIds'))
+                representative_member = entity.get('population', {}).get('expansionMode') == 'representative_member'
+                has_anatomy = bool(entity.get('anatomyDepictions'))
+                relationship_enterable = (
+                    entity.get('representation') != 'black_box'
+                    and entity.get('id') in endpoint_ids
+                )
+                enterable = contextual and (
+                    representative_member or has_children or has_anatomy or relationship_enterable
+                )
                 if not enterable:
                     continue
                 checked += 1
@@ -53,7 +66,7 @@ def main() -> None:
         'mechanical_errors': errors,
         'qualitative_review_source': 'readiness/initial-five.yaml',
         'contexts': contexts,
-        'note': 'PASS requires both mechanically non-empty entered contexts and explicit per-system qualitative orientation review. It is not a minimum-object-count claim.',
+        'note': 'PASS requires both mechanically non-empty entered contexts and explicit per-system qualitative orientation review. Enterability mirrors the Explore UI: contextual capability plus representative-member expansion, children, authored anatomy, or (for non-black-box entities) a direct architectural relationship. It is not a minimum-object-count claim.',
     }
     REPORT.parent.mkdir(parents=True, exist_ok=True)
     REPORT.write_text(json.dumps(report, indent=2, sort_keys=True) + '\n')

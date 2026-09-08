@@ -35,7 +35,7 @@ Current planning-disposition values:
 - **Verify first, then implement if supported** — the evidence gate remains consequential.
 - **Closed — no addition** — preserve the deliberate omission/closure.
 
-The supplied baseline has a mixed RSC source-schema corpus (five initial configurations on 1.3.0 and later-candidate files on 1.2.0). Historical validator/report claims do not waive revalidation after this physical-anatomy/Product-Catalog work.
+The supplied baseline has a mixed RSC source-schema corpus (the five initial configurations on 1.4.0 and later-candidate files on preserved earlier schema revisions). Historical validator/report claims do not waive revalidation after physical-anatomy/Product-Catalog work.
 
 ## Global / cross-file additions
 
@@ -602,6 +602,23 @@ Use the Source-of-Truth DEP-033 test. Completion is reached when the learner can
 
 All reconciled rows with Planning disposition **Implement** or **Revise / complete** were applied to the supplied baseline unless explicitly closed below. Baseline-present **Retain / verify** rows were retained and revalidated. Evidence-gated CER-04, ELCAP-04, RUBIN-02/03, OCI-09, and CW-02 were implemented at the documented safe evidence boundary. Deliberate closures G-04, OCI-01, OCI-02, OCI-08, and XAI-01 remain closed; XAI-04 remains superseded by the newer mixed-fleet wording. New physical-orientation rows H100-12/13/14, GB300-11/12, CER-07, and META-06 were completed using ordinary entities where independent semantics mattered and noninteractive Anatomy Depictions where orientation-only physical presence was appropriate.
 
-Validation on this implementation snapshot: RSC **16 systems / 18 configurations PASS**; Product/Anatomy **PASS**; Concepts **15 PASS** with **9/9** Concept tests; V1 **5 systems / 15 Concepts / 45 Properties / 0 errors**; deterministic runtime **54 artifacts PASS**; branch coverage **75 branches / 0 errors**; physical-orientation audit **21 entered contexts / 0 errors**; Property fixtures **5/5 PASS**. Chromium density benchmark confirms the densest initial-five context is the DGX H100 node with **9 interactive entities + 4 Anatomy Depictions** and Anatomy Depictions create **0 focus targets**.
+Validation on this implementation snapshot: RSC **16 systems / 18 configurations PASS**; Product/Anatomy **PASS**; Concepts **15 PASS** with **9/9** Concept tests; V1 **5 systems / 15 Concepts / 45 Properties / 0 errors**; deterministic runtime **54 artifacts PASS**; branch coverage **75 branches / 0 errors**; physical-orientation audit **65 entered contexts / 0 errors**; Property fixtures **5/5 PASS**. Chromium density benchmark confirms the densest initial-five context is the DGX H100 node with **9 interactive entities + 4 Anatomy Depictions** and Anatomy Depictions create **0 focus targets**.
 
 Package-backed TypeScript/Vitest/Vite/Playwright execution remains **blocked by environment dependency installation**: DNS resolution for `registry.npmjs.org` fails, and the partial `node_modules` tree lacks required installed type packages and executables. These checks are not recorded as passes.
+
+
+## Device-interior coverage expansion — 2026-09-07 follow-up
+
+A second physical-coverage pass was completed against the current repository baseline after comparing Explore UI Entry behavior with the readiness audit. The UI permits contextual Entry not only for semantic children and representative members, but also for non-black-box architectural relationship endpoints. The prior audit did not include that last class, allowing physically empty terminal-device interiors to escape RDY-018. The audit now mirrors the UI rules and also recognizes terminal entities with authored Anatomy Depictions.
+
+| Initial system | Audited entered contexts after expansion | Device-interior outcome |
+|---|---:|---|
+| NVIDIA DGX H100 SuperPOD | 17 | GPU/CPU/memory/NVSwitch/NIC/NVMe/BMC, management servers, and compute/storage/in-band/OOB switch interiors have source-bounded anatomy. |
+| NVIDIA DGX GB300 NVL72 SuperPOD | 17 | B300/Grace/LPDDR/CX-8/BlueField/NVSwitch/cache/OS storage, switch trays, rack power/cooling, and fabric/OOB switch interiors are represented. |
+| Google TPU7x Ironwood | 10 | Host memory/CPU boundary, OCS/DCN, and cooling interiors are represented only to the public level of detail; undisclosed device models remain generic. |
+| Cerebras Condor Galaxy 3 | 10 | CS-3/WSE support, cores/SRAM/wafer mesh, MemoryX, SwarmX, preprocessing, and management interiors are represented at documented or explicitly representative generality. |
+| Meta H100 RoCE cluster | 11 | H100/E1.S, Wedge 400, Minipack2, and the Arista 7800-family boundary have physical anatomy; family-only evidence remains explicitly representative. |
+
+**Acceptance result:** RDY-018 now checks **65** entered contexts and reports **0 mechanical errors**. Every audited entered context has semantic children or authored Anatomy Depictions; explicit black-box boundaries remain non-enterable unless they have deliberately authored anatomy. Depictions remain noninteractive and are not counted as Entities.
+
+**Known evidence boundaries retained:** exact GB300 E1.S cache population remains source-revision-sensitive; Meta's exact Arista 7800 generation/chassis is not established by the current public cluster description; partner/deployment-specific storage internals remain black boxes; public Ironwood documentation does not identify the exact CPU-host SKU or device-level DCN/OCS/cooling BOM; and public Cerebras material does not establish the exact preprocessing/management server BOM or complete MemoryX/SwarmX chassis internals. These limits must remain visibly generic/simplified until stronger source evidence is supplied.

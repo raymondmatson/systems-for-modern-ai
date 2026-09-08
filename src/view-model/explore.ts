@@ -41,6 +41,10 @@ export interface SceneConnection {
 
 export interface SceneAnatomyDepiction {
   depiction: AnatomyDepiction;
+  labelLines: string[];
+  evidenceLabel: string;
+  placementLabel: string;
+  countLabel?: string;
   x: number;
   y: number;
   width: number;
@@ -56,6 +60,50 @@ export interface PreviewVM {
 
 function sameLocator(a: ContextLocator | undefined, b: ContextLocator) {
   return a !== undefined && JSON.stringify(a) === JSON.stringify(b);
+}
+
+function wrapAnatomyLabel(label: string, maxChars = 29): string[] {
+  const words = label.trim().split(/\s+/).filter(Boolean);
+  if (words.length === 0) return [''];
+
+  const lines: string[] = [];
+  let current = '';
+  let consumed = 0;
+  for (const word of words) {
+    const candidate = current ? `${current} ${word}` : word;
+    if (candidate.length <= maxChars || current.length === 0) {
+      current = candidate;
+      consumed += 1;
+      continue;
+    }
+    lines.push(current);
+    if (lines.length === 2) break;
+    current = word;
+    consumed += 1;
+  }
+  if (lines.length < 2 && current) lines.push(current);
+  if (consumed < words.length && lines.length > 0) {
+    const last = lines.length - 1;
+    lines[last] = `${lines[last].replace(/[.…]+$/, '')}…`;
+  }
+  return lines.slice(0, 2);
+}
+
+function anatomyEvidenceLabel(depiction: AnatomyDepiction): string {
+  switch (depiction.evidence.status) {
+    case 'documented': return 'verified';
+    case 'inferred':
+    case 'simplified': return 'representative';
+    case 'proprietary': return 'limited detail';
+    case 'unknown': return 'unknown detail';
+    default: return depiction.evidence.status.replaceAll('_', ' ');
+  }
+}
+
+function anatomyCountLabel(depiction: AnatomyDepiction): string | undefined {
+  if (!depiction.count) return undefined;
+  const basis = depiction.count.basis.replaceAll('_', ' ');
+  return depiction.count.value ? `${depiction.count.value} · ${basis}` : basis;
 }
 
 function entityIdForRepresentative(locator: Extract<ContextLocator, {kind: 'representative_member'}>) {
@@ -313,17 +361,21 @@ export function buildExploreScene(state: AppState, configuration: Configuration)
     };
   });
 
-  const anatomyDepictions: SceneAnatomyDepiction[] = (current.anatomyDepictions ?? []).map((depiction, index) => {
-    const columns = Math.min(4, Math.max(1, current.anatomyDepictions?.length ?? 1));
-    return {
-      depiction,
-      x: 42 + (index % columns) * 176,
-      y: layout.height + 28 + Math.floor(index / columns) * 82,
-      width: 154,
-      height: 58,
-    };
-  });
-  const anatomyRows = Math.ceil(anatomyDepictions.length / Math.min(4, Math.max(1, anatomyDepictions.length)));
+  const anatomyColumns = Math.min(3, Math.max(1, current.anatomyDepictions?.length ?? 1));
+  const anatomyDepictions: SceneAnatomyDepiction[] = (current.anatomyDepictions ?? []).map((depiction, index) => ({
+    depiction,
+    labelLines: wrapAnatomyLabel(depiction.label),
+    evidenceLabel: anatomyEvidenceLabel(depiction),
+    placementLabel: depiction.placementBasis === 'schematic'
+      ? 'schematic placement'
+      : 'documented placement',
+    countLabel: anatomyCountLabel(depiction),
+    x: 40 + (index % anatomyColumns) * 232,
+    y: layout.height + 52 + Math.floor(index / anatomyColumns) * 106,
+    width: 214,
+    height: 92,
+  }));
+  const anatomyRows = Math.ceil(anatomyDepictions.length / anatomyColumns);
 
   const connections: SceneConnection[] = [];
   const contextConnections: SceneConnection[] = [];
@@ -375,7 +427,7 @@ export function buildExploreScene(state: AppState, configuration: Configuration)
     contextConnections,
     anatomyDepictions,
     width: Math.max(layout.width, anatomyDepictions.length ? 760 : layout.width),
-    height: layout.height + (anatomyRows ? 40 + anatomyRows * 82 : 0),
+    height: layout.height + (anatomyRows ? 66 + anatomyRows * 106 : 0),
     layoutKind: layout.kind,
   };
 }

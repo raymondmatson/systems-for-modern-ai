@@ -83,9 +83,9 @@ systems:
     physical_orientation:
       review_status: pass
       criterion: DEP-033 / RDY-018
-      note: Reviewed after 1.4 physical-anatomy migration. Major known orientation-critical constituents/paths are modeled as entities, authored
-        Anatomy Depictions, explicit black-box boundaries, or documented scope limits; schematic anatomy remains noninteractive and accessible
-        through enclosing Detail.
+      note: Reviewed after the 1.4 device-interior expansion. The readiness audit now mirrors Explore contextual Entry, including relationship
+        endpoints and anatomy-bearing terminal devices; every audited entered context exposes semantic children or authored Anatomy Depictions.
+        Verified and representative anatomy remain visibly distinguished, noninteractive, and accessible through enclosing Detail.
   nvidia-dgx-gb300-nvl72-superpod:
     configuration_id: gb300-nvl72-superpod-reference
     claims:
@@ -167,9 +167,9 @@ systems:
     physical_orientation:
       review_status: pass
       criterion: DEP-033 / RDY-018
-      note: Reviewed after 1.4 physical-anatomy migration. Major known orientation-critical constituents/paths are modeled as entities, authored
-        Anatomy Depictions, explicit black-box boundaries, or documented scope limits; schematic anatomy remains noninteractive and accessible
-        through enclosing Detail.
+      note: Reviewed after the 1.4 device-interior expansion. The readiness audit now mirrors Explore contextual Entry, including relationship
+        endpoints and anatomy-bearing terminal devices; every audited entered context exposes semantic children or authored Anatomy Depictions.
+        Verified and representative anatomy remain visibly distinguished, noninteractive, and accessible through enclosing Detail.
   google-tpu7x-ironwood:
     configuration_id: tpu7x-9216-chip-superpod
     claims:
@@ -236,9 +236,9 @@ systems:
     physical_orientation:
       review_status: pass
       criterion: DEP-033 / RDY-018
-      note: Reviewed after 1.4 physical-anatomy migration. Major known orientation-critical constituents/paths are modeled as entities, authored
-        Anatomy Depictions, explicit black-box boundaries, or documented scope limits; schematic anatomy remains noninteractive and accessible
-        through enclosing Detail.
+      note: Reviewed after the 1.4 device-interior expansion. The readiness audit now mirrors Explore contextual Entry, including relationship
+        endpoints and anatomy-bearing terminal devices; every audited entered context exposes semantic children or authored Anatomy Depictions.
+        Verified and representative anatomy remain visibly distinguished, noninteractive, and accessible through enclosing Detail.
   cerebras-cs3-condor-galaxy3:
     configuration_id: condor-galaxy-3-64-cs3
     claims:
@@ -310,9 +310,9 @@ systems:
     physical_orientation:
       review_status: pass
       criterion: DEP-033 / RDY-018
-      note: Reviewed after 1.4 physical-anatomy migration. Major known orientation-critical constituents/paths are modeled as entities, authored
-        Anatomy Depictions, explicit black-box boundaries, or documented scope limits; schematic anatomy remains noninteractive and accessible
-        through enclosing Detail.
+      note: Reviewed after the 1.4 device-interior expansion. The readiness audit now mirrors Explore contextual Entry, including relationship
+        endpoints and anatomy-bearing terminal devices; every audited entered context exposes semantic children or authored Anatomy Depictions.
+        Verified and representative anatomy remain visibly distinguished, noninteractive, and accessible through enclosing Detail.
   meta-h100-roce-24k:
     configuration_id: meta-24576-h100-roce
     claims:
@@ -390,9 +390,9 @@ systems:
     physical_orientation:
       review_status: pass
       criterion: DEP-033 / RDY-018
-      note: Reviewed after 1.4 physical-anatomy migration. Major known orientation-critical constituents/paths are modeled as entities, authored
-        Anatomy Depictions, explicit black-box boundaries, or documented scope limits; schematic anatomy remains noninteractive and accessible
-        through enclosing Detail.
+      note: Reviewed after the 1.4 device-interior expansion. The readiness audit now mirrors Explore contextual Entry, including relationship
+        endpoints and anatomy-bearing terminal devices; every audited entered context exposes semantic children or authored Anatomy Depictions.
+        Verified and representative anatomy remain visibly distinguished, noninteractive, and accessible through enclosing Detail.
 release_evidence:
   documentation_confidence:
     status: unavailable_in_shared_sources

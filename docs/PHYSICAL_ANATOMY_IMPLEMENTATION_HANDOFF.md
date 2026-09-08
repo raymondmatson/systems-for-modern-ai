@@ -622,8 +622,13 @@ Implementation is complete for this handoff only when:
 
 ## 8. Remaining questions requiring user input
 
-**None at this Planning stage.**
+The implementation can proceed safely without these answers because each item has an explicit generic, representative, or black-box boundary. Confirm the following only if the repository should become more device-specific:
 
-The physical-first baseline, generic/noninteractive anatomy policy, Product Catalog organization, local-vs-reusable identity boundary, migration precedence, and initial-five priorities are now decided. Remaining uncertainty is evidence- or implementation-test-driven and has a safe interim boundary above.
+1. **GB300 cache population:** the retained source set contains conflicting cache-population descriptions. Confirm the intended NVL72 reference revision and whether Explore should display 4 E1.S devices per compute tray, 8 × 4 TB devices, or another exact population/capacity. Until confirmed, cache media/controller anatomy remains generic and the ambiguous exact count is not promoted into the depiction.
+2. **Meta Arista 7800 identity:** confirm the exact 7800 generation/chassis used in the modeled 24,576-H100 cluster, and line-card population if known. Until then, the interior is labeled representative 7800-family anatomy rather than a specific chassis fact.
+3. **Deployment-specific external storage:** provide the exact storage vendor/model/node/controller/drive configuration for the H100 certified-storage boundary or GB300 external-storage boundary if those interiors should become explorable. Otherwise they remain deliberate black boxes.
+4. **Ironwood private physical details:** provide exact CPU-host SKU/socket layout, DCN switch models, OCS hardware model/port organization, or cooling component topology (for example CDU/manifold/cold-plate/pump boundaries) if available. Public evidence supports the roles and coarse boundaries but not those exact device identities.
+5. **Cerebras support-appliance hardware:** provide exact preprocessing-server and management-server models/BOMs, plus MemoryX/SwarmX chassis/port/module details if available. Current content stays representative where public material establishes function and connectivity but not a complete BOM.
+6. **H100 management-server SKU policy:** confirm whether the project should pin a specific server model for SuperPOD management nodes or continue using the documented hardware profile without asserting a fixed SKU.
 
-If Implementation uncovers a genuinely consequential conflict—such as an additive schema being impossible without semantic breakage, a source supporting two materially different physical interpretations, or a required anatomy item that cannot be represented without changing interaction semantics—it should present that concrete conflict with options and a recommendation. Routine schema field spelling, component styling, product-catalog seed order, and source-verification outcomes do not require another high-level planning cycle.
+None of these questions blocks the current physical-orientation acceptance test.

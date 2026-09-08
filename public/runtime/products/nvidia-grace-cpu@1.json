@@ -1,0 +1,1 @@
+{"entityType":"cpu","id":"nvidia-grace-cpu","identity":{"manufacturer":"NVIDIA","model":"Grace CPU","product_family":"Grace"},"name":"NVIDIA Grace CPU","properties":{},"recordLevel":"model","revision":1,"sourceIds":["official"],"summary":"NVIDIA Grace data-center CPU."}

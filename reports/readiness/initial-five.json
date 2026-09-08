@@ -79,7 +79,7 @@
       },
       "physical_orientation": {
         "criterion": "DEP-033 / RDY-018",
-        "note": "Reviewed after 1.4 physical-anatomy migration. Major known orientation-critical constituents/paths are modeled as entities, authored Anatomy Depictions, explicit black-box boundaries, or documented scope limits; schematic anatomy remains noninteractive and accessible through enclosing Detail.",
+        "note": "Reviewed after the 1.4 device-interior expansion. The readiness audit now mirrors Explore contextual Entry, including relationship endpoints and anatomy-bearing terminal devices; every audited entered context exposes semantic children or authored Anatomy Depictions. Verified and representative anatomy remain visibly distinguished, noninteractive, and accessible through enclosing Detail.",
         "status": "PASS"
       },
       "scenario_count": 3
@@ -137,7 +137,7 @@
       },
       "physical_orientation": {
         "criterion": "DEP-033 / RDY-018",
-        "note": "Reviewed after 1.4 physical-anatomy migration. Major known orientation-critical constituents/paths are modeled as entities, authored Anatomy Depictions, explicit black-box boundaries, or documented scope limits; schematic anatomy remains noninteractive and accessible through enclosing Detail.",
+        "note": "Reviewed after the 1.4 device-interior expansion. The readiness audit now mirrors Explore contextual Entry, including relationship endpoints and anatomy-bearing terminal devices; every audited entered context exposes semantic children or authored Anatomy Depictions. Verified and representative anatomy remain visibly distinguished, noninteractive, and accessible through enclosing Detail.",
         "status": "PASS"
       },
       "scenario_count": 3
@@ -195,7 +195,7 @@
       },
       "physical_orientation": {
         "criterion": "DEP-033 / RDY-018",
-        "note": "Reviewed after 1.4 physical-anatomy migration. Major known orientation-critical constituents/paths are modeled as entities, authored Anatomy Depictions, explicit black-box boundaries, or documented scope limits; schematic anatomy remains noninteractive and accessible through enclosing Detail.",
+        "note": "Reviewed after the 1.4 device-interior expansion. The readiness audit now mirrors Explore contextual Entry, including relationship endpoints and anatomy-bearing terminal devices; every audited entered context exposes semantic children or authored Anatomy Depictions. Verified and representative anatomy remain visibly distinguished, noninteractive, and accessible through enclosing Detail.",
         "status": "PASS"
       },
       "scenario_count": 3
@@ -253,7 +253,7 @@
       },
       "physical_orientation": {
         "criterion": "DEP-033 / RDY-018",
-        "note": "Reviewed after 1.4 physical-anatomy migration. Major known orientation-critical constituents/paths are modeled as entities, authored Anatomy Depictions, explicit black-box boundaries, or documented scope limits; schematic anatomy remains noninteractive and accessible through enclosing Detail.",
+        "note": "Reviewed after the 1.4 device-interior expansion. The readiness audit now mirrors Explore contextual Entry, including relationship endpoints and anatomy-bearing terminal devices; every audited entered context exposes semantic children or authored Anatomy Depictions. Verified and representative anatomy remain visibly distinguished, noninteractive, and accessible through enclosing Detail.",
         "status": "PASS"
       },
       "scenario_count": 4
@@ -311,7 +311,7 @@
       },
       "physical_orientation": {
         "criterion": "DEP-033 / RDY-018",
-        "note": "Reviewed after 1.4 physical-anatomy migration. Major known orientation-critical constituents/paths are modeled as entities, authored Anatomy Depictions, explicit black-box boundaries, or documented scope limits; schematic anatomy remains noninteractive and accessible through enclosing Detail.",
+        "note": "Reviewed after the 1.4 device-interior expansion. The readiness audit now mirrors Explore contextual Entry, including relationship endpoints and anatomy-bearing terminal devices; every audited entered context exposes semantic children or authored Anatomy Depictions. Verified and representative anatomy remain visibly distinguished, noninteractive, and accessible through enclosing Detail.",
         "status": "PASS"
       },
       "scenario_count": 3

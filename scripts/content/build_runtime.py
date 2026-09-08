@@ -5,7 +5,7 @@ from pathlib import Path
 import yaml
 
 ROOT=Path(__file__).resolve().parents[2]
-RSC=ROOT/'content'/'RSCs'; CONCEPTS=ROOT/'content'/'concepts'; PRODUCTS=ROOT/'content'/'products'; SCENARIOS=ROOT/'scenarios'; OUT=ROOT/'runtime'/'generated'
+RSC=ROOT/'content'/'RSCs'; CONCEPTS=ROOT/'content'/'concepts'; PRODUCTS=ROOT/'content'/'products'; SCENARIOS=ROOT/'scenarios'; OUT=ROOT/'runtime'/'generated'; PUBLIC=ROOT/'public'/'runtime'
 INITIAL=['nvidia-dgx-h100-superpod','nvidia-dgx-gb300-nvl72-superpod','google-tpu7x-ironwood','cerebras-cs3-condor-galaxy3','meta-h100-roce-24k']
 
 def stable(obj): return json.dumps(obj, ensure_ascii=False, sort_keys=True, separators=(',',':'))+'\n'
@@ -161,6 +161,12 @@ def main():
         right={str(p.relative_to(tmp)):p.read_bytes() for p in tmp.rglob('*') if p.is_file()}
         shutil.rmtree(tmp)
         if left!=right: raise SystemExit('generated runtime artifacts are not deterministic/current')
+        if not PUBLIC.exists(): raise SystemExit('public/runtime browser mirror does not exist')
+        browser={str(p.relative_to(PUBLIC)):p.read_bytes() for p in PUBLIC.rglob('*') if p.is_file()}
+        if left!=browser: raise SystemExit('public/runtime browser mirror is not current')
         print(f'PASS: deterministic runtime artifacts ({len(left)} files)')
-    else: print(f'PASS: generated runtime artifacts at {OUT}')
+    else:
+        if PUBLIC.exists(): shutil.rmtree(PUBLIC)
+        shutil.copytree(OUT,PUBLIC)
+        print(f'PASS: generated runtime artifacts at {OUT} and mirrored browser runtime at {PUBLIC}')
 if __name__=='__main__': main()

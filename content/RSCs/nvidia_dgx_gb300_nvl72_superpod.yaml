@@ -7,8 +7,8 @@ reference_system:
   introduction:
     date_or_year: 2025
     lifecycle: new
-  summary: Rack-scale Blackwell Ultra architecture in which 72 GPUs form one tightly coupled NVLink domain and multiple racks
-    scale out over high-performance networking.
+  summary: Rack-scale Blackwell Ultra architecture in which 72 GPUs form one tightly coupled NVLink domain and multiple 
+    racks scale out over high-performance networking.
   learning_value:
   - Rack-scale scale-up architecture
   - Compute-tray and switch-tray organization
@@ -32,13 +32,50 @@ sources:
 - id: nv-gb300-network
   title: Network Logical Architecture — NVIDIA NVL72 AI Factory
   publisher: NVIDIA
-  url: https://docs.nvidia.com/enterprise-reference-architectures/nvl72-ai-factory/latest/network-logical-architecture.html
+  url: 
+    https://docs.nvidia.com/enterprise-reference-architectures/nvl72-ai-factory/latest/network-logical-architecture.html
   accessed: '2026-08-19'
 - id: nv-gb300-node
   title: Appendix B — Node Configurations
   publisher: NVIDIA
-  url: https://docs.nvidia.com/enterprise-reference-architectures/nvl72-ai-factory/latest/appendix-node-configurations.html
+  url: 
+    https://docs.nvidia.com/enterprise-reference-architectures/nvl72-ai-factory/latest/appendix-node-configurations.html
   accessed: '2026-08-19'
+- id: nv-blackwell-ultra
+  title: Inside NVIDIA Blackwell Ultra
+  publisher: NVIDIA
+  url: https://developer.nvidia.com/blog/inside-nvidia-blackwell-ultra-the-chip-powering-the-ai-factory-era/
+  accessed: '2026-09-07'
+- id: nv-connectx8-hw
+  title: NVIDIA ConnectX-8 SuperNIC User Manual
+  publisher: NVIDIA
+  url: https://networking-docs.nvidia.com/connectx8hw/
+  accessed: '2026-09-07'
+- id: nv-bluefield3-hw
+  title: NVIDIA BlueField-3 Networking Platform User Guide
+  publisher: NVIDIA
+  url: https://docs.nvidia.com/nvidia-bluefield-3-networking-platform-user-guide.pdf
+  accessed: '2026-09-07'
+- id: nv-sn5600-hw
+  title: NVIDIA Spectrum-4 SN5000 2U Switch Systems Hardware User Manual
+  publisher: NVIDIA
+  url: https://docs.nvidia.com/nvidia-spectrum-4-sn5000-2u-switch-systems-hardware-user-manual.pdf
+  accessed: '2026-09-07'
+- id: nv-sn2201-hw
+  title: SN2201 and SN2201_M 1G Management Switch Systems User Manual
+  publisher: NVIDIA
+  url: https://docs.nvidia.com/sn2201-and-sn2201-m-1g-management-switch-systems-user-manual.pdf
+  accessed: '2026-09-07'
+- id: nv-grace-cpu
+  title: NVIDIA Grace CPU Superchip
+  publisher: NVIDIA
+  url: https://www.nvidia.com/en-us/data-center/grace-cpu/
+  accessed: '2026-09-07'
+- id: nvme-ssd-architecture
+  title: NVM Express — NVMe Technology Overview
+  publisher: NVM Express
+  url: https://nvmexpress.org/specifications/
+  accessed: '2026-09-07'
 configurations:
 - id: gb300-nvl72-superpod-reference
   name: GB300 NVL72 rack-scale reference with scale-out fabric
@@ -47,8 +84,8 @@ configurations:
     id: baseline-normal-operation
     name: Baseline / normal operation
     description: Normal/baseline operation with no deliberately injected fault or bottleneck.
-  scope_notes: Models one GB300 NVL72 rack as the core scale-up unit and an aggregate scale-out fabric. Exact multi-rack SuperPOD
-    size is intentionally not fixed.
+  scope_notes: Models one GB300 NVL72 rack as the core scale-up unit and an aggregate scale-out fabric. Exact multi-rack
+    SuperPOD size is intentionally not fixed.
   modeling_notes:
   - Compute and switch trays use canonical inventory items because they recur in rack-scale AI systems.
   - Facility-level power/cooling distribution beyond the rack is intentionally simplified.
@@ -174,6 +211,78 @@ configurations:
             product_ref:
               id: nvidia-b300
               revision: 1
+            anatomy:
+            - id: gb300-b300-dual-die
+              label: Blackwell Ultra dual-die GPU package
+              inventory:
+                category: Accelerator internals
+                item: GPU / accelerator dies
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - nv-blackwell-ultra
+                - nv-gb300-components
+                note: Blackwell Ultra uses two reticle-sized GPU dies functioning as one GPU.
+              depiction_kind: compute
+              placement_basis: schematic
+              count:
+                value: 2
+                basis: documented_fixed
+            - id: gb300-b300-hbm3e
+              label: 288 GB HBM3e per B300 GPU
+              inventory:
+                category: Accelerator internals
+                item: HBM stacks
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - nv-blackwell-ultra
+                note: Blackwell Ultra B300 provides up to 288 GB HBM3e; the GB300 rack uses B300 GPUs.
+              depiction_kind: memory
+              placement_basis: schematic
+            - id: gb300-b300-nvlink
+              label: Fifth-generation NVLink interfaces
+              inventory:
+                category: Network hardware
+                item: Switch ASICs
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - nv-blackwell-ultra
+                - nv-gb300-components
+                note: Blackwell Ultra exposes NVLink 5 connectivity into the rack-scale NVSwitch domain.
+              depiction_kind: network
+              placement_basis: schematic
+            - id: gb300-b300-nvlink-c2c
+              label: NVLink-C2C CPU/GPU interface
+              inventory:
+                category: Server-level hardware
+                item: PCIe switches
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - nv-blackwell-ultra
+                - nv-gb300-components
+                note: GB300 couples Grace CPUs and Blackwell Ultra GPUs through NVLink-C2C.
+              depiction_kind: io
+              placement_basis: schematic
+            - id: gb300-b300-pcie
+              label: PCIe Gen6 host-I/O interface
+              inventory:
+                category: Server-level hardware
+                item: PCIe switches
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - nv-blackwell-ultra
+                note: Blackwell Ultra provides a PCIe Gen6 x16 host interface; exact tray lane routing is not asserted.
+              depiction_kind: io
+              placement_basis: schematic
           - id: gb300-cpus
             name: Grace CPUs
             entity_type: cpu
@@ -209,6 +318,66 @@ configurations:
             product_ref:
               id: nvidia-grace-cpu
               revision: 1
+            anatomy:
+            - id: gb300-grace-package
+              label: Grace CPU package
+              inventory:
+                category: Server-level hardware
+                item: CPUs
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - nv-gb300-components
+                - nv-grace-cpu
+                note: Each GB300 compute tray contains two Grace CPUs.
+              depiction_kind: compute
+              placement_basis: schematic
+            - id: gb300-grace-cores
+              label: 72 Arm Neoverse V2 cores per Grace CPU
+              inventory:
+                category: Accelerator internals
+                item: Compute cores
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - nv-gb300-components
+                - nv-grace-cpu
+                note: The selected GB300 documentation specifies 72 Arm Neoverse V2 cores per Grace processor.
+              depiction_kind: compute
+              placement_basis: schematic
+              count:
+                value: 72
+                basis: documented_fixed
+            - id: gb300-grace-memory-interface
+              label: LPDDR5-family main-memory interface
+              inventory:
+                category: Memory hierarchy
+                item: Host memory
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - nv-gb300-components
+                note: The two Grace CPUs share 1 TB aggregate LPDDR5 CPU main memory in the compute tray; package-level 
+                  placement is schematic.
+              depiction_kind: memory
+              placement_basis: schematic
+            - id: gb300-grace-io
+              label: NVLink-C2C and PCIe host I/O
+              inventory:
+                category: Server-level hardware
+                item: PCIe switches
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - nv-grace-cpu
+                - nv-gb300-components
+                note: Grace exposes coherent NVLink-C2C and PCIe host connectivity used by the GB300 tray.
+              depiction_kind: io
+              placement_basis: schematic
           - id: gb300-cx8
             name: ConnectX-8 NICs
             entity_type: nic
@@ -228,6 +397,49 @@ configurations:
             product_ref:
               id: nvidia-connectx-8
               revision: 1
+            anatomy:
+            - id: gb300-cx8-controller
+              label: ConnectX-8 SuperNIC silicon
+              inventory:
+                category: Network hardware
+                item: NICs
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - nv-connectx8-hw
+                - nv-gb300-components
+                note: The compute tray contains four ConnectX-8 network adapters on two mezzanine boards.
+              depiction_kind: network
+              placement_basis: schematic
+            - id: gb300-cx8-pcie
+              label: PCIe Gen6 x16 host interface
+              inventory:
+                category: Server-level hardware
+                item: PCIe switches
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - nv-connectx8-hw
+                note: ConnectX-8 SuperNICs provide a PCIe Gen6 x16 host interface.
+              depiction_kind: io
+              placement_basis: schematic
+            - id: gb300-cx8-port-interface
+              label: High-speed OSFP/QSFP112 network interface
+              inventory:
+                category: Server-level hardware
+                item: NICs
+                status: existing
+              evidence:
+                status: simplified
+                source_ids:
+                - nv-connectx8-hw
+                - nv-gb300-components
+                note: ConnectX-8 variants expose high-speed network cages; the exact adapter card/connector variant used
+                  on the GB300 mezzanine is not asserted here.
+              depiction_kind: network
+              placement_basis: schematic
           - id: gb300-cache
             name: E1.S data-cache SSDs
             entity_type: local_storage
@@ -247,6 +459,52 @@ configurations:
                 one fixed drive count pending source reconciliation.'
             properties: {}
             children: []
+            anatomy:
+            - id: gb300-cache-controller
+              label: NVMe SSD controller
+              inventory:
+                category: Server-level hardware
+                item: NVMe SSDs
+                status: existing
+              evidence:
+                status: simplified
+                source_ids:
+                - nvme-ssd-architecture
+                - nv-gb300-components
+                note: E1.S data-cache SSD vendor/model is not selected by the reference architecture; controller 
+                  presence is represented generically.
+              depiction_kind: storage
+              placement_basis: schematic
+            - id: gb300-cache-flash
+              label: Nonvolatile flash media
+              inventory:
+                category: Server-level hardware
+                item: NVMe SSDs
+                status: existing
+              evidence:
+                status: simplified
+                source_ids:
+                - nvme-ssd-architecture
+                - nv-gb300-components
+                note: E1.S data-cache SSD is shown with generic solid-state media; NAND type/package count are not 
+                  asserted.
+              depiction_kind: storage
+              placement_basis: schematic
+            - id: gb300-cache-pcie
+              label: PCIe / NVMe host interface
+              inventory:
+                category: Server-level hardware
+                item: NVMe SSDs
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - nvme-ssd-architecture
+                - nv-gb300-components
+                note: The documented local SSD communicates through the NVMe/PCIe storage interface; exact connector 
+                  wiring is not modeled.
+              depiction_kind: io
+              placement_basis: schematic
           - id: gb300-bf3
             name: BlueField-3 B3240 DPU
             entity_type: dpu
@@ -261,13 +519,84 @@ configurations:
               source_ids:
               - nv-gb300-components
               - nv-gb300-network
-              note: Each compute tray has one dual-port BlueField-3 B3240 DPU for North/South storage, customer, and infrastructure
-                traffic.
+              note: Each compute tray has one dual-port BlueField-3 B3240 DPU for North/South storage, customer, and 
+                infrastructure traffic.
             properties: {}
             children: []
             product_ref:
               id: nvidia-bluefield-3-b3240
               revision: 1
+            anatomy:
+            - id: gb300-bf3-soc
+              label: BlueField-3 DPU SoC / 16 Arm cores
+              inventory:
+                category: Server-level hardware
+                item: DPUs
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - nv-bluefield3-hw
+                - nv-gb300-components
+                note: The B3240 DPU contains the BlueField-3 SoC with 16 Arm cores.
+              depiction_kind: compute
+              placement_basis: schematic
+            - id: gb300-bf3-ddr5
+              label: 32 GB on-board DDR5
+              inventory:
+                category: Memory hierarchy
+                item: Host memory
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - nv-bluefield3-hw
+                note: B3240 includes 32 GB of on-board DDR5 memory.
+              depiction_kind: memory
+              placement_basis: schematic
+            - id: gb300-bf3-qsfp112
+              label: Dual QSFP112 network ports
+              inventory:
+                category: Server-level hardware
+                item: NICs
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - nv-bluefield3-hw
+                - nv-gb300-components
+                note: The B3240 is a dual-port QSFP112 400GbE/NDR DPU.
+              depiction_kind: network
+              placement_basis: schematic
+              count:
+                value: 2
+                basis: documented_fixed
+            - id: gb300-bf3-pcie
+              label: PCIe Gen5 x16 host interface
+              inventory:
+                category: Server-level hardware
+                item: PCIe switches
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - nv-bluefield3-hw
+                note: B3240 provides PCIe Gen5 x16 host connectivity.
+              depiction_kind: io
+              placement_basis: schematic
+            - id: gb300-bf3-bmc
+              label: Integrated BMC / management controller
+              inventory:
+                category: Server-level hardware
+                item: Baseboard management controllers
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - nv-bluefield3-hw
+                note: The B3240 platform includes an integrated BMC.
+              depiction_kind: management
+              placement_basis: schematic
           - id: gb300-os-nvme
             name: M.2 OS NVMe SSD
             entity_type: local_storage
@@ -294,6 +623,51 @@ configurations:
                 basis: advertised
                 scope: per_device
             children: []
+            anatomy:
+            - id: gb300-os-nvme-controller
+              label: NVMe SSD controller
+              inventory:
+                category: Server-level hardware
+                item: NVMe SSDs
+                status: existing
+              evidence:
+                status: simplified
+                source_ids:
+                - nvme-ssd-architecture
+                - nv-gb300-components
+                note: M.2 OS NVMe SSD vendor/model is not selected by the reference architecture; controller presence is
+                  represented generically.
+              depiction_kind: storage
+              placement_basis: schematic
+            - id: gb300-os-nvme-flash
+              label: Nonvolatile flash media
+              inventory:
+                category: Server-level hardware
+                item: NVMe SSDs
+                status: existing
+              evidence:
+                status: simplified
+                source_ids:
+                - nvme-ssd-architecture
+                - nv-gb300-components
+                note: M.2 OS NVMe SSD is shown with generic solid-state media; NAND type/package count are not asserted.
+              depiction_kind: storage
+              placement_basis: schematic
+            - id: gb300-os-nvme-pcie
+              label: PCIe / NVMe host interface
+              inventory:
+                category: Server-level hardware
+                item: NVMe SSDs
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - nvme-ssd-architecture
+                - nv-gb300-components
+                note: The documented local SSD communicates through the NVMe/PCIe storage interface; exact connector 
+                  wiring is not modeled.
+              depiction_kind: io
+              placement_basis: schematic
           - id: gb300-system-memory
             name: Grace CPU main memory
             entity_type: system_memory
@@ -320,6 +694,35 @@ configurations:
                 basis: advertised
                 scope: per_node
             children: []
+            anatomy:
+            - id: gb300-lpddr5-memory
+              label: LPDDR5 CPU main-memory devices
+              inventory:
+                category: Memory hierarchy
+                item: Host memory
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - nv-gb300-components
+                note: The compute tray has 1 TB aggregate LPDDR5 CPU main memory; exact package count and physical 
+                  placement are not asserted.
+              depiction_kind: memory
+              placement_basis: schematic
+            - id: gb300-lpddr5-interface
+              label: Grace memory-channel interfaces
+              inventory:
+                category: Memory hierarchy
+                item: Host memory
+                status: existing
+              evidence:
+                status: simplified
+                source_ids:
+                - nv-gb300-components
+                - nv-grace-cpu
+                note: This depicts the attachment of host memory to Grace without claiming a board-level channel map.
+              depiction_kind: io
+              placement_basis: schematic
           population:
             count:
               value: 18
@@ -352,8 +755,8 @@ configurations:
               status: documented
               source_ids:
               - nv-gb300-components
-              note: Two mezzanine network boards, each carrying two ConnectX-8 devices, are part of the compute tray. This
-                depiction groups the documented board structure schematically.
+              note: Two mezzanine network boards, each carrying two ConnectX-8 devices, are part of the compute tray. 
+                This depiction groups the documented board structure schematically.
             depiction_kind: structural
             placement_basis: schematic
             count:
@@ -423,6 +826,48 @@ configurations:
               expansion_mode: aggregate_only
               individually_addressable: false
               member_entity_type: switch_asic
+            anatomy:
+            - id: gb300-nvswitch-silicon
+              label: Fifth-generation NVSwitch silicon
+              inventory:
+                category: Network hardware
+                item: Switch ASICs
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - nv-gb300-components
+                note: Each NVLink switch tray contains two NVSwitch ASICs supporting the rack-scale NVLink domain.
+              depiction_kind: network
+              placement_basis: schematic
+            - id: gb300-nvswitch-nvlink-ports
+              label: NVLink 5 switching interfaces
+              inventory:
+                category: Network hardware
+                item: Switch ASICs
+                status: existing
+              evidence:
+                status: documented
+                source_ids:
+                - nv-gb300-components
+                - nv-blackwell-ultra
+                note: NVSwitch provides the switching endpoints for fifth-generation NVLink connections.
+              depiction_kind: network
+              placement_basis: schematic
+            - id: gb300-nvswitch-tray-interface
+              label: Switch-tray board / cable interface
+              inventory:
+                category: Physical infrastructure hierarchy
+                item: Switch trays / fabric switch trays
+                status: existing
+              evidence:
+                status: simplified
+                source_ids:
+                - nv-gb300-components
+                note: This depicts the ASIC attachment to the NVLink switch-tray interconnect without asserting 
+                  connector or trace placement.
+              depiction_kind: io
+              placement_basis: schematic
           population:
             count:
               value: 9
@@ -431,6 +876,35 @@ configurations:
             expansion_mode: representative_member
             individually_addressable: false
             member_entity_type: switch_tray
+          anatomy:
+          - id: gb300-switchtray-interconnect
+            label: NVLink switch-tray interconnect / connector field
+            inventory:
+              category: Physical infrastructure hierarchy
+              item: Switch trays / fabric switch trays
+              status: existing
+            evidence:
+              status: documented
+              source_ids:
+              - nv-gb300-components
+              note: The switch trays provide the physical NVLink interconnect between NVSwitch devices and compute 
+                trays; exact cable/connector geometry is not reproduced.
+            depiction_kind: network
+            placement_basis: schematic
+          - id: gb300-switchtray-cooling
+            label: Liquid-cooling interface for switch tray
+            inventory:
+              category: Thermal management
+              item: Coolant loops
+              status: existing
+            evidence:
+              status: documented
+              source_ids:
+              - nv-gb300-components
+              note: NVL72 compute and switch trays participate in the rack liquid-cooling system; hose/manifold routing 
+                remains schematic.
+            depiction_kind: cooling
+            placement_basis: schematic
         product_ref:
           id: nvidia-gb300-nvl72
           revision: 1
@@ -445,8 +919,8 @@ configurations:
             status: documented
             source_ids:
             - nv-gb300-components
-            note: The rack and trays are liquid cooled and include tray/rack leak detection. Hose/manifold routing is not
-              asserted.
+            note: The rack and trays are liquid cooled and include tray/rack leak detection. Hose/manifold routing is 
+              not asserted.
           depiction_kind: cooling
           placement_basis: schematic
       - id: gb300-scaleout-switches
@@ -473,6 +947,81 @@ configurations:
         product_ref:
           id: nvidia-spectrum-x-sn5600
           revision: 1
+        anatomy:
+        - id: sn5600-switch-silicon
+          label: Spectrum-4 switching silicon
+          inventory:
+            category: Network hardware
+            item: Switch ASICs
+            status: existing
+          evidence:
+            status: documented
+            source_ids:
+            - nv-sn5600-hw
+            note: SN5600 is a Spectrum-4 51.2 Tb/s switch platform.
+          depiction_kind: network
+          placement_basis: schematic
+        - id: sn5600-osfp-bank
+          label: 64 OSFP 800GbE port cages
+          inventory:
+            category: Server-level hardware
+            item: NICs
+            status: existing
+          evidence:
+            status: documented
+            source_ids:
+            - nv-sn5600-hw
+            note: SN5600 exposes 64 OSFP cages; the GB300 fabric uses them as up to 128 logical 400GbE ports.
+          depiction_kind: network
+          placement_basis: schematic
+          count:
+            value: 64
+            basis: documented_fixed
+        - id: sn5600-management-io
+          label: Front management / console / USB interfaces
+          inventory:
+            category: Server-level hardware
+            item: Baseboard management controllers
+            status: existing
+          evidence:
+            status: documented
+            source_ids:
+            - nv-sn5600-hw
+            note: The hardware manual documents front USB-A, RJ45 management and RJ45 console interfaces.
+          depiction_kind: management
+          placement_basis: schematic
+        - id: sn5600-psus
+          label: Replaceable power supplies
+          inventory:
+            category: Server-level hardware
+            item: Power supplies
+            status: existing
+          evidence:
+            status: documented
+            source_ids:
+            - nv-sn5600-hw
+            note: AC SN5600 systems have two power-supply units.
+          depiction_kind: power
+          placement_basis: schematic
+          count:
+            value: 2
+            basis: documented_fixed
+        - id: sn5600-fans
+          label: Replaceable fan modules
+          inventory:
+            category: Server-level hardware
+            item: Fans
+            status: existing
+          evidence:
+            status: documented
+            source_ids:
+            - nv-sn5600-hw
+            note: SN5600 has four fan modules.
+          depiction_kind: cooling
+          placement_basis: schematic
+          count:
+            value: 4
+            basis: documented_fixed
       - id: gb300-cooling
         name: Rack-scale liquid-cooling infrastructure
         entity_type: cooling_system
@@ -489,6 +1038,34 @@ configurations:
           note: GB300 NVL72 is fully liquid-cooled.
         properties: {}
         children: []
+        anatomy:
+        - id: gb300-cooling-distribution
+          label: Rack / tray liquid-cooling distribution
+          inventory:
+            category: Thermal management
+            item: Coolant loops
+            status: existing
+          evidence:
+            status: documented
+            source_ids:
+            - nv-gb300-components
+            note: GB300 NVL72 is liquid cooled at rack and tray level; exact manifold/CDU topology is not published in 
+              the selected reference.
+          depiction_kind: cooling
+          placement_basis: schematic
+        - id: gb300-leak-detection
+          label: Tray- and rack-level leak detection
+          inventory:
+            category: Thermal management
+            item: Coolant loops
+            status: existing
+          evidence:
+            status: documented
+            source_ids:
+            - nv-gb300-components
+            note: NVIDIA explicitly documents integrated tray-level and rack-level liquid leakage detection.
+          depiction_kind: management
+          placement_basis: schematic
       - id: gb300-power-shelves
         name: Rack power shelves
         entity_type: power_system
@@ -530,6 +1107,37 @@ configurations:
           expansion_mode: aggregate_only
           individually_addressable: false
           member_entity_type: power_system
+        anatomy:
+        - id: gb300-power-shelf-psus
+          label: 5.5 kW PSU modules per power shelf
+          inventory:
+            category: Server-level hardware
+            item: Power supplies
+            status: existing
+          evidence:
+            status: documented
+            source_ids:
+            - nv-gb300-components
+            note: Each of the eight 33 kW power shelves contains six 5.5 kW PSUs.
+          depiction_kind: power
+          placement_basis: schematic
+          count:
+            value: 6
+            basis: documented_fixed
+        - id: gb300-power-shelf-distribution
+          label: Power-shelf chassis / distribution bus
+          inventory:
+            category: Physical infrastructure hierarchy
+            item: Power infrastructure
+            status: existing
+          evidence:
+            status: simplified
+            source_ids:
+            - nv-gb300-components
+            note: The shelf necessarily aggregates PSU outputs into rack power delivery; exact busbar/backplane 
+              implementation and placement are not asserted by the selected source.
+          depiction_kind: power
+          placement_basis: schematic
       - id: gb300-oob-switches
         name: SN2201 out-of-band management switches
         entity_type: network_switch
@@ -566,6 +1174,84 @@ configurations:
         product_ref:
           id: nvidia-sn2201
           revision: 1
+        anatomy:
+        - id: sn2201-switch-silicon
+          label: Spectrum switching silicon / control plane
+          inventory:
+            category: Network hardware
+            item: Switch ASICs
+            status: existing
+          evidence:
+            status: documented
+            source_ids:
+            - nv-sn2201-hw
+            note: SN2201 is an NVIDIA Spectrum management-switch platform with an x86 control plane.
+          depiction_kind: network
+          placement_basis: schematic
+        - id: sn2201-rj45-bank
+          label: 48 RJ45 1GbE ports
+          inventory:
+            category: Server-level hardware
+            item: NICs
+            status: existing
+          evidence:
+            status: documented
+            source_ids:
+            - nv-sn2201-hw
+            note: The SN2201 exposes 48 1GBase-T RJ45 switch ports.
+          depiction_kind: network
+          placement_basis: schematic
+          count:
+            value: 48
+            basis: documented_fixed
+        - id: sn2201-qsfp-bank
+          label: Four QSFP28 100GbE uplink cages
+          inventory:
+            category: Server-level hardware
+            item: NICs
+            status: existing
+          evidence:
+            status: documented
+            source_ids:
+            - nv-sn2201-hw
+            note: The SN2201 exposes four QSFP28 high-speed interfaces.
+          depiction_kind: network
+          placement_basis: schematic
+          count:
+            value: 4
+            basis: documented_fixed
+        - id: sn2201-psus
+          label: Redundant power-supply units
+          inventory:
+            category: Server-level hardware
+            item: Power supplies
+            status: existing
+          evidence:
+            status: documented
+            source_ids:
+            - nv-sn2201-hw
+            note: SN2201 has two AC power supplies / inlets for redundancy.
+          depiction_kind: power
+          placement_basis: schematic
+          count:
+            value: 2
+            basis: documented_fixed
+        - id: sn2201-fans
+          label: Rear fan modules
+          inventory:
+            category: Server-level hardware
+            item: Fans
+            status: existing
+          evidence:
+            status: documented
+            source_ids:
+            - nv-sn2201-hw
+            note: SN2201 documents four rear fan units.
+          depiction_kind: cooling
+          placement_basis: schematic
+          count:
+            value: 4
+            basis: documented_fixed
       - id: gb300-converged-switches
         name: North/South converged fabric switches
         entity_type: network_switch
@@ -579,13 +1265,88 @@ configurations:
           status: documented
           source_ids:
           - nv-gb300-network
-          note: SN5600 switches form a distinct converged North/South fabric for customer, storage, and in-band management
-            traffic.
+          note: SN5600 switches form a distinct converged North/South fabric for customer, storage, and in-band 
+            management traffic.
         properties: {}
         children: []
         product_ref:
           id: nvidia-spectrum-x-sn5600
           revision: 1
+        anatomy:
+        - id: gb300-converged-sn5600-switch-silicon
+          label: Spectrum-4 switching silicon
+          inventory:
+            category: Network hardware
+            item: Switch ASICs
+            status: existing
+          evidence:
+            status: documented
+            source_ids:
+            - nv-sn5600-hw
+            note: SN5600 is a Spectrum-4 51.2 Tb/s switch platform.
+          depiction_kind: network
+          placement_basis: schematic
+        - id: gb300-converged-sn5600-osfp-bank
+          label: 64 OSFP 800GbE port cages
+          inventory:
+            category: Server-level hardware
+            item: NICs
+            status: existing
+          evidence:
+            status: documented
+            source_ids:
+            - nv-sn5600-hw
+            note: SN5600 exposes 64 OSFP cages; the GB300 fabric uses them as up to 128 logical 400GbE ports.
+          depiction_kind: network
+          placement_basis: schematic
+          count:
+            value: 64
+            basis: documented_fixed
+        - id: gb300-converged-sn5600-management-io
+          label: Front management / console / USB interfaces
+          inventory:
+            category: Server-level hardware
+            item: Baseboard management controllers
+            status: existing
+          evidence:
+            status: documented
+            source_ids:
+            - nv-sn5600-hw
+            note: The hardware manual documents front USB-A, RJ45 management and RJ45 console interfaces.
+          depiction_kind: management
+          placement_basis: schematic
+        - id: gb300-converged-sn5600-psus
+          label: Replaceable power supplies
+          inventory:
+            category: Server-level hardware
+            item: Power supplies
+            status: existing
+          evidence:
+            status: documented
+            source_ids:
+            - nv-sn5600-hw
+            note: AC SN5600 systems have two power-supply units.
+          depiction_kind: power
+          placement_basis: schematic
+          count:
+            value: 2
+            basis: documented_fixed
+        - id: gb300-converged-sn5600-fans
+          label: Replaceable fan modules
+          inventory:
+            category: Server-level hardware
+            item: Fans
+            status: existing
+          evidence:
+            status: documented
+            source_ids:
+            - nv-sn5600-hw
+            note: SN5600 has four fan modules.
+          depiction_kind: cooling
+          placement_basis: schematic
+          count:
+            value: 4
+            basis: documented_fixed
       - id: gb300-external-storage
         name: External storage boundary
         entity_type: storage_system
@@ -599,8 +1360,8 @@ configurations:
           status: documented
           source_ids:
           - nv-gb300-network
-          note: The reference architecture routes storage through the North/South converged network; the attached storage
-            implementation is deployment-specific.
+          note: The reference architecture routes storage through the North/South converged network; the attached 
+            storage implementation is deployment-specific.
         properties: {}
         children: []
   connections:
@@ -687,8 +1448,8 @@ configurations:
       status: documented
       source_ids:
       - nv-gb300-network
-      note: Storage traffic leaves the rack through the converged fabric; external storage internals are not fixed by this
-        configuration.
+      note: Storage traffic leaves the rack through the converged fabric; external storage internals are not fixed by 
+        this configuration.
     properties: {}
   - id: gb300-oob-management
     name: Rack management path

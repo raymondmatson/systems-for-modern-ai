@@ -1,0 +1,1 @@
+{"entityType":"gpu","id":"nvidia-h100","identity":{"architecture":"Hopper","manufacturer":"NVIDIA","model":"H100"},"name":"NVIDIA H100","properties":{},"recordLevel":"model","revision":1,"sourceIds":["official"],"summary":"NVIDIA H100 Tensor Core GPU"}

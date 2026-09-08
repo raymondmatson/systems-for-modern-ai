@@ -1,0 +1,1 @@
+{"entityType":"compute_node","id":"cerebras-cs-3","identity":{"generation":"3rd generation","manufacturer":"Cerebras","model":"CS-3","product_family":"CS"},"name":"Cerebras CS-3","properties":{},"recordLevel":"model","revision":1,"sourceIds":["official"],"summary":"Cerebras CS-3 wafer-scale AI system."}

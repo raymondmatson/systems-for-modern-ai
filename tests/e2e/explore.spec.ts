@@ -196,8 +196,22 @@ test('authored Anatomy Depictions are visible but noninteractive and summarized 
   const depiction = page.locator('svg .anatomy-depiction').first();
   await expect(depiction).toBeVisible();
   await expect(depiction).toHaveAttribute('aria-hidden', 'true');
+  await expect(depiction).toHaveAttribute('data-evidence-status', /documented|inferred|simplified|proprietary|unknown/);
   await expect(depiction).not.toHaveAttribute('tabindex', /.+/);
+  await expect(page.locator('svg .anatomy-section-label')).toContainText('Physical anatomy');
 
   await expect(page.getByLabel('Detail')).toContainText('Visible anatomy');
   await expect(page.getByRole('region', {name: 'Explore semantic structure'}).locator('.anatomy-depiction')).toHaveCount(0);
+});
+
+test('relationship-enterable switch interiors expose physical anatomy instead of an empty scene', async ({page}) => {
+  await page.goto('./');
+  const computeSwitches = page.locator('svg [role="button"][aria-label*="Compute-fabric InfiniBand switches"]').first();
+  await computeSwitches.click();
+  await page.getByRole('button', {name: 'Enter'}).click();
+
+  await expect(page.getByRole('heading', {name: 'Compute-fabric InfiniBand switches'})).toBeVisible();
+  await expect(page.locator('svg .anatomy-depiction')).toHaveCount(5);
+  await expect(page.locator('svg .anatomy-depiction').first()).toHaveAttribute('data-evidence-status', 'documented');
+  await expect(page.locator('svg .empty-scene')).toHaveCount(0);
 });

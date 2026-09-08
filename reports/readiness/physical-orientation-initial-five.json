@@ -10,6 +10,123 @@
       "system": "nvidia-dgx-h100-superpod"
     },
     {
+      "anatomy_count": 3,
+      "black_box": false,
+      "child_count": 0,
+      "configuration": "h100-superpod-4su-reference",
+      "direct_connection_count": 1,
+      "entity": "h100-bmc",
+      "system": "nvidia-dgx-h100-superpod"
+    },
+    {
+      "anatomy_count": 5,
+      "black_box": false,
+      "child_count": 0,
+      "configuration": "h100-superpod-4su-reference",
+      "direct_connection_count": 1,
+      "entity": "h100-compute-switches",
+      "system": "nvidia-dgx-h100-superpod"
+    },
+    {
+      "anatomy_count": 4,
+      "black_box": false,
+      "child_count": 0,
+      "configuration": "h100-superpod-4su-reference",
+      "direct_connection_count": 2,
+      "entity": "h100-cpus",
+      "system": "nvidia-dgx-h100-superpod"
+    },
+    {
+      "anatomy_count": 3,
+      "black_box": false,
+      "child_count": 0,
+      "configuration": "h100-superpod-4su-reference",
+      "direct_connection_count": 2,
+      "entity": "h100-cx7",
+      "system": "nvidia-dgx-h100-superpod"
+    },
+    {
+      "anatomy_count": 4,
+      "black_box": false,
+      "child_count": 0,
+      "configuration": "h100-superpod-4su-reference",
+      "direct_connection_count": 1,
+      "entity": "h100-gpus",
+      "system": "nvidia-dgx-h100-superpod"
+    },
+    {
+      "anatomy_count": 5,
+      "black_box": false,
+      "child_count": 0,
+      "configuration": "h100-superpod-4su-reference",
+      "direct_connection_count": 1,
+      "entity": "h100-inband-switches",
+      "system": "nvidia-dgx-h100-superpod"
+    },
+    {
+      "anatomy_count": 3,
+      "black_box": false,
+      "child_count": 0,
+      "configuration": "h100-superpod-4su-reference",
+      "direct_connection_count": 1,
+      "entity": "h100-local-nvme",
+      "system": "nvidia-dgx-h100-superpod"
+    },
+    {
+      "anatomy_count": 5,
+      "black_box": false,
+      "child_count": 0,
+      "configuration": "h100-superpod-4su-reference",
+      "direct_connection_count": 1,
+      "entity": "h100-management",
+      "system": "nvidia-dgx-h100-superpod"
+    },
+    {
+      "anatomy_count": 3,
+      "black_box": false,
+      "child_count": 0,
+      "configuration": "h100-superpod-4su-reference",
+      "direct_connection_count": 1,
+      "entity": "h100-nvswitch",
+      "system": "nvidia-dgx-h100-superpod"
+    },
+    {
+      "anatomy_count": 5,
+      "black_box": false,
+      "child_count": 0,
+      "configuration": "h100-superpod-4su-reference",
+      "direct_connection_count": 2,
+      "entity": "h100-oob-switches",
+      "system": "nvidia-dgx-h100-superpod"
+    },
+    {
+      "anatomy_count": 3,
+      "black_box": false,
+      "child_count": 0,
+      "configuration": "h100-superpod-4su-reference",
+      "direct_connection_count": 1,
+      "entity": "h100-os-nvme",
+      "system": "nvidia-dgx-h100-superpod"
+    },
+    {
+      "anatomy_count": 3,
+      "black_box": false,
+      "child_count": 0,
+      "configuration": "h100-superpod-4su-reference",
+      "direct_connection_count": 3,
+      "entity": "h100-storage-cx7",
+      "system": "nvidia-dgx-h100-superpod"
+    },
+    {
+      "anatomy_count": 5,
+      "black_box": false,
+      "child_count": 0,
+      "configuration": "h100-superpod-4su-reference",
+      "direct_connection_count": 2,
+      "entity": "h100-storage-switches",
+      "system": "nvidia-dgx-h100-superpod"
+    },
+    {
       "anatomy_count": 0,
       "black_box": false,
       "child_count": 1,
@@ -30,10 +147,82 @@
     {
       "anatomy_count": 2,
       "black_box": false,
+      "child_count": 0,
+      "configuration": "h100-superpod-4su-reference",
+      "direct_connection_count": 1,
+      "entity": "h100-system-memory",
+      "system": "nvidia-dgx-h100-superpod"
+    },
+    {
+      "anatomy_count": 5,
+      "black_box": false,
+      "child_count": 0,
+      "configuration": "gb300-nvl72-superpod-reference",
+      "direct_connection_count": 1,
+      "entity": "gb300-bf3",
+      "system": "nvidia-dgx-gb300-nvl72-superpod"
+    },
+    {
+      "anatomy_count": 3,
+      "black_box": false,
+      "child_count": 0,
+      "configuration": "gb300-nvl72-superpod-reference",
+      "direct_connection_count": 0,
+      "entity": "gb300-cache",
+      "system": "nvidia-dgx-gb300-nvl72-superpod"
+    },
+    {
+      "anatomy_count": 2,
+      "black_box": false,
       "child_count": 7,
       "configuration": "gb300-nvl72-superpod-reference",
       "direct_connection_count": 0,
       "entity": "gb300-compute-trays",
+      "system": "nvidia-dgx-gb300-nvl72-superpod"
+    },
+    {
+      "anatomy_count": 5,
+      "black_box": false,
+      "child_count": 0,
+      "configuration": "gb300-nvl72-superpod-reference",
+      "direct_connection_count": 2,
+      "entity": "gb300-converged-switches",
+      "system": "nvidia-dgx-gb300-nvl72-superpod"
+    },
+    {
+      "anatomy_count": 2,
+      "black_box": false,
+      "child_count": 0,
+      "configuration": "gb300-nvl72-superpod-reference",
+      "direct_connection_count": 1,
+      "entity": "gb300-cooling",
+      "system": "nvidia-dgx-gb300-nvl72-superpod"
+    },
+    {
+      "anatomy_count": 4,
+      "black_box": false,
+      "child_count": 0,
+      "configuration": "gb300-nvl72-superpod-reference",
+      "direct_connection_count": 1,
+      "entity": "gb300-cpus",
+      "system": "nvidia-dgx-gb300-nvl72-superpod"
+    },
+    {
+      "anatomy_count": 3,
+      "black_box": false,
+      "child_count": 0,
+      "configuration": "gb300-nvl72-superpod-reference",
+      "direct_connection_count": 1,
+      "entity": "gb300-cx8",
+      "system": "nvidia-dgx-gb300-nvl72-superpod"
+    },
+    {
+      "anatomy_count": 5,
+      "black_box": false,
+      "child_count": 0,
+      "configuration": "gb300-nvl72-superpod-reference",
+      "direct_connection_count": 1,
+      "entity": "gb300-gpus",
       "system": "nvidia-dgx-gb300-nvl72-superpod"
     },
     {
@@ -46,6 +235,51 @@
       "system": "nvidia-dgx-gb300-nvl72-superpod"
     },
     {
+      "anatomy_count": 3,
+      "black_box": false,
+      "child_count": 0,
+      "configuration": "gb300-nvl72-superpod-reference",
+      "direct_connection_count": 1,
+      "entity": "gb300-nvswitch",
+      "system": "nvidia-dgx-gb300-nvl72-superpod"
+    },
+    {
+      "anatomy_count": 5,
+      "black_box": false,
+      "child_count": 0,
+      "configuration": "gb300-nvl72-superpod-reference",
+      "direct_connection_count": 1,
+      "entity": "gb300-oob-switches",
+      "system": "nvidia-dgx-gb300-nvl72-superpod"
+    },
+    {
+      "anatomy_count": 3,
+      "black_box": false,
+      "child_count": 0,
+      "configuration": "gb300-nvl72-superpod-reference",
+      "direct_connection_count": 0,
+      "entity": "gb300-os-nvme",
+      "system": "nvidia-dgx-gb300-nvl72-superpod"
+    },
+    {
+      "anatomy_count": 2,
+      "black_box": false,
+      "child_count": 0,
+      "configuration": "gb300-nvl72-superpod-reference",
+      "direct_connection_count": 1,
+      "entity": "gb300-power-shelves",
+      "system": "nvidia-dgx-gb300-nvl72-superpod"
+    },
+    {
+      "anatomy_count": 5,
+      "black_box": false,
+      "child_count": 0,
+      "configuration": "gb300-nvl72-superpod-reference",
+      "direct_connection_count": 1,
+      "entity": "gb300-scaleout-switches",
+      "system": "nvidia-dgx-gb300-nvl72-superpod"
+    },
+    {
       "anatomy_count": 0,
       "black_box": false,
       "child_count": 7,
@@ -55,12 +289,21 @@
       "system": "nvidia-dgx-gb300-nvl72-superpod"
     },
     {
-      "anatomy_count": 0,
+      "anatomy_count": 2,
       "black_box": false,
       "child_count": 1,
       "configuration": "gb300-nvl72-superpod-reference",
       "direct_connection_count": 0,
       "entity": "gb300-switch-trays",
+      "system": "nvidia-dgx-gb300-nvl72-superpod"
+    },
+    {
+      "anatomy_count": 2,
+      "black_box": false,
+      "child_count": 0,
+      "configuration": "gb300-nvl72-superpod-reference",
+      "direct_connection_count": 1,
+      "entity": "gb300-system-memory",
       "system": "nvidia-dgx-gb300-nvl72-superpod"
     },
     {
@@ -73,6 +316,15 @@
       "system": "google-tpu7x-ironwood"
     },
     {
+      "anatomy_count": 2,
+      "black_box": false,
+      "child_count": 0,
+      "configuration": "tpu7x-9216-chip-superpod",
+      "direct_connection_count": 1,
+      "entity": "ironwood-cooling",
+      "system": "google-tpu7x-ironwood"
+    },
+    {
       "anatomy_count": 0,
       "black_box": false,
       "child_count": 1,
@@ -82,12 +334,48 @@
       "system": "google-tpu7x-ironwood"
     },
     {
-      "anatomy_count": 0,
+      "anatomy_count": 2,
+      "black_box": false,
+      "child_count": 0,
+      "configuration": "tpu7x-9216-chip-superpod",
+      "direct_connection_count": 1,
+      "entity": "ironwood-dcn",
+      "system": "google-tpu7x-ironwood"
+    },
+    {
+      "anatomy_count": 1,
       "black_box": false,
       "child_count": 3,
       "configuration": "tpu7x-9216-chip-superpod",
       "direct_connection_count": 0,
       "entity": "ironwood-host",
+      "system": "google-tpu7x-ironwood"
+    },
+    {
+      "anatomy_count": 3,
+      "black_box": true,
+      "child_count": 0,
+      "configuration": "tpu7x-9216-chip-superpod",
+      "direct_connection_count": 2,
+      "entity": "ironwood-host-cpu",
+      "system": "google-tpu7x-ironwood"
+    },
+    {
+      "anatomy_count": 2,
+      "black_box": false,
+      "child_count": 0,
+      "configuration": "tpu7x-9216-chip-superpod",
+      "direct_connection_count": 1,
+      "entity": "ironwood-host-memory",
+      "system": "google-tpu7x-ironwood"
+    },
+    {
+      "anatomy_count": 2,
+      "black_box": false,
+      "child_count": 0,
+      "configuration": "tpu7x-9216-chip-superpod",
+      "direct_connection_count": 1,
+      "entity": "ironwood-ocs",
       "system": "google-tpu7x-ironwood"
     },
     {
@@ -118,12 +406,75 @@
       "system": "cerebras-cs3-condor-galaxy3"
     },
     {
-      "anatomy_count": 1,
+      "anatomy_count": 3,
+      "black_box": false,
+      "child_count": 0,
+      "configuration": "condor-galaxy-3-64-cs3",
+      "direct_connection_count": 1,
+      "entity": "cg3-ai-cores",
+      "system": "cerebras-cs3-condor-galaxy3"
+    },
+    {
+      "anatomy_count": 4,
       "black_box": false,
       "child_count": 1,
       "configuration": "condor-galaxy-3-64-cs3",
       "direct_connection_count": 4,
       "entity": "cg3-cs3",
+      "system": "cerebras-cs3-condor-galaxy3"
+    },
+    {
+      "anatomy_count": 3,
+      "black_box": false,
+      "child_count": 0,
+      "configuration": "condor-galaxy-3-64-cs3",
+      "direct_connection_count": 1,
+      "entity": "cg3-management",
+      "system": "cerebras-cs3-condor-galaxy3"
+    },
+    {
+      "anatomy_count": 3,
+      "black_box": false,
+      "child_count": 0,
+      "configuration": "condor-galaxy-3-64-cs3",
+      "direct_connection_count": 1,
+      "entity": "cg3-memoryx",
+      "system": "cerebras-cs3-condor-galaxy3"
+    },
+    {
+      "anatomy_count": 3,
+      "black_box": false,
+      "child_count": 0,
+      "configuration": "condor-galaxy-3-64-cs3",
+      "direct_connection_count": 1,
+      "entity": "cg3-preprocess",
+      "system": "cerebras-cs3-condor-galaxy3"
+    },
+    {
+      "anatomy_count": 2,
+      "black_box": false,
+      "child_count": 0,
+      "configuration": "condor-galaxy-3-64-cs3",
+      "direct_connection_count": 1,
+      "entity": "cg3-sram",
+      "system": "cerebras-cs3-condor-galaxy3"
+    },
+    {
+      "anatomy_count": 3,
+      "black_box": false,
+      "child_count": 0,
+      "configuration": "condor-galaxy-3-64-cs3",
+      "direct_connection_count": 2,
+      "entity": "cg3-swarmx",
+      "system": "cerebras-cs3-condor-galaxy3"
+    },
+    {
+      "anatomy_count": 2,
+      "black_box": false,
+      "child_count": 0,
+      "configuration": "condor-galaxy-3-64-cs3",
+      "direct_connection_count": 2,
+      "entity": "cg3-wafer-mesh",
       "system": "cerebras-cs3-condor-galaxy3"
     },
     {
@@ -136,12 +487,30 @@
       "system": "cerebras-cs3-condor-galaxy3"
     },
     {
+      "anatomy_count": 4,
+      "black_box": false,
+      "child_count": 0,
+      "configuration": "meta-24576-h100-roce",
+      "direct_connection_count": 0,
+      "entity": "meta-arista-7800",
+      "system": "meta-h100-roce-24k"
+    },
+    {
       "anatomy_count": 0,
       "black_box": false,
       "child_count": 1,
       "configuration": "meta-24576-h100-roce",
       "direct_connection_count": 0,
       "entity": "meta-compute-racks",
+      "system": "meta-h100-roce-24k"
+    },
+    {
+      "anatomy_count": 3,
+      "black_box": false,
+      "child_count": 0,
+      "configuration": "meta-24576-h100-roce",
+      "direct_connection_count": 0,
+      "entity": "meta-e1s",
       "system": "meta-h100-roce-24k"
     },
     {
@@ -154,12 +523,30 @@
       "system": "meta-h100-roce-24k"
     },
     {
+      "anatomy_count": 4,
+      "black_box": false,
+      "child_count": 0,
+      "configuration": "meta-24576-h100-roce",
+      "direct_connection_count": 0,
+      "entity": "meta-h100-gpus",
+      "system": "meta-h100-roce-24k"
+    },
+    {
       "anatomy_count": 0,
       "black_box": false,
       "child_count": 3,
       "configuration": "meta-24576-h100-roce",
       "direct_connection_count": 0,
       "entity": "meta-h100-roce",
+      "system": "meta-h100-roce-24k"
+    },
+    {
+      "anatomy_count": 5,
+      "black_box": false,
+      "child_count": 0,
+      "configuration": "meta-24576-h100-roce",
+      "direct_connection_count": 1,
+      "entity": "meta-minipack2",
       "system": "meta-h100-roce-24k"
     },
     {
@@ -181,6 +568,15 @@
       "system": "meta-h100-roce-24k"
     },
     {
+      "anatomy_count": 5,
+      "black_box": false,
+      "child_count": 0,
+      "configuration": "meta-24576-h100-roce",
+      "direct_connection_count": 1,
+      "entity": "meta-wedge400",
+      "system": "meta-h100-roce-24k"
+    },
+    {
       "anatomy_count": 0,
       "black_box": false,
       "child_count": 1,
@@ -191,9 +587,9 @@
     }
   ],
   "criterion": "DEP-033 / RDY-018",
-  "entered_contexts_checked": 21,
+  "entered_contexts_checked": 65,
   "mechanical_errors": [],
-  "note": "PASS requires both mechanically non-empty entered contexts and explicit per-system qualitative orientation review. It is not a minimum-object-count claim.",
+  "note": "PASS requires both mechanically non-empty entered contexts and explicit per-system qualitative orientation review. Enterability mirrors the Explore UI: contextual capability plus representative-member expansion, children, authored anatomy, or (for non-black-box entities) a direct architectural relationship. It is not a minimum-object-count claim.",
   "qualitative_review_source": "readiness/initial-five.yaml",
   "result": "PASS"
 }
