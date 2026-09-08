@@ -2,9 +2,9 @@
 
 ## Current state
 
-The current Reference-System schema is **1.2.0**, but its `concept_links` records still use the legacy display `name`, Organizational Content Inventory mapping, and one or more configuration-local `entity_ids`. The 1.2.0 taxonomy finalization intentionally did not perform the Concept-link migration because the Architecture-Anchored Foundational Library is not yet complete.
+The current Reference-System authoring path supports a mixed source corpus. `content/RSCs/reference_system.schema.json` is the active additive **1.4.0** schema for migrated files; the repository also preserves explicit 1.3.0 and 1.2.0 compatibility schemas. The Version-1 initial configurations have migrated to stable `concept_id`/`role`/`target` Concept occurrences. Later-candidate configurations may still use the legacy display `name`, Organizational Content Inventory mapping, and one or more configuration-local `entity_ids`.
 
-Those records are useful architecture-occurrence seeds, but display names and inventory paths are not stable Concept identity.
+The current compatibility scan reports **27 legacy-link warnings and zero errors**, all outside the five-system Version-1 user-facing set. Those records remain useful architecture-occurrence seeds, but display names and inventory paths are not stable Concept identity.
 
 ## Target state
 
@@ -54,8 +54,8 @@ Allowed roles are `embodies`, `uses`, `illustrates`, `applies_to`, and `measured
 
 ## Compatibility during transition
 
-`validate_concepts.py --reference-systems <dir>` understands the target `concept_id`/`role`/`target` contract. Legacy `name`/`inventory`/`entity_ids` links are reported as migration warnings rather than validation failures so the current Reference-System corpus can coexist with the new Concept Library until a dedicated schema migration is approved.
+`python content/concepts/validate_concepts.py --reference-systems content/RSCs` understands the canonical `concept_id`/`role`/`target` contract. Legacy `name`/`inventory`/`entity_ids` links are reported as migration warnings rather than validation failures so later-candidate 1.2.0 sources can coexist with migrated 1.4.0 sources.
 
-Once the Reference-System schema is updated and the migration is complete, strict validation should require every configuration Concept occurrence to resolve to a global `concept_id` and valid local target.
+The Version-1 initial configurations are already strict/canonical. Remaining migration work applies to later-candidate content before it is promoted to release scope; it does not block the current five-system user experience. When a later candidate is migrated, every user-facing Concept occurrence should resolve to a global `concept_id` and valid local target.
 
-Scenario Concept references should follow the same identity rule when the richer Scenario schema is implemented: Scenarios may reference stable `concept_id` values for explanatory relevance, but Scenario-specific state remains in Scenario data and never moves into global Concept definitions.
+Scenario Concept references, if introduced later, should follow the same global identity rule: Scenario-specific state remains in Scenario data and never moves into global Concept definitions.

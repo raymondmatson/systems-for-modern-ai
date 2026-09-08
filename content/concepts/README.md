@@ -97,7 +97,7 @@ Supported target types are `entity`, `connection`, and `configuration`. Reverse 
 
 Inventory mappings organize content but never define Concept identity. A Concept may map to several current Organizational Content Inventory locations when genuinely cross-cutting. If mappings are present, exactly one must be marked `primary: true`.
 
-The validator reads the living `Organizational_Content_Inventory.md` from the project root. Inventory vocabulary is not duplicated in the JSON Schema.
+The validator reads the living `docs/Organizational_Content_Inventory.md` from the repository root by default. Inventory vocabulary is not duplicated in the JSON Schema.
 
 A valid Concept may omit `inventory_mappings` if no honest current mapping exists. Do not force an artificial classification.
 
@@ -125,25 +125,25 @@ Other sections are optional and should be used only when they improve the explan
 
 ## Initial library scope
 
-The initial library follows the **Architecture-Anchored Foundational Library** policy. It should eventually cover the Concepts directly exposed by the initial Reference Systems, their direct prerequisites, and major cross-cutting foundations needed to understand those architectures. It is not intended to exhaustively mirror every Organizational Content Inventory item.
+The initial library follows the **Architecture-Anchored Foundational Library** policy: it covers Concepts directly exposed by the initial Reference Systems, their direct prerequisites, and major cross-cutting foundations needed to understand those architectures. It is not intended to exhaustively mirror every Organizational Content Inventory item.
 
-The records currently under `metadata/` and `content/` are a small canonical example set that exercises the storage contract; they are not the final initial Concept Library.
+The current repository contains **15 canonical Concepts** under `metadata/` and `content/`, including the architecture-anchored topics required by the Version-1 initial systems. This is the current Version-1 Concept Library baseline; broader or near-exhaustive Organizational Content Inventory coverage remains deferred.
 
 ## Validation
 
 Run from the project root:
 
 ```bash
-python concepts/validate_concepts.py
-python -m unittest discover -s concepts/tests -v
+python content/concepts/validate_concepts.py
+python -m unittest discover -s content/concepts/tests -v
 ```
 
 The validator checks YAML/JSON Schema structure, filenames, content pairing, Markdown identity/minimum content, inventory mappings, relationship targets, self-references, duplicate edges, prerequisite cycles, aliases, tags, sources, and placeholder values.
 
-Reference-System integration is compatibility-aware but intentionally not forced in this task. Pass a Reference-System source directory to inspect migrated links while reporting legacy name/inventory-based links as warnings:
+Reference-System integration is compatibility-aware. Pass the Reference-System source directory to verify canonical occurrences while reporting remaining later-candidate legacy name/inventory-based links as migration warnings:
 
 ```bash
-python concepts/validate_concepts.py --reference-systems path/to/RSCs
+python content/concepts/validate_concepts.py --reference-systems content/RSCs
 ```
 
 See `MIGRATION.md` for the compatibility direction.

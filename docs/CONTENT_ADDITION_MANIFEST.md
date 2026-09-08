@@ -3,8 +3,8 @@
 **Created:** 2026-09-01  
 **Reconciled against supplied repository baseline:** 2026-09-07  
 **Baseline:** `systems-for-modern-ai.zip` supplied with this planning pass; no newer repository is assumed.  
-**Scope:** Current authored Reference Systems, Reference Configurations, Version-1 Scenario catalogs, and the physical-orientation additions that must be handed to Implementation.  
-**Status:** Planning/content manifest — baseline-reconciled. Historical implementation claims are retained only as history; the **Baseline ZIP verification** and **Planning disposition** tables added below govern current work.
+**Scope:** Current authored Reference Systems, Reference Configurations, Version-1 Scenario catalogs, and the physical-orientation/Product-Catalog content history.  
+**Status:** Implementation/content manifest — current implementation recorded. The pre-implementation reconciliation tables are retained as historical migration evidence; **Implementation completion status — 2026-09-07** and the device-interior follow-up govern the current repository state.
 
 ## Review principles
 
@@ -12,14 +12,14 @@ This manifest applies the project content-depth, fidelity, aggregation, Concept,
 
 ### Status interpretation after baseline reconciliation
 
-The original manifest used **Implemented** for three different stages (candidate identified, evidence accepted, and canonical change reportedly completed). That wording is no longer a reliable indicator of the supplied repository state. To preserve history without misrepresenting the current ZIP:
+The original manifest used **Implemented** for three different stages (candidate identified, evidence accepted, and canonical change reportedly completed). To preserve that history without confusing it with the current repository:
 
-- every existing table's last column is now interpreted as **Historical reported status** only;
+- every original table's last column remains **Historical reported status** only;
 - the original item IDs, research notes, deliberate closures, and proposed changes are preserved;
-- the current authoritative planning state is recorded in the **Baseline ZIP reconciliation** tables below; and
-- no item is considered delivered until its canonical source change is visible in the supplied/current implementation repository and the required validation gates pass.
+- **Baseline ZIP reconciliation** records the pre-implementation state that was used to plan the migration; and
+- the current delivered state is recorded later under **Implementation completion status — 2026-09-07** and **Device-interior coverage expansion — 2026-09-07 follow-up**.
 
-Current baseline-verification values:
+Historical baseline-verification values used during planning:
 
 - **Present** — the proposed result is materially present in the supplied ZIP; Implementation should verify/retain it.
 - **Partial** — part of the proposed structure/explanation exists, but the manifest outcome is not fully present.
@@ -27,7 +27,7 @@ Current baseline-verification values:
 - **Closed / not applicable** — the deliberate no-addition decision remains valid.
 - **Superseded by newer baseline content** — the baseline already contains a newer/equivalent treatment; do not recreate the older proposal literally.
 
-Current planning-disposition values:
+Planning-time disposition values used by the completed migration:
 
 - **Implement** — add the missing canonical content after evidence verification.
 - **Revise / complete** — preserve valid existing identity/content and complete the missing treatment.
@@ -444,9 +444,9 @@ A prior implementation report stated that all manifest items had reached termina
 
 The **Baseline ZIP reconciliation** below is the current authority for what is present, partial, absent, closed, or superseded. Implementation must apply changes to the supplied/current repository and rerun validation rather than treating the historical report as a waiver.
 
-## Baseline ZIP reconciliation — current planning authority
+## Baseline ZIP reconciliation — historical pre-implementation work queue
 
-The following table is derived from direct inspection of the supplied repository. It supersedes the historical status column for current work. “Present” means materially present in source, not that post-change release validation has been rerun.
+The following table records direct inspection of the pre-implementation supplied repository and explains why the subsequent Product/Anatomy/content migration was needed. It superseded the older ambiguous status column **at planning time**, but it is no longer the current repository-status authority after the completed implementation recorded below. “Present” here means present in that pre-implementation baseline.
 
 | ID | Baseline ZIP verification | Planning disposition | Baseline note |
 |---|---|---|---|
@@ -589,9 +589,9 @@ This table turns the baseline reconciliation into the release-priority visual/ph
 
 ## Later-candidate coverage disposition
 
-Later candidates remain part of the authored corpus and should receive the same physical-orientation policy when their content is touched or before they are promoted. They are **not** a Version-1 release requirement. The reconciliation table above is the work queue: Implement/Revise rows remain valid future work; evidence-gated rows must be verified first; Closed rows remain closed. When a later-candidate entered context is eventually exposed as release content, apply DEP-033/RDY-018 rather than a minimum object-count target.
+Later candidates remain part of the authored corpus and receive the same physical-orientation policy when touched or before promotion, but they are **not** a Version-1 release requirement. The historical reconciliation table above is no longer an active work queue: the Implement/Revise rows were processed in the completed migration unless the completion section records a deliberate closure/evidence boundary. Future promotion of any later-candidate configuration still requires DEP-033/RDY-018 rather than a minimum object-count target.
 
-Notable baseline-retain cases include `TRN2-05`, `TRN3-03`, `GROQ-03`, `OCI-06`, `OCI-07`, `CW-03`, `CW-05`, and `XAI-03`; deliberate closures remain `G-04`, `OCI-01`, `OCI-02`, `OCI-08`, and `XAI-01`. `XAI-04` is superseded by newer mixed-fleet baseline wording and should not be recreated literally.
+Deliberate closures remain `G-04`, `OCI-01`, `OCI-02`, `OCI-08`, and `XAI-01`; `XAI-04` remains superseded by newer mixed-fleet wording. Any new future content pass should start from the current canonical YAML, not by replaying the historical baseline reconciliation literally.
 
 ## Completion test for every entered context
 

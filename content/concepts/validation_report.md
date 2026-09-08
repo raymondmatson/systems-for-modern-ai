@@ -1,73 +1,66 @@
 # Concept Library Validation Report
 
-**Date:** 2026-08-25  
+**Documentation reconciliation date:** 2026-09-07  
 **Concept schema version:** 1.0.0  
-**Canonical Concept records:** 6  
-**Verification scope:** Final taxonomy, structure, and cross-file consistency pass
+**Canonical Concept records:** 15  
+**Current repository scope:** canonical Concept validation plus Reference-System compatibility scan
 
-## Finalization changes
+## Current library state
 
-This pass reconciled the Concept Library with the finalized project taxonomy and source layout without rewriting unrelated educational prose.
+The canonical Concept Library uses the established hybrid source layout:
 
-- Restored the canonical hybrid storage layout required by the authoring contract: `metadata/<concept_id>.yaml` plus `content/<concept_id>.md`, with schema, templates, tests, and validator in their documented locations.
-- Standardized Concept naming guidance: display names use conventional technical capitalization; `concept_id` values and tags remain lowercase machine identifiers.
-- Reconciled the two Primary Inventory Homes that were inconsistent with the intended architecture-oriented taxonomy:
-  - **Direct Memory Access** → **Direct data movement and GPU I/O → DMA** (CPU architecture and Local server interconnects remain secondary mappings).
-  - **High Bandwidth Memory** → **Server-level hardware → HBM** (Memory hierarchy → GPU HBM and Accelerator internals → HBM stacks remain secondary mappings).
-- Retained all existing stable Concept IDs, Concept kinds, aliases, relationships, tags, and Markdown filenames.
-- No new Concept–Architecture Links were invented. The Reference-System corpus still uses the legacy `concept_links` representation pending the dedicated migration described in `MIGRATION.md`.
+```text
+content/concepts/metadata/<concept_id>.yaml
+content/concepts/content/<concept_id>.md
+```
 
-Structured `sources` remain optional under the current schema. Where present, they are authoritative machine-readable provenance; Markdown source sections are complementary and are not required to duplicate every structured source record.
+The current repository contains **15 canonical Concepts**, which form the present Architecture-Anchored Foundational Library baseline for the five Version-1 Reference Systems. Broader/near-exhaustive Organizational Content Inventory coverage remains deferred.
 
-## Commands run
+The five Version-1 configurations use canonical `concept_id` / `role` / `target` occurrence links. Later-candidate 1.2.0 sources may still use the legacy name/inventory/entity-list representation; those links are compatibility warnings rather than canonical Concept errors until the corresponding candidate is migrated.
 
-From the shared-source root:
+## Commands
+
+From the repository root:
 
 ```bash
-python concepts/validate_concepts.py
-python -m unittest discover -s concepts/tests -v
-python concepts/validate_concepts.py --reference-systems RSCs
-python -m py_compile concepts/validate_concepts.py concepts/tests/test_validate_concepts.py
+python content/concepts/validate_concepts.py
+python -m unittest discover -s content/concepts/tests -v
+python content/concepts/validate_concepts.py --reference-systems content/RSCs
 ```
+
+The validator's default inventory path is the canonical repository file `docs/Organizational_Content_Inventory.md`.
 
 ## Canonical validation result
 
 ```text
-SUMMARY: concepts=6, warnings=0, errors=0, result=PASS
+SUMMARY: concepts=15, warnings=0, errors=0, result=PASS
 ```
 
-Validation covered:
-
-- YAML parsing and JSON Schema Draft 2020-12 compliance;
-- global `concept_id` uniqueness and kebab-case naming;
-- YAML/Markdown filename and one-to-one pairing;
-- deterministic `content_file` references;
-- required Markdown identity and minimum educational content;
-- canonical Organizational Content Inventory mappings and exactly one Primary Inventory Home when mappings exist;
-- relationship-target integrity, duplicate edges, self-references, and prerequisite acyclicity;
-- aliases, tags, source-record structure, and placeholder rejection; and
-- orphaned metadata/content detection.
+Validation covers YAML/JSON Schema structure, global Concept identity, YAML/Markdown pairing, required Markdown sections/content, inventory mappings, relationship targets, duplicate/self edges, prerequisite cycles, aliases/tags/sources, and placeholder rejection.
 
 ## Automated tests
 
 ```text
-Ran 8 tests
+Ran 9 tests
 OK
 ```
 
-The suite verifies the valid canonical library plus rejection of prerequisite cycles, missing Markdown content, invalid inventory mappings, filename/ID mismatches, orphan Markdown files, self-referential Concept relationships, and invalid controlled-vocabulary values.
+The current suite includes the canonical-library pass case plus rejection/coverage for prerequisite cycles, missing Markdown, invalid inventory mappings, filename/ID mismatches, orphan Markdown, self relationships, invalid controlled vocabulary, and the repository-default inventory path.
 
 ## Reference-System compatibility scan
 
 ```text
-SUMMARY: concepts=6, warnings=39, errors=0, result=PASS
+SUMMARY: concepts=15, warnings=27, errors=0, result=PASS
 ```
 
-All 39 warnings are expected migration notices for legacy Reference-Configuration `concept_links` that still use name/inventory/entity-ID semantics rather than the target `concept_id` / `role` / `target` contract. The taxonomy/finalization pass introduced no new dangling Concept IDs or Reference-System integration errors.
+All 27 warnings are expected legacy-link migration notices on later-candidate Reference-System content. The five Version-1 configurations are already on canonical occurrence links, so the warnings do not enter the current five-system user-facing experience.
 
-## Intentionally deferred work
+## Remaining migration work
 
-- Expand the six-record example library into the Architecture-Anchored Foundational Library required for the core product.
-- Migrate Reference-System `concept_links` to stable global `concept_id` references and explicit occurrence roles/targets after the destination Concepts exist.
+- Migrate later-candidate legacy `concept_links` before those configurations are promoted to release scope.
+- Preserve the global Concept IDs/roles/target semantics; do not derive Concept identity from inventory paths or product names.
+- Continue expanding the Concept Library selectively only when additional architecture/content requires it; near-exhaustive inventory coverage is not a Version-1 requirement.
 
-These are explicit follow-on content/schema tasks, not unresolved Concept identity or taxonomy decisions.
+## Historical generated snapshots
+
+`content/concepts/validator_run.txt`, `test_run.txt`, and `reference_integration_run.txt` are older generated snapshots and currently contain pre-expansion six-Concept/8-test/39-warning results. They should be regenerated by the implementation/release process rather than treated as current documentation evidence.

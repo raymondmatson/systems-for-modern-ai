@@ -2,13 +2,13 @@
 title: "Systems for Modern AI Project — Working Design Source of Truth"
 project: "Systems for Modern AI Project"
 status: "Living planning document"
-last_updated: "2026-08-26"
-version: "0.7"
+last_updated: "2026-09-07"
+version: "0.8"
 ---
 
 # Systems for Modern AI Project — Working Design Source of Truth
 
-**Last updated:** 2026-08-26  
+**Last updated:** 2026-09-07  
 **Status:** Living planning document  
 **Purpose:** Central working context for project chats. This document records current design decisions, explicitly deferred or unresolved matters when they exist, rejected approaches, and dependencies. Later decisions supersede earlier ones when conflicts arise.
 
@@ -27,11 +27,13 @@ version: "0.7"
 
 | Artifact | Role | Status |
 |---|---|---|
-| `explore_tier_inventory_baseline.xlsx` | Item-by-item baseline mapping of the Organizational inventory into Explore tiers, Concepts, Scenario Context, System Context, and Future Guided Modes. | Current baseline |
-| `ai_infra_layout_snapshot.mmd` | Editable Mermaid snapshot of the high-level tool layout. | Temporary snapshot |
-| `ai_infra_layout_snapshot.svg` | Rendered version of the same high-level layout. | Temporary snapshot |
-| `reference_systems_candidate_comparison.xlsx` | Learning-oriented comparison of researched Reference System candidates, ratings, sources, and initial/later/not-recommended classifications. | Current research baseline |
-| `Delivery_Rendering_and_Platform_Implementation_Plan.md` | Implementation companion for the established browser-first layered-2D baseline and the current Version-1 technical decision register, including platform isolation, runtime/content tooling, schema migration defaults, testing, and possible future C++/Qt native-client migration. | Current implementation plan |
+| `explore_tier_inventory_baseline.xlsx` | Historical/supporting item-by-item mapping of the Organizational inventory into Explore tiers, Concepts, Scenario Context, System Context, and Future Guided Modes. | External/historical supporting artifact; not present in the current repository and superseded by current Source-of-Truth decisions where they differ. |
+| `ai_infra_layout_snapshot.mmd` | Historical editable Mermaid snapshot of the high-level tool layout. | External/historical supporting artifact; not present in the current repository. |
+| `ai_infra_layout_snapshot.svg` | Rendered version of the same historical high-level layout snapshot. | External/historical supporting artifact; not present in the current repository. |
+| `reference_systems_candidate_comparison.xlsx` | Learning-oriented comparison of researched Reference System candidates, ratings, sources, and initial/later/not-recommended classifications. | External evidence artifact; not present in the current repository. Its Documentation Confidence ratings are still required for reproducible RDY-009 evidence. |
+| `Delivery_Rendering_and_Platform_Implementation_Plan.md` | Implementation companion for the established browser-first layered-2D baseline and the current Version-1 technical decision register, including platform isolation, runtime/content tooling, current schema/runtime state, testing, and possible future C++/Qt native-client migration. | Current implementation plan |
+| `CONTENT_ADDITION_MANIFEST.md` | Physical-anatomy/content manifest preserving the historical baseline reconciliation and the completed Product/Anatomy/device-interior implementation status. | Current implementation/content history; completion sections govern current repository status. |
+| `PHYSICAL_ANATOMY_IMPLEMENTATION_HANDOFF.md` | Ordered implementation handoff that produced the physical-orientation, Anatomy Depiction, Product Catalog, validation, and device-interior changes. | Completed historical handoff; retained for traceability, not a current work queue. |
 
 ## Table of contents
 
@@ -69,6 +71,8 @@ Functional systems such as networking, storage, power, cooling, management, and 
 
 Explore is distinct from **Concepts**, which is the primary home for abstractions, protocols, algorithms, policies, mechanisms, software concepts, metrics, and other nonphysical explanatory material.
 
+Physical/spatial understanding is not merely one Explore goal among several: it is the **baseline learning obligation** beneath the other views and metadata systems. When a user enters a structural context such as a server, tray, rack, switch, or accelerator, Explore should normally make the major source-supported physical anatomy needed for orientation visibly apparent at that scale. Concepts, Properties, evidence metadata, and Scenarios enrich that physical model; they do not substitute for a needed physical presence.
+
 ## 1.2 Core terminology
 
 | Term | Status | Definition |
@@ -88,6 +92,8 @@ Explore is distinct from **Concepts**, which is the primary home for abstraction
 | **Structural Location** | **Established** | The current canonical physical/structural context the user has entered. |
 | **Explore Structural History** | **Established** | The sequence of meaningful physical Structural Location changes inside Explore, distinct from canonical Containment Path and from application-level Back/Forward history. |
 | **Scenario Context** | **Established** | Workload or operating conditions that may change emphasis, state, traffic, failures, bottlenecks, etc. without normally changing containment. |
+| **Physical Orientation Baseline** | **Established** | The minimum source-supported physical anatomy and principal physical relationships needed at an entered structural context so the learner can form a credible mental model of what exists there, what contains it, what it contains, and how important physical paths enter, leave, or traverse the boundary. |
+| **Anatomy Depiction** | **Established** | A configuration-local, visible but noninteractive representation of a known or supportably inferred physical component/subsystem whose presence materially improves orientation but does not require independent entity identity, Selection, navigation, Concept occurrence, Scenario targeting, or connection-endpoint semantics. |
 
 ## 1.3 Explore tier structure
 
@@ -384,6 +390,73 @@ Explore objects may expose relevant concepts, and Concepts should link back to p
 
 Concepts remains a distinct view rather than existing solely as an Explore overlay.
 
+### Physical orientation and supplemental anatomy
+
+#### EXP-036 — Entered contexts must satisfy the Physical Orientation Baseline
+**Status: Established**
+
+When the user enters a structural context, Explore should normally show enough source-supported physical anatomy to answer, at the useful current scale:
+
+- what major hardware/subsystems exist within or at the boundary;
+- what larger structure contains them and what meaningful constituents they contain;
+- which principal compute, memory/data, local-interconnect, external-network, storage, power, cooling, or management paths are physically relevant; and
+- which important boundaries remain aggregated, generic, or black-boxed because finer evidence is unavailable or unnecessary.
+
+This is a qualitative orientation requirement rather than a minimum object count or universal bill of materials.
+
+**Rationale:** A system-specific learning claim should add differentiating depth to a credible physical mental model rather than permit an entered enclosure to appear misleadingly empty.
+
+#### EXP-037 — Known physical presence may be visible without independent entity identity
+**Status: Established**
+
+When a physical component or subsystem is known to exist and its visible presence materially improves spatial orientation, lack of an exact SKU, detailed specifications, or useful interaction is not by itself a reason to omit it. Explore may show a generic **Anatomy Depiction** at the supported level of generality.
+
+A properties-only note is insufficient when the learner needs a visible physical presence to understand the boundary.
+
+**Rationale:** Physical existence, product identity, and interaction capability are separate questions.
+
+#### EXP-038 — Anatomy Depictions are visible context, not physical entities
+**Status: Established**
+
+An Anatomy Depiction:
+
+- belongs to one configuration-local enclosing structural context;
+- may carry a stable depiction key for authoring, accessibility, auditing, and deterministic rendering;
+- may carry label, explanatory role, inventory classification, evidence/source references, depiction intent, and a supportable count/basis when useful;
+- does **not** receive configuration-local entity identity;
+- is not selectable, enterable, a Cross-Connection endpoint, a Concept occurrence target, a Scenario target, or an Addressable Member; and
+- does not contribute to entity/population counts merely because it is drawn.
+
+If any of those independent semantics become educationally important, model the component as an ordinary explicit/aggregate/black-box entity instead.
+
+**Rationale:** This supplies necessary anatomy without inflating identity, capability, or schema taxonomy merely to draw a physical part.
+
+#### EXP-039 — Evidence, representation, visual fidelity, and interaction capability remain distinct
+**Status: Established**
+
+The project must distinguish:
+
+1. **existence/evidence** — how strongly the presence and claims are supported;
+2. **semantic representation** — entity, Aggregate Entity, black-box boundary, Cross-Connection, or Anatomy Depiction;
+3. **visual fidelity** — whether arrangement/placement is specifically sourced or only schematic within a supported enclosure/boundary; and
+4. **interaction capability** — whether the representation can be focused, selected, entered, followed, targeted, or otherwise acted upon.
+
+No one dimension is inferred automatically from another.
+
+#### EXP-040 — Schematic arrangement must not masquerade as sourced placement
+**Status: Established**
+
+The 2D renderer may arrange components schematically inside a known enclosure, board, tray, rack, or support boundary to improve comprehension. Schematic placement must not imply a specific slot, side, ordering, routing path, or mechanical position unless that placement is itself supported and materially relevant.
+
+Do not invent containment parents merely to organize a screen. Canonical Containment remains source/model truth; coordinates and layout grouping remain presentation.
+
+#### EXP-041 — Visible anatomy does not weaken the Inspect/Select/Enter contract
+**Status: Established**
+
+Interactive entities and connections continue to follow Section 1.6. Anatomy Depictions are intentionally noninteractive and must be presented/accessibly described in a way that does not imply focus, Selection, Enter, Follow, or other unavailable actions.
+
+The Detail Area for the enclosing interactive context may summarize its visible Anatomy Depictions so keyboard and assistive-technology users receive equivalent physical-orientation information without creating fake controls.
+
 ## 1.5 Aggregation and repetition semantics
 
 **Status: Established**
@@ -650,7 +723,7 @@ Identity guarantees are:
 - Lazy rendering/virtualization of addressable populations is an Implementation concern.
 - Aggregation applies at Tier 5 as well as higher tiers; documented counts such as hundreds of thousands of cores do not imply equal numbers of rendered or individually identified entities.
 
-The Version-1 population encoding is provisionally resolved under REF-I02, and deterministic generated Addressable Member ID syntax is resolved in the implementation companion. Exact renderer virtualization/visibility limits remain intentionally open pending the representative initial-five rendering prototype.
+The Version-1 population encoding is implemented under REF-I02, and deterministic generated Addressable Member ID syntax is resolved in the implementation companion. The post-anatomy Chromium benchmark shows no need for a dense Canvas/WebGL backplane or renderer virtualization for current Version-1 representative scenes; re-profile if semantic visibility materially increases. Cross-browser Playwright verification remains a release-evidence task rather than a change to aggregation semantics.
 
 ## 1.6 Selection and Detail Context
 
@@ -1084,15 +1157,18 @@ Selection and Detail summary invariant:
 | Security remains comparatively shallow unless future requirements justify expansion. | **Established baseline** |
 | Different reference systems may expose different physical depths. | **Established** |
 | Explore should use semantic abstraction rather than attempting to display the entire architecture at all scales simultaneously. | **Established** |
+| Physical Orientation Baseline applies beneath system-specific Primary Learning Claims; a physically important entered context should not be sparse merely because its differentiating claim is narrower. | **Established** |
+| A known necessary physical component may be shown generically and noninteractively when product identity or independent interaction is unnecessary. | **Established** |
+| Schematic visual arrangement is permitted inside a supported boundary but must not be presented as sourced exact placement. | **Established** |
 
 ## 1.9 Future considerations and implementation details
 
 ### EXP-I01 — Visibility thresholds and aggregation tuning
-**Status: Provisionally Resolved implementation policy; numeric tuning remains open**
+**Status: Established implementation policy; current V1 density benchmark resolved**
 
 EXP-018 through EXP-023 establish explicit/aggregated/implicit visibility and relevance-based semantic zoom. Version 1 uses **semantic aggregation first**: visibility is derived from Structural Location, Tier, authored aggregation semantics, architectural relevance, and interaction state rather than from one global object-count threshold. Renderer virtualization or dense-layer fallback may be introduced only as presentation optimization and must not change Expansion Mode, identity, Selection, or Navigation semantics.
 
-Exact numeric visibility/virtualization limits remain intentionally open until representative scenes from the initial five systems are profiled. The current implementation default and review trigger are recorded in `Delivery_Rendering_and_Platform_Implementation_Plan.md`.
+The post-anatomy representative benchmark shows that current Version-1 scenes do not require a dense rendering backplane or renderer virtualization. No global object-count threshold is established. Re-profile if semantic visibility/materialization changes materially; cross-browser E2E remains release evidence rather than a product-level rendering decision.
 
 ### EXP-F01 — Exact Functional Lens behavior
 **Status: Deferred to Features**
@@ -1513,7 +1589,7 @@ Reference-System content is maintained as structured, validated configuration da
 | **Entity ID** | **Established** | A stable, configuration-local machine-readable identifier for a modeled entity. It identifies the entity within the current configuration and does not imply cross-configuration physical identity. |
 | **Entity Type** | **Established** | The controlled structural/behavioral type of a modeled entity. `entity_type` answers what the entity is and is the metadata layer intended to govern applicable behavior and functionality. The canonical machine vocabulary is enforced by the Reference-System schema. |
 | **Inventory Classification** | **Established** | The entity's mapping to the Organizational Content Inventory. It describes where the entity belongs in the project's organizational/documentation taxonomy and does not directly control behavior. |
-| **Product Identity** | **Established** | Optional structured `product_identity` metadata for a real, identifiable product/component. It supports comparison, search, and shared explanatory context without creating shared physical identity. |
+| **Product Identity** | **Established** | Reusable descriptive manufacturer/family/model/variant/generation/architecture/codename identity for a real product/component. For cataloged products it is resolved from the Product Definition referenced by `product_ref`; inline `product_identity` remains an uncataloged/migration fallback. Product Identity supports comparison/search without creating shared physical identity. |
 | **Representation State** | **Established** | How a configuration represents an entity, using the machine values `explicit`, `aggregate`, or `black_box`. |
 | **Evidence State** | **Established** | The support level for modeled information, using `documented`, `inferred`, `simplified`, `unknown`, or `proprietary`. |
 | **System Classification** | **Established** | Nonexclusive learning-oriented labels describing a system's role, such as **Archetypal**, **Representative**, **Specialized**, **Frontier / emerging**, or **Historical / transitional**. |
@@ -1532,7 +1608,7 @@ Reference-System content is maintained as structured, validated configuration da
 
 The entity metadata layers must also remain distinct:
 
-`configuration-local entity ID → entity type / behavior → optional product identity → inventory classification / documentation`
+`configuration-local entity ID → entity type / behavior → optional product_ref / Product Identity → inventory classification / documentation`
 
 These layers may describe the same object from different perspectives, but they do not substitute for one another.
 
@@ -1580,7 +1656,7 @@ The current configuration corpus uses the revised Organizational Content Invento
 
 The Organizational Content Inventory now also includes the emerging 800 VDC / high-voltage DC power-distribution concepts **High-voltage DC / 800 VDC distribution**, **Side power rack / power sidecar**, **Direct MVAC-to-HVDC conversion**, **DC busway / row-level DC distribution**, and **Facility-to-rack power-conversion topology**. These additions expand canonical project scope but do not require automatic changes to existing Reference Configurations. The current authored configurations retain their documented power architectures; an 800 VDC component or path should be instantiated only when configuration-specific sources establish that it is genuinely part of the modeled system.
 
-The current schema baseline is **1.2.0**, and the full source set currently passes YAML parsing, JSON Schema validation, canonical-inventory checks, hierarchy/ID/reference checks, and the project's custom configuration validator.
+The supplied repository currently supports a **mixed 1.2.0 / 1.4.0 Reference-System source corpus**: eight system files / nine configurations use the additive 1.4.0 contract, including all five Version-1 systems, while eight system files / nine configurations remain on 1.2.0. `content/RSCs/reference_system.schema.json` is the current 1.4.0 schema; explicit 1.3.0 and 1.2.0 compatibility schemas remain available. Current canonical/runtime validation passes against this mixed corpus, but generated/runtime and readiness evidence must still be regenerated/rechecked after source changes; historical validation reports do not waive new validation.
 
 ## 3.4 Reference-System rules
 
@@ -1664,8 +1740,10 @@ Facts, reasonable inferences, and educational simplifications should be evaluate
 
 When important internal details are unavailable:
 
-1. omit the detail if it is unnecessary to understanding the architecture; or
+1. omit the detail only when it is unnecessary to understanding the architecture or physical orientation; or
 2. use a clear **black-box boundary** if the component/subsystem is structurally important or the hierarchy continues below/through it.
+
+A black box hides unsupported internals; it does not erase physical anatomy that is independently known to exist at or within that boundary. When source-supported support anatomy materially aids orientation but does not warrant independent entity semantics, use the generic Anatomy Depiction mechanism under EXP-037/038 rather than inventing a SKU or leaving the boundary misleadingly empty.
 
 When a black box is shown, briefly explain to the user that the underlying details are unavailable, proprietary, or insufficiently documented.
 
@@ -1745,9 +1823,9 @@ Current mappings using `status: existing` must match a canonical inventory categ
 #### REF-024 — Product identity is optional cross-configuration metadata, not physical identity
 **Status: Established**
 
-An entity may include `product_identity` when it represents an identifiable real product/component and the metadata materially aids comparison, search, reuse, or explanation across Reference Configurations.
+An entity may identify a real reusable product/model when that information materially aids comparison, search, reuse, or explanation across Reference Configurations. The long-term preferred source for cataloged products is the global **Product Catalog** defined in Section 3.7 and referenced through `product_ref`; existing inline `product_identity` remains a valid migration/fallback form for uncataloged entities until the catalog migration is complete.
 
-The approved product-identity subfields are:
+The approved product-identity descriptors remain:
 
 - `manufacturer`;
 - `product_family`;
@@ -1757,9 +1835,7 @@ The approved product-identity subfields are:
 - `architecture`; and
 - `codename`.
 
-When `product_identity` is present, `manufacturer` and at least one additional useful qualifier are required by the current schema.
-
-Product identity does not make two configuration-local entities the same physical object and does not authorize automatic transfer of navigation, selection, or scenario state across systems.
+Product identity—whether resolved from `product_ref` or authored inline—does not make two configuration-local entities the same physical object and does not authorize automatic transfer of Navigation, Selection, Scenario, Concept-occurrence, or Return state across systems.
 
 #### REF-025 — Product identity must be conservative and nonredundant
 **Status: Established**
@@ -1768,18 +1844,20 @@ Only product-identity fields that are relevant, source-supported, and nonredunda
 
 Unsupported or ambiguous qualifiers must be omitted rather than represented with placeholders such as `unknown`, `N/A`, `TBD`, or `proprietary`.
 
-A heterogeneous aggregate containing multiple product models should normally **not** receive one singular `product_identity` block unless a valid product identity exists for the aggregate itself.
+A heterogeneous aggregate containing multiple product models should normally **not** receive one singular product identity/reference unless the aggregate itself has a valid product identity. A homogeneous aggregate may identify the common member product when one product truthfully characterizes the represented population at that semantic level.
+
+Once an entity is migrated to `product_ref`, reusable product identity and product-intrinsic facts must have one authority: the referenced Product Definition. Inline identity may coexist only as temporary verified migration data under Section 3.7/implementation validation; conflicting duplicate identity is an error rather than a precedence guess.
 
 #### REF-026 — Physical/entity identity remains configuration-local
 **Status: Established**
 
-Stable entity IDs identify the modeled entity inside its Reference Configuration. Cross-configuration similarity is expressed through explicit metadata such as `entity_type`, `product_identity`, inventory classification, and Concept links rather than by reusing physical identity.
+Stable entity IDs identify the modeled entity inside its Reference Configuration. Cross-configuration similarity is expressed through explicit metadata such as `entity_type`, Product Definition/Product Identity, inventory classification, and Concept links rather than by reusing physical identity.
 
 This preserves the distinction among:
 
 - **which modeled entity this is**;
 - **what kind of entity it is**;
-- **which real product/family it represents, when known**; and
+- **which real reusable product/family it represents, when known**; and
 - **where it belongs in the project's organizational taxonomy**.
 
 #### REF-027 — Aggregate and component-count semantics must be distinguished
@@ -1813,20 +1891,22 @@ Representation answers **how the architecture is modeled**; evidence answers **h
 #### REF-030 — Canonical configuration authoring model is YAML plus JSON Schema validation
 **Status: Established current data-contract baseline**
 
-Reference-System source files are authored as YAML 1.2-compatible, JSON-like data using a deliberately restricted style. The current structural contract is JSON Schema Draft 2020-12, schema version **1.2.0**.
+Reference-System source files are authored as YAML 1.2-compatible, JSON-like data using a deliberately restricted style and JSON Schema Draft 2020-12. The supplied repository intentionally has a **mixed supported source-schema corpus**: migrated files use the additive **1.4.0** contract while retained older files remain valid on **1.2.0** during incremental migration. `content/RSCs/reference_system.schema.json` is the current 1.4.0 schema; explicit 1.3.0 and 1.2.0 compatibility schemas remain available.
 
-The baseline data model uses:
+The current 1.4.0 data model uses:
 
 - stable slug-like IDs;
 - a controlled `entity_type` vocabulary;
 - nested physical hierarchy under `hierarchy.root`;
 - typed cross-connections using the canonical seven relationship identifiers and entity-ID references;
-- configuration-defined default scenarios;
+- configuration-defined/default Scenario linkage appropriate to the source version;
 - evidence and representation metadata;
-- Organizational Content Inventory mappings; and
-- optional `product_identity` metadata.
+- Organizational Content Inventory mappings;
+- structured population/property/Concept-link forms retained from the 1.3.0 migration;
+- exact revisioned `product_ref` support alongside the established inline-identity migration/fallback rules; and
+- authored noninteractive `anatomy` depictions for source-supported physical orientation.
 
-Runtime representation remains an Implementation concern and does not need to remain YAML.
+The 1.4.0 Product/Anatomy migration is implemented in the current repository. Older 1.2.0 sources remain deliberately supported until migrated file-by-file. Runtime representation remains an Implementation concern and does not need to remain YAML.
 
 #### REF-031 — Every authored configuration must pass structural and cross-file validation
 **Status: Established**
@@ -1841,7 +1921,9 @@ A configuration is not considered ready merely because the YAML parses. Validati
 - functional-group and Concept-link references;
 - hierarchy/tier consistency;
 - Organizational Content Inventory category/item conformance; and
-- product-identity constraints.
+- product-identity / Product Catalog reference constraints;
+- Anatomy Depiction evidence/inventory/context constraints when that authoring form is introduced; and
+- cross-file Product Definition/property compatibility where applicable.
 
 The validator should read the living Organizational Content Inventory rather than duplicating its vocabulary as a second hard-coded taxonomy inside the schema.
 
@@ -1869,7 +1951,7 @@ Every Reference System represented in the library has at least one Reference Con
 #### REF-035 — `entity_type` uses a controlled extensible vocabulary
 **Status: Established**
 
-Reference-System schema version 1.2.0 defines the canonical `entity_type` identifiers used by the current corpus. Existing distinctions such as `rack`, `rack_scale_system`, `rack_group`, and `rack_topology_domain` are intentional and describe different structural roles rather than synonyms. Generic `*_group` values identify structural aggregates when a more specific enclosure type is not justified.
+The currently supported Reference-System schemas define the canonical `entity_type` identifiers used by the corpus; all five Version-1 configurations use 1.4.0 while retained older content may still validate against 1.2.0 during migration. Existing distinctions such as `rack`, `rack_scale_system`, `rack_group`, and `rack_topology_domain` are intentional and describe different structural roles rather than synonyms. Generic `*_group` values identify structural aggregates when a more specific enclosure type is not justified.
 
 Adding a new `entity_type` requires an explicit schema/taxonomy revision and a defined application capability profile; inventory additions alone do not create behavior types. Multiple entity types may share one implementation capability profile when their interaction/rendering behavior is the same.
 
@@ -1938,7 +2020,7 @@ These layers allow the project to express, for example, that two entities in dif
 
 **Status: Established**
 
-The Organizational Content Inventory guides scope, terminology, and coverage analysis; it is not a checklist requiring each category to appear physically in every Reference Configuration. Content depth is determined by architectural learning value, spatial relevance, available evidence, and the approved learning role of the Reference System.
+The Organizational Content Inventory guides scope, terminology, and coverage analysis; it is not a checklist requiring each category to appear physically in every Reference Configuration. Content depth is determined by architectural learning value, spatial relevance, available evidence, the approved learning role of the Reference System, **and the Physical Orientation Baseline required for each enterable structural context**.
 
 ### Definitions
 
@@ -1954,6 +2036,8 @@ The Organizational Content Inventory guides scope, terminology, and coverage ana
 | **Depth Stop Condition** | **Established** | The point beyond which additional physical decomposition would not materially improve understanding of the architecture's approved learning goals. |
 | **Learning Completeness** | **Established** | Whether the system's important architectural relationships can be understood accurately, regardless of raw object count or deepest Tier reached. |
 | **Core Release Boundary** | **Established** | The approved initial content-depth boundary beyond which valid additional content is treated as later expansion rather than a release prerequisite. |
+| **Physical Orientation Baseline** | **Established** | The cross-system minimum defined by EXP-036 and DEP-029: enough source-supported physical anatomy and principal physical relationships to make an entered context spatially credible before system-specific differentiating depth is considered. |
+| **Anatomy Depiction** | **Established** | The noninteractive visible physical-coverage record defined by EXP-037/038, used when physical presence matters for orientation but independent entity semantics do not. |
 
 ### Content-depth rules
 
@@ -1967,26 +2051,28 @@ No Organizational Content Inventory category is required to appear as physical c
 #### DEP-002 — Every configuration covers its architecture-defining physical backbone
 **Status: Established**
 
-Each Reference Configuration must physically represent enough of the following, where applicable, to explain its architecture accurately:
+Each Reference Configuration must physically represent enough of the following, where applicable, to explain its architecture accurately and satisfy the Physical Orientation Baseline at entered contexts:
 
 - overall deployment/system grouping;
 - compute/accelerator organization;
 - relevant host/assembly organization;
-- architecture-defining memory structures;
-- principal local/scale-up connectivity;
+- major source-supported memory/storage constituents needed to understand data location/movement;
+- principal local/scale-up connectivity and materially relevant interface boundaries;
 - principal scale-out/network connectivity;
 - defining topology/relationships;
 - materially important data paths; and
-- distinctive support infrastructure when its physical arrangement changes the architecture.
+- power, cooling, management, or other support anatomy when its presence/arrangement materially affects orientation or architecture.
+
+Representation may be an interactive entity/aggregate, a truthful black-box boundary, or a noninteractive Anatomy Depiction according to the evidence and interaction value.
 
 **Rationale:** These are the structures that make Explore useful as a spatial learning environment.
 
 #### DEP-003 — Applicability is determined by the Reference System's learning role
 **Status: Established**
 
-A subsystem becomes required for a configuration when omitting it would prevent or materially distort one of that system's approved Primary Learning Claims. Inventory presence alone does not make it required.
+A subsystem becomes required when omitting it would either (a) violate the Physical Orientation Baseline for an entered context or (b) prevent/materially distort one of the system's approved Primary Learning Claims. Inventory presence alone still does not make it required.
 
-**Rationale:** The same technical area may be central in one system and incidental in another.
+**Rationale:** The same technical area may be central in one system and incidental in another, but system-specific claims do not excuse a misleadingly sparse physical boundary.
 
 #### DEP-004 — Physical representation requires spatial or structural educational value
 **Status: Established**
@@ -2029,7 +2115,7 @@ Apply REF-014 when a subsystem definitely exists, its placement/relationship is 
 #### DEP-008 — Omit items that add neither meaningful structure nor a useful boundary
 **Status: Established**
 
-Intentional Omission is appropriate for items that are irrelevant to the learning role, generic infrastructure with no architectural distinction, outside the established project boundary, redundant with a sufficient higher-level representation, or too poorly documented to represent meaningfully when the boundary itself is not important.
+Intentional Omission is appropriate for items that are irrelevant to both the learning role and Physical Orientation Baseline, generic infrastructure whose visible presence adds no useful spatial orientation, outside the established project boundary, redundant with a sufficient higher-level representation, or too poorly documented to establish even a useful boundary. A known-present component needed for orientation should not be omitted merely because its exact model/specifications or independent interaction are unavailable.
 
 **Rationale:** More modeled objects do not automatically create more understanding.
 
@@ -2050,7 +2136,7 @@ Systems do not need equal entity counts, branch counts, deepest Tiers, Concept-l
 #### DEP-011 — Evidence determines allowable physical depth
 **Status: Established**
 
-Model deeper only while evidence is adequate for the intended claim. When support stops, stop decomposition, aggregate, use a black box, or omit rather than extrapolating from another system.
+Model deeper only while evidence is adequate for the intended claim. When detailed support stops, reduce fidelity: use a generic entity/aggregate, Anatomy Depiction, black-box boundary, or omission as appropriate rather than extrapolating from another system. Evidence may support existence at a coarser level even when it does not support SKU, count, topology, or exact placement.
 
 **Rationale:** Documentation asymmetry is not permission to invent symmetry.
 
@@ -2127,7 +2213,7 @@ A configuration need not instantiate every supported optional storage system, fa
 #### DEP-022 — Material simplification and omission use existing fidelity mechanisms
 **Status: Established**
 
-Record material scope limitations through existing mechanisms such as `scope_notes`, `modeling_notes`, `unknowns`, Evidence State, and Black-Box Representation State. Do not create placeholder omitted entities merely to prove that every inventory item was considered.
+Record material scope limitations through existing mechanisms such as `scope_notes`, `modeling_notes`, `unknowns`, Evidence State, and Black-Box Representation State. Do not create placeholder **entities** merely to prove that every inventory item was considered. A source-supported Anatomy Depiction is not an omission placeholder: it is a canonical visible-orientation record used only when EXP-037/038 apply.
 
 **Rationale:** A per-item omission matrix would recreate the inventory-as-checklist model already rejected.
 
@@ -2141,7 +2227,7 @@ When a learner could reasonably mistake “not modeled” for “does not exist,
 #### DEP-024 — Minor omissions need no user-facing disclaimer
 **Status: Established**
 
-Do not clutter the learning interface with warnings for every unmodeled fan, connector, firmware revision, or generic facility component. Only omissions material to architectural interpretation require prominent disclosure.
+Do not clutter the learning interface with warnings for every unmodeled fan, connector, firmware revision, or generic facility component. However, if a class of hardware such as power, cooling, interface, or memory is known to exist and its visible presence is needed for the Physical Orientation Baseline, depict it generically/aggregated rather than treating it as a minor omission. Only remaining omissions material to architectural interpretation require prominent disclosure.
 
 **Rationale:** Transparency should remain proportional to educational significance.
 
@@ -2150,7 +2236,7 @@ Do not clutter the learning interface with warnings for every unmodeled fan, con
 
 The initial physical content boundary is:
 
-> **Model the architecture-defining physical path from deployment/grouping through compute/accelerator assemblies, relevant memory, principal local/scale-up and scale-out connectivity/topology, and any support infrastructure whose physical arrangement materially affects the architecture. Use Tier 5 selectively for differentiating internals. Keep general software, algorithms, protocols, metrics, and operational behavior primarily in Concepts or Scenarios.**
+> **First satisfy the Physical Orientation Baseline for each enterable structural context: show the major source-supported physical constituents and principal physical paths needed to form a credible mental model, using explicit/aggregate entities, black-box boundaries, or Anatomy Depictions as appropriate. Then model the architecture-defining path from deployment/grouping through compute/accelerator assemblies, relevant memory/storage, principal local/scale-up and scale-out connectivity/topology, and support infrastructure whose physical arrangement materially affects the architecture. Use Tier 5 selectively for useful internals. Keep general software, algorithms, protocols, metrics, and operational behavior primarily in Concepts or Scenarios.**
 
 Existing limits remain in force: transistor-level logic is outside the core scope; security remains shallow; exhaustive inventory and Concept-Library coverage are not initial requirements.
 
@@ -2159,14 +2245,14 @@ Existing limits remain in force: transistor-level logic is outside the core scop
 #### DEP-026 — Content beyond the Core Release Boundary is an enhancement unless it closes a blocker
 **Status: Established**
 
-Once a system satisfies its approved learning claims and readiness criteria, further legitimate depth may be deferred unless it resolves a known readiness blocker.
+Once a system satisfies its Physical Orientation Baseline, approved learning claims, and readiness criteria, further legitimate depth may be deferred unless it resolves a known readiness blocker.
 
 **Rationale:** The project needs a principled stopping rule for “one more detail” expansion.
 
 #### DEP-027 — Content-depth policy and Reference-System readiness are complementary
 **Status: Established**
 
-Content depth answers **what should be modeled**; readiness answers **whether that selected scope has been modeled well enough to ship**. A configuration may be intentionally shallow in one branch and still be ready when that branch is outside its learning requirements.
+Content depth answers **what should be modeled**; readiness answers **whether that selected scope has been modeled well enough to ship**. A configuration may be intentionally shallow in one branch when evidence/educational value justify it, but an enterable context may not pass readiness if its major known physical anatomy is absent in a way that leaves the learner with a misleadingly incomplete mental model.
 
 **Rationale:** “Ready” must not drift toward “exhaustive.”
 
@@ -2177,32 +2263,95 @@ Adding or materially changing a Reference System's learning purpose may make pre
 
 **Rationale:** Content relevance follows educational intent rather than being permanently attached to an inventory category.
 
+#### DEP-029 — Physical orientation is a baseline obligation beneath Primary Learning Claims
+**Status: Established**
+
+System-specific Primary Learning Claims determine **additional differentiating depth**. They do not by themselves justify omitting well-supported major physical constituents whose absence would leave an entered server, tray, rack, switch, accelerator, appliance, or similar context physically misleading or substantially incomplete.
+
+**Rationale:** The project's original and central purpose is to teach where things physically exist; the learning-claim model should prioritize depth, not erase baseline anatomy.
+
+#### DEP-030 — Physical inclusion follows evidence/presence before product specificity
+**Status: Established**
+
+Use this decision baseline:
+
+| Evidence / presence condition | Preferred treatment |
+|---|---|
+| **Documented component/subsystem; independent semantics useful** | Ordinary explicit/aggregate physical entity at the useful Tier, with sourced identity/properties only as supported. |
+| **Documented or otherwise established component/subsystem; exact model/specifications unknown and independent semantics not useful** | Visible generic Anatomy Depiction under the supported enclosing context. |
+| **Presence reasonably inferred from system-specific evidence** | Model only at the justified level with `inferred` evidence and explicit reasoning; no invented SKU, count, topology, or exact placement. Use an entity or Anatomy Depiction according to interaction/relationship needs. |
+| **Presence unknown, or internals proprietary/unsupported** | Preserve the supported parent/black-box boundary. Do not populate it from generic expectations or another system. |
+| **Repeated or low-value individual parts** | Aggregate semantically when identity/interaction matters at group level, or use a simplified Anatomy Depiction when visible orientation is sufficient. Do not create addressable duplicates for visual fullness. |
+
+Known existence does not imply known product identity; known product identity does not imply exact deployment placement; visible depiction does not imply interactivity.
+
+#### DEP-031 — Anatomy Depictions are canonical physical-coverage records with deliberately limited semantics
+**Status: Established**
+
+The enclosing configuration-local interactive entity/context owns each Anatomy Depiction. The canonical authoring contract must preserve at least:
+
+- a stable depiction key in a namespace distinct from entity IDs;
+- enclosing context association;
+- user-visible label/physical role;
+- canonical inventory classification where applicable;
+- Evidence State/source references and any uncertainty note;
+- depiction intent sufficient for deterministic generic rendering;
+- whether placement is merely schematic or specifically sourced; and
+- an optional supportable count/Count Basis when the visible count itself aids orientation.
+
+An Anatomy Depiction remains a leaf visual record: it has no children, Product Definition requirement, Concept occurrence, Cross-Connection endpoint, Scenario target, Selection, Enter/Follow behavior, or independent property surface. Promote it to an ordinary entity/aggregate when any of those semantics become materially useful.
+
+The exact YAML/schema/runtime field names are Implementation-owned; the semantic contract above is binding.
+
+#### DEP-032 — Black boxes conceal unsupported detail, not independently known anatomy
+**Status: Established**
+
+A black-box boundary may coexist with known internal/support Anatomy Depictions when those items are independently established and needed for orientation. The depiction must remain at the supported level of generality and must not imply that the rest of the black-box interior is known.
+
+**Rationale:** “Internals are proprietary” and “nothing physically meaningful is known” are not equivalent claims.
+
+#### DEP-033 — Entered-context completion uses a qualitative orientation test, not an object-count target
+**Status: Established**
+
+Before declaring an entered structural context physically complete enough for Version 1, verify that a learner can reasonably answer:
+
+1. **What boundary am I inside?**
+2. **What major physical constituents are known to exist here and are relevant to orientation?**
+3. **Where are compute, memory/data, local/interconnect, external-network/storage, power, cooling, and management/support roles represented when materially applicable?**
+4. **Which principal physical relationships or exit paths matter at this boundary?**
+5. **Which anatomy is intentionally aggregate, generic, schematic, black-boxed, or omitted, and is that limitation honest enough not to imply absence?**
+
+There is no minimum child count. A context with three well-chosen items may be complete; one with ten decorative items may still fail.
+
 ### Practical per-item inclusion test
 
 **Status: Established authoring policy**
 
-For each candidate inventory item in a Reference Configuration:
+For each candidate physical item/subsystem in a Reference Configuration:
 
-1. **Relevant to this system?** If no, omit it.
-2. **Architecture-defining or required for a Primary Learning Claim?** If yes, provide sufficient treatment to support that claim.
-3. **Does physical location, containment, count, connectivity, topology, or physical failure state materially aid understanding?** If yes, prefer Explore representation.
-4. **Is the important subject mainly an abstract mechanism, protocol, algorithm, software abstraction, metric, or principle?** If yes, prefer Concepts-only unless a physical occurrence also matters.
-5. **Does the physical boundary matter while internals are insufficiently known?** If yes, use a black box.
-6. **Is the structure repeated?** If yes, apply Section 1.5 expansion semantics.
-7. **Is evidence adequate for the proposed depth?** If no, stop higher, aggregate, black-box, or omit; if this destroys a Primary Learning Claim, mark a readiness blocker.
-8. **Would another deeper layer materially improve understanding?** If no, the Depth Stop Condition has been reached.
+1. **Is its presence relevant to physical orientation at an entered context?** If yes, establish the supported level of presence before asking whether it needs rich interaction.
+2. **Is it architecture-defining or required for a Primary Learning Claim?** If yes, provide enough semantic treatment to support that claim.
+3. **Does independent identity, Selection/Detail, relationships, Scenario targeting, Concept occurrence, properties, or deeper navigation materially aid understanding?** If yes, prefer an ordinary entity/aggregate/black-box entity rather than a noninteractive depiction.
+4. **Does visible presence aid orientation but independent semantics add little value?** If yes, use an Anatomy Depiction under DEP-031.
+5. **Is the important subject mainly an abstract mechanism, protocol, algorithm, software abstraction, metric, or principle?** If yes, prefer Concepts-only unless a physical occurrence also matters.
+6. **Does a physical boundary matter while internals are insufficiently known?** If yes, use a black box and retain any independently known support anatomy under DEP-032.
+7. **Is the structure repeated?** If yes, apply Section 1.5 expansion semantics; do not manufacture member identity.
+8. **Is evidence adequate for the proposed claim/fidelity?** If no, reduce specificity rather than inventing detail; if even the required boundary cannot be established, record a readiness blocker.
+9. **Does the visual layout show sourced placement or schematic arrangement?** Mark/implement the distinction; do not infer exact slots/routing from a schematic.
+10. **Does another deeper layer materially improve orientation or a Primary Learning Claim?** If no, the Depth Stop Condition has been reached.
 
 | Relevance / evidence condition | Default treatment |
 |---|---|
-| Central + well documented + spatially meaningful | Explicit or aggregate physical Explore representation |
+| Orientation-critical + well documented + independently meaningful | Explicit or aggregate physical Explore entity |
+| Orientation-critical + known presence + weak/unknown product specifics + low interaction value | Generic Anatomy Depiction |
 | Central + repeated/homogeneous | Aggregate with representative expansion as appropriate |
-| Central boundary + weak/proprietary internals | Black box |
+| Central boundary + weak/proprietary internals | Black box, plus independently known Anatomy Depictions when warranted |
 | Abstract/general mechanism | Concepts-only, optionally linked to a physical occurrence |
 | Dynamic operating condition | Scenario |
-| Real but incidental/generic | Shallow aggregate or Intentional Omission |
-| Poor evidence + nonessential | Intentional Omission |
-| Poor evidence + essential to Primary Learning Claim | Readiness blocker |
-| Outside Core Release Boundary | Omit/defer |
+| Real but incidental and visually unhelpful | Intentional Omission or shallow parent explanation |
+| Poor evidence + presence not established | Omit / black-box at the last supported boundary |
+| Poor evidence + essential boundary/learning claim | Readiness blocker |
+| Outside Core Release Boundary and not needed for orientation | Omit/defer |
 | Added only for cross-system visual symmetry | Do not model |
 
 ### Content-depth assumptions
@@ -2211,6 +2360,8 @@ For each candidate inventory item in a Reference Configuration:
 
 - The Organizational Content Inventory remains broader than any one Reference Configuration.
 - Physical modeling is driven by learning value and spatial relevance rather than inventory coverage percentage.
+- The Physical Orientation Baseline is evaluated before system-specific differentiating depth; it does not impose a universal BOM.
+- Known-present physical anatomy may be represented generically/noninteractively when that is the most faithful useful level.
 - Unequal physical depth among systems is desirable when it reflects architecture and evidence honestly.
 - Concepts and Scenarios absorb much of the nonphysical depth that would otherwise overload Explore.
 - Intentional omissions are expected and legitimate.
@@ -2230,6 +2381,9 @@ Shared architecture is represented through reusable **definitions, family/varian
 | Term | Status | Definition |
 |---|---|---|
 | **Shared Definition** | **Established** | A globally identified, non-instance record containing reusable facts intended to be common across multiple realizations. |
+| **Product Definition** | **Established** | A globally identified, revisioned non-instance record for source-supported facts about a reusable real product/model or, when appropriate, a carefully bounded product family. It is not a deployed object, Containment node, or Scenario target. |
+| **Product Catalog** | **Established** | The canonical directory-backed library of Product Definitions. It removes repeated product/model facts while preserving configuration-local physical realization. |
+| **Product Reference (`product_ref`)** | **Established** | An optional exact Product Definition ID + revision reference from a configuration-local entity/aggregate. It expresses reusable product/model identity without creating shared physical identity. |
 | **Reusable Architecture Definition** | **Established** | A Shared Definition describing a structural platform, assembly, topology building block, or other reusable physical architecture. It is a blueprint/reference, not a deployed physical object. |
 | **Architecture Family** | **Established** | A stable grouping of related architecture definitions or realizations that share meaningful design lineage without asserting exact structural identity. |
 | **Architecture Variant** | **Established** | A separately identified reusable definition that differs materially from another definition while remaining part of the same Architecture Family. |
@@ -2238,6 +2392,24 @@ Shared architecture is represented through reusable **definitions, family/varian
 | **Realization Delta / Override** | **Established** | An explicit system-specific departure from a Shared Definition, retained with provenance rather than hidden in inheritance. |
 | **Resolved Configuration Graph** | **Established** | The complete configuration-local hierarchy and relationship graph after any reuse/composition mechanism has been applied. Explore consumes this resolved graph. |
 | **Individual Instance** | **Established** | A configuration-local modeled physical entity. Individual Instances are never globally shared merely because they derive from the same definition. |
+
+### Identity and ownership map
+
+**Status: Established**
+
+This table is the authoritative compact distinction among the project's physical/product/explanatory identity layers. Other sections should cross-reference it rather than redefine the same ownership model.
+
+| Layer | Identity scope | Owns | Does not own |
+|---|---|---|---|
+| **Configuration-local physical entity / Individual Instance** | Configuration-local entity ID | Realization-specific Containment, local relationships, local properties/evidence, Selection/navigation identity, Scenario targetability | Cross-configuration physical identity |
+| **Aggregate Entity** | Configuration-local entity ID | Group/population semantics, Count Basis, Expansion Mode, aggregate relationships/state | Automatic identity for every represented member |
+| **Representative Member Context** | Reconstructable runtime locator; no canonical entity ID | Educational exemplar of a homogeneous population | Canonical member identity, unique Scenario target, unique physical occurrence |
+| **Anatomy Depiction** | Configuration-local depiction key in a non-entity namespace | Visible orientation anatomy, label/role, evidence, inventory mapping, schematic-vs-sourced placement intent | Entity identity, Selection, navigation, connections, Concept occurrences, Scenario targeting |
+| **Entity Type** | Global controlled vocabulary | Structural/behavioral capability class | Product/model identity or inventory classification |
+| **Product Definition** | Global `product_id` + exact definition revision | Reusable product/model identity, product-intrinsic sourced facts/properties, product-level provenance | Deployment location/count, configuration connections, Scenario state, physical instance identity |
+| **Product Identity metadata** | Reusable descriptive identity layer; inline legacy/fallback or resolved from Product Definition | Manufacturer/family/model/variant/generation/architecture/codename descriptors | Shared physical identity |
+| **Reusable Architecture Definition** | Global definition ID + version | Reusable sourced multi-component physical blueprint/structure when real duplication justifies it | A deployed instance or explanatory mechanism |
+| **Educational Concept** | Global `concept_id` | Explanation of ideas, mechanisms, protocols, topologies, metrics, workflows, technologies, distinctions | Product/BOM records, physical instance identity, Scenario state |
 
 ### Shared-architecture rules
 
@@ -2255,12 +2427,14 @@ Configurations may reference the same global Concept ID, Reusable Architecture D
 
 **Rationale:** This represents genuine commonality without false physical equivalence.
 
-#### SHR-003 — Product Identity remains the preferred mechanism for shared product/model identity
+#### SHR-003 — Product Definitions/Product Identity express shared product/model identity without sharing instances
 **Status: Established**
 
-When separate configuration-local entities represent the same supported product family/model, use compatible `product_identity` metadata rather than creating a globally shared physical component entity.
+When separate configuration-local entities represent the same supported reusable product/model, prefer a shared Product Definition referenced through `product_ref` once that product is cataloged. Existing inline `product_identity` remains a valid uncataloged/migration fallback under REF-024/025.
 
-**Rationale:** The existing Product Identity layer already separates product commonality from physical identity.
+Never create a globally shared physical component entity merely because two configurations use the same product.
+
+**Rationale:** A lightweight Product Catalog centralizes reusable facts while preserving the already-established separation between product commonality and configuration-local physical identity.
 
 #### SHR-004 — Reusable Architecture Definitions are for structural reuse beyond one product
 **Status: Established**
@@ -2400,12 +2574,63 @@ The initial five systems do not require a reusable architecture-definition engin
 
 **Rationale:** The semantics should be established before reuse appears, but implementation cost should follow actual need.
 
+#### SHR-022 — The Product Catalog is the lightweight reusable-component layer
+**Status: Established**
+
+Use a directory-backed Product Catalog for reusable real product/model definitions while keeping every physical realization in its owning RSC. Product Definitions are separately sourced/revisioned records, not entity templates and not Concept records.
+
+**Rationale:** Current cross-system product reuse is sufficient to justify centralized product facts, but not sufficient to justify automatic reusable-subtree instantiation.
+
+#### SHR-023 — Product references pin exact reusable definition revisions
+**Status: Established**
+
+A `product_ref` identifies one global `product_id` and exact definition revision. Updating a Product Definition does not silently change an already validated configuration; configurations migrate deliberately to a later definition revision when appropriate.
+
+Product-definition revision records the catalog record version and is distinct from real product generation, family, model, or variant identity.
+
+#### SHR-024 — Product-intrinsic facts and realization-local facts have different owners
+**Status: Established**
+
+The Product Definition owns facts intended to remain true of the referenced product/model independently of deployment, such as supported manufacturer/model identity and source-supported product-intrinsic specifications. The RSC owns configuration-specific physical location/Containment, population/count basis, deployed options, local connections/topology, local evidence/deltas, and realization-level/derived properties. Scenarios own dynamic state/metrics.
+
+A local property must not silently override a conflicting product-intrinsic property. Until an explicit provenance-bearing override mechanism is justified, conflicts are validation errors and authors should select the correct Product Definition/variant or keep the fact local instead of duplicating it globally.
+
+#### SHR-025 — Product reference and inline Product Identity have one-authority migration rules
+**Status: Established migration rule**
+
+Incremental migration supports these states:
+
+1. **No `product_ref`, inline `product_identity` present** — valid uncataloged/legacy form.
+2. **`product_ref` present, inline identity absent** — preferred cataloged form.
+3. **Both present and semantically identical** — temporary migration-compatible form; `product_ref` is authoritative and validation should warn about redundant inline identity.
+4. **Both present and conflicting** — validation error; never guess precedence.
+5. **Neither present** — valid for generic/unknown/heterogeneous components where product identity is not supportable or useful.
+
+Once migration for an entity is complete, remove redundant inline Product Identity rather than maintaining two sources of truth.
+
+#### SHR-026 — Product Definitions do not instantiate structure or inherit contextual occurrences
+**Status: Established**
+
+A Product Definition does not automatically create child entities, Containment, Cross-Connections, Concept occurrences, Scenario state, or Navigation destinations. Concept occurrences remain configuration-local links to resolved physical entities/connections/configurations. Scenario state remains configuration-local. Automatic reusable-subtree composition remains governed by Reusable Architecture Definition rules and SHR-021.
+
+#### SHR-027 — Product families, variants, and aggregates must not overstate identity
+**Status: Established**
+
+Use a family-level Product Definition only when family-level identity is all that is supportable/useful; family records must not claim model/variant-specific properties. Materially different product variants receive distinct Product Definitions when their intrinsic facts differ enough to affect the model.
+
+A singular `product_ref` is valid for a homogeneous aggregate only when the same product identity truthfully characterizes the represented members at that semantic level. Heterogeneous aggregates do not receive one member-product reference merely for convenience.
+
+#### SHR-028 — Generic Anatomy Depictions do not require Product Definitions
+**Status: Established**
+
+Do not fabricate Product Catalog records to support a generic physical depiction. If a component/subsystem is known to exist but its product identity is unknown or unnecessary, represent it generically under EXP-037/DEP-031. Product Catalog participation is optional and follows source-supported reusable identity, not visibility.
+
 ### Shared-architecture assumptions and ownership
 
 **Status: Established**
 
 - Most reusable physical structure is expected at component, tray, rack, platform, or subsystem level rather than whole-system level.
-- Product Identity is sufficient for many shared-component cases and should be preferred when no larger structural definition is needed.
+- Product Definitions/Product Identity are sufficient for many shared-component cases and should be preferred when no larger structural definition is needed.
 - Architecture Family is broader than exact Reusable Architecture Definition identity.
 - Reusable Architecture Definitions are sourced architectural artifacts, not generic explanatory Concepts.
 - A Resolved Configuration Graph remains independently inspectable and valid even when composition was used during authoring.
@@ -2414,9 +2639,10 @@ The initial five systems do not require a reusable architecture-definition engin
 | Layer | Responsibility |
 |---|---|
 | **Source of Truth** | Defines identity, Family/Variant, realization, composition, provenance, versioning, and no-false-equivalence semantics. |
-| **Reference-System schema/data** | Owns configuration-local physical entities and may later add optional lineage/definition references. |
-| **Reusable architecture source** | If introduced, stores separately validated reusable physical definitions rather than Concept records. |
-| **Concept Library** | Owns global explanatory Concepts and may link to architecture families/realizations without storing physical blueprints. |
+| **Reference-System schema/data** | Owns configuration-local physical entities, Anatomy Depictions, realization-local facts, and optional references to Product Definitions/reusable architecture definitions. |
+| **Product Catalog** | Owns separately validated reusable Product Definitions and product-level sources/properties; never owns deployed physical identity. |
+| **Reusable architecture source** | If introduced, stores separately validated reusable multi-component physical definitions rather than Concept or Product records. |
+| **Concept Library** | Owns global explanatory Concepts and may link to architecture families/realizations without storing product/BOM records or physical blueprints. |
 | **Organizational Content Inventory** | Continues to organize scope/terminology only; it does not own reuse behavior. |
 | **Implementation** | Resolves composition, namespaces generated/reused structures, tracks lineage, and produces the Resolved Configuration Graph. |
 | **Explore / Navigation** | Displays and navigates the system-specific realization using configuration-local identities. |
@@ -2426,7 +2652,7 @@ The initial five systems do not require a reusable architecture-definition engin
 
 **Status: Established**
 
-Exact filenames, directories, YAML keys, composition timing, namespacing, and whether resolved graphs are generated artifacts or runtime products remain Implementation decisions. If reusable definitions are introduced, they should use a separately validated physical-architecture source library rather than Concept files. Scenario targets and Navigation continue to use resolved configuration-local identities.
+The Product Catalog source organization and exact `product_ref` contract are detailed in the implementation companion and are implemented in the current 1.4.0 source/compiler/runtime path. Exact composition timing/namespacing for future Reusable Architecture Definitions remains deferred until actual structural duplication justifies that engine. If reusable architecture definitions are introduced, they should use a separately validated physical-architecture source library rather than Concept/Product files. Scenario targets and Navigation continue to use resolved configuration-local identities.
 
 No foundational shared-architecture product decision remains unresolved.
 
@@ -2434,7 +2660,7 @@ No foundational shared-architecture product decision remains unresolved.
 
 **Status: Established**
 
-Readiness is evaluated against the approved educational role of each Reference System rather than exhaustive implementation of the Organizational Content Inventory. Structural/schema validity is necessary but not sufficient: a system is ready only when its architecture-defining learning claims can be taught accurately, navigated coherently, linked to complete explanatory content, exercised through meaningful Scenarios, and validated without blocking integrity defects.
+Readiness is evaluated against both the **Physical Orientation Baseline** and the approved educational role of each Reference System rather than exhaustive implementation of the Organizational Content Inventory. Structural/schema validity is necessary but not sufficient: a system is ready only when entered contexts provide a credible supported physical mental model, architecture-defining learning claims can be taught accurately, navigation is coherent, explanatory links/Scenarios are complete enough, and validation has no blocking integrity defects.
 
 ### Definitions
 
@@ -2460,14 +2686,14 @@ Use **Ship-ready** or **Not ship-ready**, with accompanying Readiness Notes. Exi
 #### RDY-002 — Primary Learning Claims define the stopping boundary
 **Status: Established**
 
-The existing `reference_system.learning_value` statements are the starting source of Primary Learning Claims. A configuration is deep enough when every Primary Learning Claim can be located in Explore, explained structurally, connected to relevant Concepts where needed, and supported by adequate evidence.
+The existing `reference_system.learning_value` statements are the starting source of Primary Learning Claims. They determine differentiating depth **after** the Physical Orientation Baseline is satisfied. A configuration is deep enough when entered contexts pass DEP-033 and every Primary Learning Claim can be located in Explore, explained structurally, connected to relevant Concepts where needed, and supported by adequate evidence.
 
 **Rationale:** This creates a principled stopping condition for content development.
 
 #### RDY-003 — Ship readiness does not require all five Explore tiers
 **Status: Established**
 
-A Ship-Ready Configuration requires a valid Tier-1/system root and sufficient architecture-specific breadth/depth beneath it. Tier 4 is expected only when device-level distinctions are central; Tier 5 is required only when supportable internals materially explain the architecture.
+A Ship-Ready Configuration requires a valid Tier-1/system root and sufficient architecture-specific breadth/depth beneath it. It does not require every branch to reach all five Tiers, but each **enterable** context must satisfy the Physical Orientation Baseline at its supported scale. Tier 5 remains selective and is required only when supportable internals materially improve orientation or explain the architecture.
 
 **Rationale:** Mandatory five-tier depth would encourage invented or educationally irrelevant detail.
 
@@ -2483,7 +2709,8 @@ For every configuration, explicitly review:
 - topology-defining connections;
 - storage/data movement where architecturally important;
 - management/control where architecturally important; and
-- power/cooling where distinctive or necessary to the physical architecture.
+- power/cooling where distinctive, necessary to physical architecture, or required for credible orientation of an entered enclosure; and
+- generic support anatomy that is known to exist and whose visible absence would otherwise make the entered context misleadingly sparse.
 
 Each domain is either modeled sufficiently or documented as not materially relevant to the approved learning role.
 
@@ -2499,7 +2726,7 @@ When a Primary Learning Claim depends on a relationship, that relationship must 
 #### RDY-006 — Black boxes may not conceal the principal lesson
 **Status: Established**
 
-A black box passes readiness when its boundary/location is correct, existence/function is supportable, unavailable internals are acknowledged, and the learner can still understand the relevant architecture. A Primary Learning Claim cannot depend entirely on unexplained proprietary internals.
+A black box passes readiness when its boundary/location is correct, existence/function is supportable, unavailable internals are acknowledged, independently known orientation-critical anatomy is still represented at the supported level, and the learner can understand the relevant architecture. A Primary Learning Claim cannot depend entirely on unexplained proprietary internals.
 
 **Rationale:** Black boxes preserve fidelity; they are not substitutes for missing core research.
 
@@ -2515,7 +2742,7 @@ A system intended for detailed initial Explore treatment should have Documentati
 #### RDY-008 — Product Identity is required only when supportable and materially useful
 **Status: Established**
 
-Readiness does not require `product_identity` on every entity. It should be present for architecture-defining real components when reliable manufacturer/family/model information materially improves distinction or understanding. Heterogeneous, generic, unsupported, or redundant cases may omit it under REF-024/025.
+Readiness does not require Product Definition/Product Identity on every entity or Anatomy Depiction. Catalog/reference or inline identity should be present for architecture-defining real products when reliable manufacturer/family/model information materially improves distinction or understanding. Heterogeneous, generic, unsupported, or redundant cases may omit it under REF-024/025 and SHR-022–028.
 
 **Rationale:** Conservative identity is preferable to invented completeness.
 
@@ -2563,7 +2790,7 @@ The required non-default Scenario must illuminate an architecture-relevant condi
 #### RDY-013 — Material omissions must be documented
 **Status: Established**
 
-An omission is acceptable when it is irrelevant, proprietary, insufficiently documented, deployment-variable, intentionally simplified, or beyond the Core Release Boundary. Material omissions must be recorded through the existing scope/modeling/evidence mechanisms and surfaced to users when they could materially mislead interpretation.
+An omission is acceptable when it is irrelevant to both the Physical Orientation Baseline and learning role, proprietary/unknown beyond the last supportable boundary, deployment-variable, intentionally simplified, or beyond the Core Release Boundary. A known-present item needed for orientation should use an entity/aggregate, black box, or Anatomy Depiction rather than an omission. Material remaining omissions must be recorded through existing scope/modeling/evidence mechanisms and surfaced when they could materially mislead interpretation.
 
 **Rationale:** An omission is safe when its boundary is intentional and auditable.
 
@@ -2606,9 +2833,18 @@ For each shipped configuration, verify at least:
 #### RDY-017 — Readiness results are versioned and reproducible
 **Status: Established**
 
-Record readiness against the Reference-System/configuration IDs, schema version, Concept Library revision, Scenario-content revision, and validation date. Material source changes may require reevaluation.
+Record readiness against the Reference-System/configuration IDs, schema version, Concept Library revision, Scenario-content revision, Product Catalog revision where applicable, and validation date. Material source changes may require reevaluation.
 
 **Rationale:** “Ready” should identify a concrete validated content snapshot.
+
+#### RDY-018 — Every user-enterable context passes the Physical Orientation Completion Test
+**Status: Established release criterion**
+
+For each user-enterable context in an initial Ship-Ready configuration, apply DEP-033. All major known orientation-critical physical anatomy must be accounted for as an entity/aggregate, Anatomy Depiction, black-box boundary, or justified omission at the evidence-supported level. Required visible anatomy must not exist only as a property/note when its absence from the scene would materially distort the physical mental model.
+
+Noninteractive anatomy must also be conveyed accessibly without being exposed as a fake focusable/selectable object.
+
+**Rationale:** Interaction correctness and schema validity cannot compensate for a physically empty or misleading entered view.
 
 ### Practical initial-system readiness checklist
 
@@ -2632,6 +2868,7 @@ Record readiness against the Reference-System/configuration IDs, schema version,
 | **14** | Navigation smoke test | Structural navigation, aggregation, connections, and switching behave correctly. |
 | **15** | Cross-view smoke test | Concept traversal/return and Scenario context behavior work correctly. |
 | **16** | Reproducibility | Readiness result identifies exact validated source/schema/library revisions. |
+| **17** | Physical orientation | Every user-enterable context passes DEP-033/RDY-018; known orientation-critical anatomy is visibly/accountably represented without false identity or unsupported placement. |
 
 A Reference Configuration is **Ship-ready only when every applicable mandatory gate passes**.
 
@@ -2639,10 +2876,10 @@ A Reference Configuration is **Ship-ready only when every applicable mandatory g
 
 **Status: Established**
 
-- Readiness is judged against the Reference System's approved learning value rather than exhaustive physical reality.
+- Readiness is judged against the Physical Orientation Baseline plus the Reference System's approved learning value rather than exhaustive physical reality.
 - Unequal physical depth across systems is expected.
 - A Documented Omission is preferable to unsupported physical detail.
-- Additional detail after readiness is normally an enhancement unless it closes a Readiness Blocker.
+- Additional detail after readiness is normally an enhancement unless it closes a Physical Orientation or other Readiness Blocker.
 - Candidate evaluation ratings and Ship-Readiness are separate processes.
 - System-specific readiness audits may expose content blockers without reopening the readiness model itself.
 
@@ -2679,16 +2916,16 @@ User-created or editable configurations, the relationship to a generic archetypa
 ### REF-I01 — Entity-type capability profiles
 **Status: Established implementation architecture within an Established taxonomy**
 
-The controlled `entity_type` vocabulary is finalized in schema version 1.2.0. Version-1 Implementation uses a **data-driven capability registry** keyed by `entity_type`, with multiple types permitted to share reusable semantic capability profiles/traits. Those profiles govern applicable Detail sections, Scenario-state categories, Property expectations, structural/render roles, and interaction capabilities. Enterability remains resolved from the current object/context under SDC-025 rather than being a permanent type flag.
+The controlled `entity_type` vocabulary is maintained through the currently supported RSC schemas and capability registry. Version-1 Implementation uses a **data-driven capability registry** keyed by `entity_type`, with multiple types permitted to share reusable semantic capability profiles/traits. Those profiles govern applicable Detail sections, Scenario-state categories, Property expectations, structural/render roles, and interaction capabilities. Enterability remains resolved from the current object/context under SDC-025 rather than being a permanent type flag.
 
 Organizational inventory classification must not be used as a behavior switch. Browser-specific visual styling remains separate from the language-neutral capability contract. Concrete registry organization is maintained in `Delivery_Rendering_and_Platform_Implementation_Plan.md`.
 
 ### REF-I02 — Machine-readable aggregate/count-basis encoding
-**Status: Provisionally Resolved implementation encoding within Established count semantics**
+**Status: Established current implementation encoding within Established count semantics**
 
-REF-027 and REF-028 establish the four Count Basis values, and Section 1.5 establishes Aggregate Entity Expansion Mode and identity behavior. Current configurations still express many count facts through free-form properties plus evidence/modeling notes. Before automatic representative/addressable expansion or comparison derives values from population counts, Version-1 Implementation must introduce explicit structured population/repetition metadata consistent with AGG-013 and Section 7.
+REF-027 and REF-028 establish the four Count Basis values, and Section 1.5 establishes Aggregate Entity Expansion Mode and identity behavior. The current 1.4.0 authoring contract implements explicit `population` metadata with Count Basis, Expansion Mode, member addressability, and optional member type kept as distinct fields. The compiler/validators must not infer those semantics from legacy free-form property names.
 
-The planned encoding keeps Count Basis, Expansion Mode, and member addressability as distinct fields and must not infer one from another or from legacy property names. The exact schema shape is **provisionally resolved** in `Delivery_Rendering_and_Platform_Implementation_Plan.md` and should be confirmed by a migration pilot over the initial five systems before the schema revision is finalized.
+Retained 1.2.0 later-candidate files may continue to carry legacy count facts until deliberately migrated. Automatic representative/addressable expansion and comparison may rely only on the structured metadata when the resolved source version provides it.
 
 ### Emerging power-architecture scope note — 800 VDC
 
@@ -3042,7 +3279,7 @@ Arbitrary time-series simulation is outside the initial Scenario model.
 #### SCN-029 — Scenario validation is configuration-aware
 **Status: Established implementation requirement**
 
-When the richer named-Scenario data contract is implemented, validation should ensure at minimum that:
+The implemented named-Scenario data contract is validated to ensure at minimum that:
 
 - Scenario IDs are unique within the Reference Configuration;
 - at least one named Scenario exists and exactly one is designated as default;
@@ -3174,7 +3411,7 @@ Scenario content must obey the same fidelity principles as Reference-System cont
 
 `product_identity`, inventory classification, stable IDs, and containment do not change under Scenario state.
 
-`entity_type` is the intended basis for determining which Scenario capabilities, states, metrics, and future controls are applicable to a component. The controlled `entity_type` vocabulary is finalized in Reference-System schema 1.2.0. Richer Scenario validation uses the data-driven type-to-capability registry established under REF-I01 and detailed in the implementation companion.
+`entity_type` is the intended basis for determining which Scenario capabilities, states, metrics, and future controls are applicable to a component. The controlled `entity_type` vocabulary is defined by the currently supported Reference-System schemas/capability registry. Richer Scenario validation uses the data-driven type-to-capability registry established under REF-I01 and detailed in the implementation companion.
 
 The current YAML corpus's `default_scenario` objects should be treated as the minimal first form of this richer Scenario model. Expanding the schema to support complete named Scenario catalogs must not invalidate the established physical hierarchy or require system-specific application code for ordinary Scenario additions.
 
@@ -3618,11 +3855,11 @@ Concept IDs remain global/stable; the YAML `content_file` reference must resolve
 **Rationale:** This format is already implemented and validated by the current Concept Library and cleanly separates structured graph/query metadata from long-form educational content.
 
 ### CON-I02 — Migration of configuration `concept_links` to global Concept IDs
-**Status: Established schema direction; migration execution remains**
+**Status: Established; Version-1 migration complete, later-candidate migration remains**
 
 Reference-Configuration Concept occurrence links use the established canonical form: a stable global `concept_id`, an explicit Concept-link role, and exactly one explicit architecture target of type **entity**, **connection**, or **configuration**. The migration must preserve existing physical hierarchy and configuration-local identity.
 
-Legacy compatibility may remain temporarily during development, but RDY-010 requires all user-facing links in initial Ship-Ready configurations to use the canonical form and resolve to validated Concept content. Concrete migration tooling and the coordinated schema revision are maintained in `Delivery_Rendering_and_Platform_Implementation_Plan.md`.
+All user-facing links in the five Version-1 configurations use the canonical form and resolve to validated Concept content. Legacy compatibility remains for later-candidate 1.2.0 sources, currently reported as migration warnings; those links must migrate before the corresponding systems are promoted to release scope. Concrete migration tooling and schema handling are maintained in `Delivery_Rendering_and_Platform_Implementation_Plan.md`.
 
 ### CON-I03 — Concept search, indexing, and visualization
 **Status: Established Version-1 scope; implementation technology resolved in companion**
@@ -4683,7 +4920,7 @@ A future display-preference feature may be added without changing canonical Prop
 
 **Status: Established implementation requirement**
 
-The future property validator should reject or flag, as appropriate:
+The current property validator should reject or flag, as appropriate:
 
 - treating `GB` and `GiB` as aliases;
 - unregistered units for registered Property Definitions;
@@ -4711,7 +4948,7 @@ The future property validator should reject or flag, as appropriate:
 | Descriptive Text Properties remain valid where numeric structure adds no value. | **Established** |
 | Scenario Metric / Dynamic Property values should reuse these conventions where applicable rather than creating a second unit system. | **Established** |
 | Existing free-form configuration properties are migration inputs rather than assumed comparison-safe data. | **Established** |
-| Structured YAML shape, initial Property Registry membership, and generated normalized-value handling are provisionally resolved in the implementation companion and are reviewed against initial-five migration examples before schema finalization. | **Provisionally Resolved implementation** |
+| Structured Property Values, the global Property Registry, and generated normalized-value handling are implemented in the current Version-1 content/runtime path; retained legacy free-form properties remain migration inputs rather than comparison-safe data. | **Established current implementation** |
 
 ## 7.7 Interactions with aggregation, Reference Systems, Scenarios, and Concepts
 
@@ -4866,13 +5103,13 @@ Version 1 should maintain clean semantic/platform boundaries, but it should not 
 **Rationale:** The portability boundary is valuable only if it also improves the browser implementation. Premature dual-platform architecture would increase cost without improving the initial educational experience.
 
 #### PLT-011 — Version-1 browser technology choices are implementation-owned
-**Status: Established documentation ownership; renderer fallback remains prototype-gated**
+**Status: Established documentation ownership; current V1 renderer fallback decision measured**
 
 The Source of Truth does not normatively require a particular browser framework, client language, state-management library, graph-layout package, build tool, search library, testing framework, or concrete SVG/Canvas/WebGL implementation. The current Version-1 selections are recorded in `Delivery_Rendering_and_Platform_Implementation_Plan.md` and may be revised there when implementation evidence warrants, provided PLT-001 through PLT-010 and the established accessibility/interaction contracts remain satisfied.
 
-The only intentionally open renderer parameters are the measured threshold at which an SVG-first implementation may require a denser Canvas/WebGL presentation backplane and the exact visibility/virtualization limits used for dense scenes. Those choices must be driven by representative initial-five prototypes rather than by product semantics.
+The post-anatomy representative benchmark currently supports SVG-first rendering without a Canvas/WebGL dense backplane or renderer virtualization for Version-1 scenes. Future fallback/virtualization changes remain implementation-owned and must be driven by new representative measurements rather than by product semantics.
 
-**Rationale:** Technology selections should be explicit and reviewable without turning framework/library versions into product-level truth; performance-sensitive renderer fallback still requires empirical evidence.
+**Rationale:** Technology selections should be explicit and reviewable without turning framework/library versions into product-level truth; performance-sensitive renderer changes remain evidence-driven.
 
 ## 8.4 Interactions with established design sections
 
@@ -4918,14 +5155,15 @@ The companion may evolve during Implementation without changing product behavior
 
 | Area | Current relationship |
 |---|---|
-| **Reference Systems / Configurations** | Definitions, rules, initial five-system set, default system, switching behavior, validated YAML/schema data contract, entity/inventory/product-identity separation, content-depth policy, shared/reusable architecture semantics, Ship-Readiness criteria, current authored corpus, comparison metadata, and future Sandbox-related considerations are established in Section 3. |
+| **Reference Systems / Configurations** | Definitions, rules, initial five-system set, default system, switching behavior, mixed 1.2/1.4 YAML/schema baseline, entity/inventory/Product Catalog identity separation, physical-orientation/content-depth policy, shared/reusable architecture semantics, Ship-Readiness criteria, current authored corpus, comparison metadata, and future Sandbox-related considerations are established in Section 3. |
 | **Aggregation / repetition** | Aggregate Entity identity, representative versus addressable expansion, Selection/navigation semantics, Scenario/Concept behavior, and Implementation prerequisites are established in Explore Section 1.5; count-basis evidence remains defined by REF-027/028. |
+| **Physical orientation / anatomy** | EXP-036–041 and DEP-029–033 establish the baseline physical-anatomy obligation, generic noninteractive Anatomy Depiction semantics, schematic-placement boundary, and entered-context completion test. RDY-018 makes that coverage a release gate without imposing a minimum object count or universal BOM. |
 | **Property / measurement conventions** | Property identity, units, scope, basis, directionality, missing-data semantics, derivation, evidence, comparison, rounding, and validator responsibilities are established in Section 7. |
 | **Concepts** | Formal global Concept Library, stable Concept identity, inventory-mapping rules, typed Concept graph, architecture-occurrence links, cross-view context behavior, Architecture-Anchored Foundational Library initial scope, and deferred exhaustive expansion are established in Section 5. |
 | **Cross-View Integration** | Shared Architectural Context, view-local state ownership, direct versus contextual transitions, semantic Return Context, application-level Back/Forward behavior, stale-state degradation, and Explore/Concepts interoperability are established in Section 6. |
 | **Scenarios / Scenario Context** | Formal Scenario definitions, named-Scenario initial scope, state/target/evidence rules, Explore/Navigation interactions, qualitative-state baseline, extensibility direction, and case-by-case catalog authoring policy are established in Section 4. |
 | **Selection & Detail Context** | Finalized Option F Hybrid interaction model, Inspect/Select/Enter semantics, persistent Detail Context, default Current-Location Summary, input/accessibility behavior, Selection clearing, target-specific Detail, and history/cross-view effects are established in Explore Section 1.6; Navigation and Cross-View Integration retain ownership of their respective history and persistence semantics. |
-| **Delivery / rendering / platform** | Long-term layered 2D rendering, browser-first Version-1 delivery, renderer-independent semantic truth, browser/platform isolation boundaries, and the possible future genuinely native C++/Qt desktop-client direction are established in Section 8. The current Version-1 technical stack, content/runtime build strategy, schema migration defaults, testing tools, provisional renderer/layout choices, and remaining performance-triggered open questions live in `Delivery_Rendering_and_Platform_Implementation_Plan.md`. |
+| **Delivery / rendering / platform** | Long-term layered 2D rendering, browser-first Version-1 delivery, renderer-independent semantic truth, browser/platform isolation boundaries, and the possible future genuinely native C++/Qt desktop-client direction are established in Section 8. The current Version-1 technical stack, content/runtime build strategy, schema migration state, testing tools, measured renderer decision, and future re-profile triggers live in `Delivery_Rendering_and_Platform_Implementation_Plan.md`. |
 | **Guided Modes / Flows** | Future feature expected to traverse the same Explore structure without redefining it. |
 | **Functional Lenses** | Future feature with high-level persistence semantics established; detailed behavior deferred to Features. |
 
@@ -4954,3 +5192,5 @@ The companion may evolve during Implementation without changing product behavior
 | **2026-08-25** | Finalized Selection and Detail Context using **Option F — Hybrid interaction model**. Added Explore Section 1.6 defining transient Inspect/Preview, persistent singular Selection, explicit Enter/Follow navigation, Current-Location Summary and persistent Detail behavior, keyboard/touch/accessibility equivalents, clearing/history rules, target-specific edge cases, Scenario/Concept interactions, and responsive Detail semantics. Updated directly related Navigation and Cross-View Integration rules to preserve one normative contract without reintroducing duplicate state semantics. |
 | **2026-08-26** | Established the Delivery, Rendering, and Platform baseline: layered 2D as the long-term rendering direction; browser-first 2D Semantic Canvas for Version 1; browser presentation/platform isolation from semantic domain/state/content/validation rules; genuinely native desktop client distinguished from packaged browser wrappers; C++20-or-later + Qt 6 selected as the preferred future native target; and contract/conformance reuse prioritized over browser UI source-code reuse. Added a separate implementation-planning companion for detailed module boundaries and migration guidance. |
 | **2026-08-26** | Completed the implementation-decision pass following the platform baseline. Reconciled Concept authoring/storage with the implemented YAML+Markdown contract; established Version-1 Concept relationship presentation and Back/Forward/Return UI baselines; recorded the no-global-unit-preference Version-1 policy; promoted entity capability, Scenario storage, Concept-link migration, and structural-history guidance from open implementation questions to resolved/provisional implementation decisions; and narrowed remaining Explore rendering uncertainty to prototype-derived visibility/virtualization thresholds. Detailed technologies and migration defaults remain in the implementation companion. |
+| **2026-09-07** | Re-centered content/readiness policy on the project's physical-first purpose. Established the Physical Orientation Baseline, noninteractive Anatomy Depictions, evidence/representation/visual-fidelity/interaction separation, schematic-placement constraints, and entered-context completion/readiness gate. Established a lightweight directory-backed Product Catalog with exact revisioned `product_ref` semantics while retaining configuration-local physical realizations, Concepts separation, and deferred reusable-subtree instantiation. Reconciled planning text with the supplied mixed RSC 1.2/1.3 repository baseline and created an implementation handoff for manifest application, validation repair, and physical-anatomy migration. |
+| **2026-09-07 — documentation reconciliation** | Documentation-only status reconciliation after the Product/Anatomy implementation landed. Updated current repository facts from the pre-implementation 1.2/1.3 baseline to the actual mixed 1.2/1.4 corpus, recorded implemented Product Catalog/Anatomy/Property/population/initial-five Concept-link status, and kept remaining evidence/deferred requirements unchanged. No product semantics were changed. |

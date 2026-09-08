@@ -2,7 +2,7 @@
 
 Interactive browser-first educational explorer for the physical architecture, networking, hardware, and infrastructure used in modern AI systems.
 
-This repository is a complete handoff snapshot. It contains the canonical project documentation and authored content, validation/compiler tooling, generated runtime artifacts, browser application source, tests, and release configuration. Installed dependencies and machine-specific build artifacts are intentionally excluded.
+This repository is the current Version 1 implementation snapshot. It contains the canonical project documentation and authored content, validation/compiler tooling, generated runtime artifacts, browser application source, tests, and release configuration. Installed dependencies and machine-specific build artifacts are intentionally excluded.
 
 ## Version 1 scope
 
@@ -42,11 +42,11 @@ py -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
 pip install -r requirements.txt
-npm install
+npm ci
 npm run test:e2e:install
 ```
 
-`package.json` pins every direct JavaScript dependency to an exact version. See **Release caveat: npm lock resolution** below for the state of the included lockfile.
+`package.json` pins every direct JavaScript dependency to an exact version, and the included npm v3 `package-lock.json` contains the resolved transitive dependency graph for reproducible clean installs. Use `npm ci` for normal clean installation/CI; network access or a populated npm cache is still required to fetch packages that are not already available locally.
 
 ## Runtime-content generation
 
@@ -151,6 +151,7 @@ Or run the PowerShell helper:
 ├── content/
 │   ├── RSCs/                     Canonical Reference-System YAML, schemas, validator, templates
 │   ├── concepts/                 Canonical Concept YAML/Markdown, schema, tests, migration guidance
+│   ├── products/                 Canonical reusable Product Definitions and schema
 │   └── capabilities/             Language-neutral entity capability registry
 ├── scenarios/                    Configuration-local Version-1 Scenario catalogs
 ├── property/                     Global Property Registry and schema
@@ -175,16 +176,14 @@ Canonical authoring remains YAML/Markdown plus the documented schemas. `runtime/
 
 Product semantics are governed by `docs/Systems_for_Modern_AI_Project_Source_of_Truth.md`. Implementation-specific decisions are governed by `docs/Delivery_Rendering_and_Platform_Implementation_Plan.md`. `docs/Organizational_Content_Inventory.md` is the canonical inventory taxonomy, not a behavior engine.
 
-## Release caveat: npm lock resolution
+## npm lockfile and clean-install note
 
-The release environment used to assemble this handoff had no outbound DNS/network path to the npm registry. Therefore it could not perform the network-backed `npm install` needed to expand the included npm v3 lock snapshot with the full transitive dependency graph. All direct dependencies are exact-version pinned in both `package.json` and the included lock snapshot, but the first successful `npm install` on a network-enabled machine will complete/update `package-lock.json` with transitive resolutions.
+The current repository includes a populated npm v3 `package-lock.json` with the resolved transitive dependency graph for the exact direct dependency versions in `package.json`. Use **`npm ci`** for reproducible clean installs and CI. A clean install still requires npm-registry access (or an appropriately populated local cache); the offline review environment used for some repository verification could not fetch packages and therefore could not rerun dependency-backed TypeScript/Vitest/Vite/Playwright gates.
 
-For this handoff, **use `npm install`, not `npm ci`, on the first clean Windows installation**. After that successful installation has produced a complete lockfile, commit/preserve that generated lockfile and use `npm ci` for subsequent reproducible installs/CI.
+This is an environment-specific verification limitation, not a change to the approved application stack.
 
-This is an environment-specific release-evidence limitation, not a change to the approved application stack.
+## Remaining release-evidence gaps
 
-## Known external release blocker
+The supplied authoritative shared-source set does not contain the candidate-comparison artifact needed to reproduce the Source-of-Truth requirement that detailed initial systems have **Documentation Confidence ≥ 3**. Content/readiness tooling records this explicitly rather than inventing a score. The current repository also records cross-browser Playwright verification as pending in an environment with installed npm dependencies and browser binaries.
 
-The supplied authoritative shared-source set does not contain the candidate-comparison artifact needed to reproduce the Source-of-Truth requirement that detailed initial systems have **Documentation Confidence ≥ 3**. Content/readiness tooling records this explicitly rather than inventing a score.
-
-See `docs/RELEASE_REPORT.md` for the full gate record.
+See `docs/RELEASE_REPORT.md` for the current gate record.

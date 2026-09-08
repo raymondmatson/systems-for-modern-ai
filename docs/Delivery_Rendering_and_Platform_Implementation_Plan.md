@@ -2,14 +2,14 @@
 title: "Systems for Modern AI Project — Delivery, Rendering, and Platform Implementation Plan"
 project: "Systems for Modern AI Project"
 status: "Implementation-planning companion"
-last_updated: "2026-08-26"
+last_updated: "2026-09-07"
 source_of_truth_section: "Section 8 — Delivery, Rendering, and Platform Baseline"
-version: "0.2"
+version: "0.3"
 ---
 
 # Systems for Modern AI Project — Delivery, Rendering, and Platform Implementation Plan
 
-**Last updated:** 2026-08-26  
+**Last updated:** 2026-09-07  
 **Status:** Implementation-planning companion  
 **Authority:** `Systems_for_Modern_AI_Project_Source_of_Truth.md` remains authoritative for product behavior and binding design decisions. This document translates the established delivery/platform decisions in Source of Truth Section 8 into implementation boundaries and migration guidance. If the two documents conflict, the Source of Truth governs.
 
@@ -23,8 +23,10 @@ It does **not** create a second product specification. It provides implementatio
 - Explore uses a layered **2D semantic canvas** and 2D remains the long-term rendering direction;
 - browser-specific presentation and platform services should remain isolated from semantic/domain logic; and
 - a future genuinely native standalone client may be implemented in **C++20-or-later with Qt 6**, without treating a packaged browser wrapper as the native-client target.
+- the Source of Truth now requires a **Physical Orientation Baseline** for every enterable context and permits canonical noninteractive **Anatomy Depictions** when visible physical presence matters but independent entity semantics do not; and
+- reusable real product/model facts move toward a lightweight directory-backed **Product Catalog**, while configuration-local physical realizations remain in RSCs and automatic reusable-subtree instantiation remains deferred.
 
-Most Version-1 implementation choices are now resolved or provisionally resolved below. Only renderer fallback/virtualization thresholds that require representative performance evidence remain intentionally open.
+Most Version-1 implementation choices are now resolved below. The post-anatomy Chromium benchmark closes the former renderer fallback/virtualization questions for current Version-1 representative scenes; cross-browser Playwright verification remains release evidence rather than an open rendering decision.
 
 ## Table of contents
 
@@ -54,6 +56,8 @@ The following table is a concise cross-reference, not a duplicate normative spec
 | **PLT-009** — preferred native target | If the native client is pursued, the default target is compiled **C++20-or-later + Qt 6**. Exact Qt rendering classes remain future implementation choices. |
 | **PLT-009 / PLT-010** — migration/reuse expectations; avoid speculative overengineering | Preserve content contracts, IDs, behavior specifications, and test vectors. Do not force Version 1 into C++/WebAssembly or a generalized cross-platform UI abstraction solely for hypothetical source-code reuse. |
 | **PLT-011** — implementation-owned browser technology | Record concrete Version-1 technology choices here rather than in product-level source truth; preserve the prototype gate for performance-sensitive renderer fallback. |
+| **EXP-036–041 / DEP-029–033 / RDY-018** — Physical Orientation Baseline and Anatomy Depictions | Add a canonical non-entity anatomy stream to the content/view-model pipeline. Required physical presence must be authored, evidence-bearing, coverage-auditable, accessible, and independent of renderer heuristics; it must not create fake entity identity or interaction. |
+| **SHR-022–028 / REF-024–026** — lightweight Product Catalog | Add versioned Product Definitions under `content/products/`, exact `product_ref` resolution, one-authority migration rules for inline `product_identity`, and compiler/runtime product resolution without changing configuration-local physical identity. |
 
 ## 3. Recommended Version-1 architecture boundary
 
@@ -92,7 +96,9 @@ The domain layer should represent semantic project objects and relationships suc
 - Concepts and Concept occurrences;
 - Scenario definitions and resolved Scenario state;
 - Property Values and measurement semantics; and
-- evidence, representation, and provenance metadata.
+- evidence, representation, and provenance metadata;
+- noninteractive Anatomy Depictions owned by enclosing configuration-local contexts; and
+- Product Definition / `product_ref` data as reusable non-instance identity/specification records.
 
 The domain layer should not contain:
 
@@ -103,6 +109,8 @@ The domain layer should not contain:
 - canvas/SVG/WebGL object handles;
 - screen coordinates as canonical location; or
 - direct calls to browser or operating-system services.
+
+An Anatomy Depiction is deliberately **not** a domain Entity/Connection. Keep its stable depiction key in a separate namespace and prevent it from acquiring Selection, Navigation, Concept-occurrence, Cross-Connection, Scenario-target, or Addressable-Member semantics. Product Definitions likewise remain non-instance records and never become Explore nodes.
 
 Stable project IDs and Context Locators remain the semantic identity layer.
 
@@ -144,6 +152,7 @@ A useful conceptual interface is:
 ```text
 ContentRepository
   loadReferenceSystem(id)
+  loadProduct(product_id, revision)
   loadConcept(id)
   loadScenarioCatalog(configuration_id)
   loadInventory()
@@ -165,6 +174,8 @@ A future C++ client may consume prevalidated build artifacts, reimplement select
 
 Cross-file rules that exceed JSON Schema should remain explicit and covered by tests so they can be reproduced in another language without reverse-engineering browser code.
 
+Current repository reality is a mixed RSC source corpus: eight system files / nine configurations use schema 1.4.0, including all five Version-1 systems, and eight system files / nine configurations remain 1.2.0. The 1.3.0 schema is retained for compatibility/history but no current authored system file uses it. Validation/migration code must preserve explicit version handling rather than assuming one homogeneous source revision.
+
 ### 3.5 Rendering and layout boundary
 
 The 2D renderer consumes semantic state and produces a context-appropriate scene. It may use different layouts at different Tiers or Structural Locations.
@@ -177,6 +188,7 @@ Resolved Configuration Graph
 + Structural Location / Tier
 + Scenario state
 + Selection / Preview
++ authored Anatomy Depictions / placement basis
               ↓
       2D presentation model
               ↓
@@ -201,6 +213,8 @@ The following must remain presentation-only unless separately established as arc
 - animation state.
 
 If a layout is cached, the cache is derived presentation data and can be discarded/recomputed without changing architectural truth.
+
+Anatomy Depictions must be included in the presentation model through authored semantic records, not invented from missing children or renderer heuristics. Their coordinates/grouping remain presentation-only. The accessible parent/detail representation must expose their label/role without making them focusable fake objects.
 
 ### 3.6 Persistence boundary
 
@@ -282,9 +296,15 @@ Where state, generated content, fixtures, or migration artifacts cross process/l
 
 Version 1 should not create a second native implementation, a C++/WebAssembly core, or a generalized multi-platform UI framework unless a present Version-1 requirement independently justifies it.
 
+### IMP-PLT-011 — Visible anatomy must be authored independently from entity interactivity
+
+Do not infer missing physical anatomy from `entity_type`, inventory category, renderer templates, or product family. When the Source of Truth requires a visible generic component/subsystem, the compiler/view model must receive an explicit Anatomy Depiction record. Conversely, a depiction must not be promoted to a semantic Entity merely because the renderer needs a glyph.
+
+This separation is required for truthful coverage audits, accessibility, and future native-client conformance.
+
 ## 5. Version-1 implementation decisions
 
-This section records **technical implementation choices**, not product-level semantics. The Source of Truth remains authoritative for user behavior and durable architectural constraints. A choice marked **Provisionally Resolved** is the current default but has an explicit evidence-based review trigger. A choice marked **Still Open** requires prototype or migration evidence before it is frozen; it does not require a new product decision unless that evidence reveals a semantic conflict.
+This section records **technical implementation choices**, not product-level semantics. The Source of Truth remains authoritative for user behavior and durable architectural constraints. A choice marked **Provisionally Resolved** remains a working default with an explicit evidence-based review trigger. Current renderer fallback/virtualization decisions are resolved for the existing V1 scene density and should be re-profiled only when their stated review trigger occurs.
 
 ### 5.1 Browser application stack
 
@@ -326,14 +346,13 @@ Use **Vite** with the current stable release compatible with the selected React/
 
 #### IMP-RENDER-001 — SVG-first layered 2D renderer
 
-**Status: Provisionally Resolved**  
-**Confidence: Medium**  
-**Assumption:** semantic aggregation keeps the ordinary interactive scene small enough that DOM-backed SVG remains responsive.  
-**Review trigger:** the representative initial-five rendering prototype fails agreed interaction/performance criteria because of SVG scene size, edge density, hit testing, or update cost.
+**Status: Resolved for current Version-1 scenes**  
+**Confidence: High for current authored density**  
+**Review trigger:** semantic visibility/materialization increases materially, layout behavior changes substantially, or measured interaction performance regresses.
 
-Implement Explore **SVG-first**, with ordinary HTML/React for surrounding Detail, Concepts, controls, and document UI. SVG is preferred initially because the application is label-heavy, object-interactive, keyboard/focus sensitive, and accessibility conscious.
+Explore remains **SVG-first**, with ordinary HTML/React for surrounding Detail, Concepts, controls, and document UI. The post-anatomy Chromium benchmark confirms that current initial-five scenes do not require a Canvas/WebGL dense-layer backplane or renderer virtualization.
 
-Do not build a generalized multi-renderer framework. If profiling shows a genuine dense-layer bottleneck, add a Canvas/WebGL presentation backplane only for the affected nonsemantic/dense layers while keeping semantic actions, focusable targets, Selection, and identity outside that drawing technology.
+Do not build a generalized multi-renderer framework. If future profiling shows a genuine dense-layer bottleneck, add a Canvas/WebGL presentation backplane only for the affected nonsemantic/dense layers while keeping semantic actions, focusable targets, Selection, and identity outside that drawing technology.
 
 #### IMP-RENDER-002 — Layout strategy
 
@@ -348,23 +367,20 @@ ELK objects and generated coordinates remain presentation data, never the domain
 
 #### IMP-RENDER-003 — Semantic visibility before renderer budgets
 
-**Status: Resolved policy; numeric thresholds Still Open**  
-**Confidence: Medium**
+**Status: Resolved policy and current V1 implementation**  
+**Confidence: High**
 
 Apply authored/semantic aggregation, current Tier, Structural Location, educational relevance, Selection/Preview, and Scenario emphasis **before** renderer-level virtualization. Do not establish one global object-count cutoff.
 
-Exact visibility thresholds remain open until representative scenes are measured. They are renderer tuning, not Reference-System source data unless an author is explicitly expressing a semantic representation decision.
+The current V1 representative scenes do not require an additional numeric renderer cutoff. Any future threshold remains renderer tuning rather than Reference-System source data and must be justified by new measurements.
 
 #### IMP-RENDER-004 — Virtualization
 
-**Status: Provisionally Resolved behavior; activation limit Still Open**  
-**Confidence: Medium**  
-**Assumption:** many V1 scenes will not require aggressive virtualization because aggregate semantics reduce visible population.  
-**Review trigger:** benchmarked frame/update latency or memory exceeds the agreed prototype budget.
+**Status: Resolved as not required for current V1 representative scenes**  
+**Confidence: High for current authored density**  
+**Review trigger:** benchmarked frame/update latency, memory, or scene density materially regresses after future content/layout expansion.
 
-When needed, virtualize rendered **Addressable Members** outside the viewport using viewport plus overscan. Semantic identity and navigation remain complete even when a glyph is not materialized. Never virtualize the selected or keyboard-focused semantic target out of the accessible interaction model.
-
-The exact activation limit remains open pending prototype measurements.
+If virtualization becomes necessary later, virtualize rendered **Addressable Members** outside the viewport using viewport plus overscan. Semantic identity and navigation remain complete even when a glyph is not materialized. Never virtualize the selected or keyboard-focused semantic target out of the accessible interaction model.
 
 ### 5.3 Navigation and view-state presentation
 
@@ -412,6 +428,8 @@ Compile canonical YAML/Markdown into **versioned generated JSON artifacts** for 
 ```text
 runtime/
   manifest.json
+  products/index.json
+  products/<product-id>@<revision>.json
   systems/<system-id>.json
   scenarios/<configuration-id>.json
   concepts/index.json
@@ -450,25 +468,25 @@ Detailed diagnostics remain developer-facing while user-facing behavior stays co
 
 #### IMP-RSC-001 — Coordinated source-schema migration
 
-**Status: Provisionally Resolved**  
-**Confidence: Medium–High**  
-**Assumption:** the required new fields can be introduced additively while retaining temporary legacy compatibility.  
-**Review trigger:** an initial-five migration pilot demonstrates that the required semantic changes cannot be represented cleanly without breaking the 1.x contract.
+**Status: Resolved and implemented**  
+**Confidence: High**
 
-Target one coordinated **Reference-System schema 1.3.0** implementation revision for the Version-1 additions rather than several overlapping micro-migrations. Until that migration is complete, **1.2.0 remains the current authoritative source-schema baseline** in the Source of Truth.
+The coordinated additive **1.4.0** Product/Anatomy migration is implemented. Current source-version distribution is:
 
-The planned additive revision covers structured population/repetition metadata, canonical Concept occurrence links, Scenario-catalog linkage/default identity, and structured comparison-capable Property Values. Legacy authoring forms may remain temporarily accepted with migration warnings; the **Ship-Ready** validation profile rejects unresolved legacy forms that violate RDY requirements.
+- **1.4.0:** 8 system files / 9 configurations, including all five Version-1 configurations;
+- **1.2.0:** 8 system files / 9 configurations retained for later-candidate compatibility; and
+- **1.3.0:** compatibility/history schema retained, with no current authored system file using it.
 
-Migrate the initial five systems first, then apply the migration to later-candidate configurations when appropriate.
+`content/RSCs/reference_system.schema.json` is the active 1.4.0 authoring schema. It retains the 1.3.0 population/Concept-link/Scenario/property forms and adds exact Product Catalog references, Anatomy Depictions, and the controlled `system_memory` / `power_system` entity types. Migration remains explicit and file-by-file; do not silently rewrite 1.2.0 canonical YAML at runtime.
+
+The old pre-implementation assumption/review trigger is closed by the successful migration and current Python validation. Any future breaking schema change requires a new explicit migration decision rather than reopening this completed 1.4.0 step.
 
 #### IMP-RSC-002 — Population/repetition encoding
 
-**Status: Provisionally Resolved**  
-**Confidence: Medium–High**  
-**Assumption:** repeated Aggregate Entities can be enriched without conflating heterogeneous aggregates with homogeneous populations.  
-**Review trigger:** the initial-five migration pilot finds repeated structures that cannot be represented without additional repetition dimensions.
+**Status: Resolved and implemented for migrated sources**  
+**Confidence: High**
 
-Use an optional `population` block for repeated Aggregate Entities. Initial conceptual shape:
+Use the implemented optional `population` block for repeated Aggregate Entities. Current 1.4.0 shape:
 
 ```yaml
 population:
@@ -503,6 +521,151 @@ These IDs identify modeled configuration-local instances only. Representative Me
 Implement a **language-neutral capability registry** keyed by `entity_type`. Use reusable capability profiles/traits so many entity types can share behavior. Profiles may define applicable Detail sections, Scenario-state categories, Property expectations, structural/render roles, relationship capabilities, and semantic actions.
 
 Enterability itself remains a resolved object/context capability under SDC-025 rather than a static type boolean. Keep browser visual style mappings separate from semantic capability metadata. Never use Organizational inventory categories as behavior switches.
+
+Do not add a new `entity_type` merely because a physical part must be visible. Add a type only when the part becomes an ordinary semantic entity/aggregate with reusable behavior. Use Anatomy Depictions for required orientation-only physical presence.
+
+#### IMP-RSC-005 — Noninteractive Anatomy Depiction authoring/runtime contract
+
+**Status: Resolved and implemented**  
+**Confidence: High**
+
+The implemented 1.4.0 Source-of-Truth Anatomy Depiction contract is a configuration-local leaf record owned by an enclosing Entity. Its authoring shape is:
+
+```yaml
+anatomy:
+  - id: psu-bank
+    label: Power-supply assembly
+    description: Visible power-delivery hardware known to exist in this enclosure.
+    inventory:
+      category: Server-level hardware
+      item: Power supplies
+      status: existing
+    evidence:
+      status: documented
+      source_ids: [source-id]
+      note: Exact model/placement not asserted.
+    depiction_kind: support
+    placement_basis: schematic
+    count:
+      value: 6
+      basis: documented_fixed
+```
+
+The current schema/compiler/runtime preserve these semantics:
+
+- `id` is a stable depiction key in a **non-entity namespace**, unique at least within the owning configuration;
+- containment/context is inherited only from the owning Entity; depictions do not become children in the canonical entity hierarchy;
+- `label`, optional description, canonical inventory mapping, evidence/source references, depiction intent, and `placement_basis` are authored rather than inferred;
+- `placement_basis` distinguishes **schematic** arrangement from specifically **documented** placement; documented placement requires evidence appropriate to the claim;
+- optional count must use supportable count/basis semantics when a visible count matters;
+- no `product_ref` is required for generic anatomy; and
+- depictions have no children, semantic properties, Concept links, connections, Scenario targets, Selection, Enter/Follow, or Addressable-Member behavior.
+
+The compiler should emit depictions into a dedicated presentation-oriented collection such as `anatomyDepictions` on the resolved runtime Entity/view model. They contribute to physical-coverage/readiness audits through inventory/evidence/context, but not to entity counts or graph connectivity.
+
+Accessible presentation: individual schematic glyphs should not become fake focus targets. The enclosing interactive Entity/Detail surface must expose a concise accessible anatomy summary (for example, “Visible anatomy: power-supply assembly, fan/cooling assembly”) and distinguish schematic placement when material.
+
+Promote a depiction to an ordinary entity/aggregate if independent Detail/properties, connections, Concept occurrence, Scenario targeting, nested structure, or navigation becomes materially useful.
+
+#### IMP-RSC-006 — Product Catalog source layout and record identity
+
+**Status: Resolved and implemented**  
+**Confidence: High**
+
+The implemented canonical directory-backed Product Catalog is under:
+
+```text
+content/products/
+  README.md
+  product.schema.json
+  manifest.yaml                 # generated or validator-maintained index, not product truth
+  <product-id>.yaml             # one reusable Product Definition per file
+```
+
+Use one YAML file per Product Definition rather than one monolithic catalog. The target conceptual record is:
+
+```yaml
+schema_version: 1.0.0
+product:
+  id: nvidia-connectx-7
+  revision: 1
+  record_level: model           # family | model | variant
+  name: NVIDIA ConnectX-7
+  entity_type: nic
+  identity:
+    manufacturer: NVIDIA
+    product_family: ConnectX
+    model: ConnectX-7
+  summary: ...
+  properties: ...               # product-intrinsic Property Values only
+  source_ids: [source-id]
+sources:
+  - id: source-id
+    ...
+```
+
+Contract rules:
+
+- `product_id` is globally unique, stable lowercase ASCII kebab-case and filename-aligned;
+- `revision` is a positive integer record revision, distinct from product generation/model/variant;
+- RSC references pin an exact `{id, revision}`;
+- `record_level: family` may contain only family-wide facts and must not claim model/variant-specific properties;
+- materially different variants get distinct Product Definitions when their intrinsic differences matter to modeled properties/identity;
+- the Product Definition owns its own sources/evidence for shared claims; and
+- Product Definitions are non-instance records: never Containment parents, Navigation destinations, Scenario targets, Concept occurrences, or automatic child templates.
+
+Do not populate a catalog exhaustively before need exists. Seed it from products that recur or whose architecture-defining identity/specifications materially reduce RSC duplication; uncataloged inline Product Identity remains valid during migration.
+
+#### IMP-RSC-007 — `product_ref`, inline identity, and local-property precedence
+
+**Status: Resolved and implemented**  
+**Confidence: High**
+
+Target RSC form:
+
+```yaml
+product_ref:
+  id: nvidia-connectx-7
+  revision: 1
+```
+
+Apply exactly these precedence/compatibility rules:
+
+1. `product_ref` absent + inline `product_identity` present → valid legacy/uncataloged form.
+2. `product_ref` present + inline identity absent → preferred migrated form.
+3. both present and equivalent → temporarily valid with a migration warning; compiler resolves reusable identity from `product_ref`.
+4. both present and conflicting → **error**; never silently choose one.
+5. neither present → valid for generic, heterogeneous, unsupported, or identity-irrelevant entities.
+
+Product-intrinsic properties come from the referenced Product Definition. Configuration-local properties own realization facts (population, placement, selected deployment option, derived aggregate totals, local capacity/topology, etc.). If the same Property Definition appears in both layers with conflicting intrinsic meaning, treat it as an error until a separately designed provenance-bearing override mechanism is justified; do not invent silent local precedence.
+
+A singular `product_ref` is valid on a homogeneous aggregate only when one product identity truthfully characterizes the represented members (or the aggregate itself is that product). Heterogeneous aggregates must not collapse multiple models into one reference.
+
+No Product Definition automatically contributes Concept occurrences, Scenario state, children, connections, or reusable-subtree structure.
+
+#### IMP-RSC-008 — Product/compiler/runtime resolution
+
+**Status: Resolved and implemented**  
+**Confidence: High**
+
+Extend the Python content pipeline in this order:
+
+`load/validate Product Catalog → load/validate RSC versions → resolve product_ref compatibility → normalize configuration-local graph → emit versioned runtime product index + resolved entity product view → validate runtime artifacts`
+
+Recommended runtime organization:
+
+```text
+runtime/
+  manifest.json
+  products/index.json
+  products/<product-id>@<revision>.json
+  systems/<system-id>.json
+  ...
+```
+
+Runtime Entities may retain the exact `productRef` and a denormalized read-only `resolvedProduct` summary for Detail/search performance. That denormalization is generated and never becomes a second authored authority. Product records never become physical runtime Entities.
+
+The future C++/Qt client should be able to consume the same language-neutral Product Definition/runtime contract.
 
 ### 5.6 Scenario implementation
 
@@ -539,7 +702,7 @@ The canonical Concept authoring format is now established in Source-of-Truth CON
 
 #### IMP-CON-001 — Canonical occurrence-link migration
 
-**Status: Resolved; migration execution remains**  
+**Status: Resolved for Version 1; later-candidate migration remains**  
 **Confidence: High**
 
 Migrate legacy Reference-System Concept links to the established canonical occurrence form:
@@ -577,12 +740,10 @@ Use **react-markdown** with **remark-gfm** for Concept Markdown in the browser c
 
 #### IMP-PROP-001 — Structured Property Value shape
 
-**Status: Provisionally Resolved**  
-**Confidence: Medium–High**  
-**Assumption:** the established Property semantics map cleanly to a property-ID-keyed YAML structure without duplicating registry metadata.  
-**Review trigger:** initial-five migration examples expose a required semantic dimension that cannot be represented without awkward special cases.
+**Status: Resolved and implemented for migrated sources**  
+**Confidence: High**
 
-Use `properties` as a mapping keyed by stable **Property Definition ID**. Comparison-capable values use structured records, conceptually:
+Use `properties` as a mapping keyed by stable **Property Definition ID**. Comparison-capable values use the implemented structured records, for example:
 
 ```yaml
 properties:
@@ -605,12 +766,10 @@ Include `directional_basis` and `derivation` only where applicable. Non-`known` 
 
 #### IMP-PROP-002 — Property Registry
 
-**Status: Provisionally Resolved**  
-**Confidence: Medium**  
-**Assumption:** a minimal registry derived from actual initial-five content is preferable to designing a broad metric ontology up front.  
-**Review trigger:** the initial-five + initial-Scenario property audit is complete.
+**Status: Resolved and implemented**  
+**Confidence: High**
 
-Maintain one canonical global `property_registry.yaml`. Seed it only with comparison-capable properties actually required by the initial five systems and initial Scenario catalogs, then expand incrementally. Obvious initial definitions include `memory_capacity`, `link_rate`, `power`, and `component_count`; the final initial membership is determined by the content audit rather than by speculation.
+Maintain one canonical global `property_registry.yaml`. The current Version-1 registry contains **45 Property Definitions** derived from actual authored content and remains intentionally incremental rather than an exhaustive metric ontology. Expand it only when new canonical content needs another comparison-capable semantic property.
 
 #### IMP-PROP-003 — Numeric normalization
 
@@ -717,17 +876,21 @@ Framework/library versions should be pinned when implementation begins and updat
 | UI framework | React 19.x | **Resolved** | High |
 | Build system | Vite | **Resolved** | High |
 | Application state | Redux Toolkit + React-Redux | **Resolved** | High |
-| Explore rendering | SVG-first; dense Canvas/WebGL backplane only if measured need | **Provisionally Resolved** | Medium — initial-five render prototype |
+| Explore rendering | SVG-first; no dense Canvas/WebGL backplane required for current V1 representative scenes | **Resolved for current V1 scenes** | High — re-profile on material density change |
 | Physical layout | Deterministic project layouts | **Resolved** | High |
 | Graph-heavy layout | elkjs adapter / Worker where useful | **Provisionally Resolved** | Medium–High — topology prototype/dependency review |
 | Semantic visibility | Aggregation/relevance first; no universal numeric cutoff | **Resolved policy** | High |
-| Numeric visibility/virtualization limits | Determine from measured prototype | **Still Open** | Medium — benchmark evidence |
+| Numeric visibility/virtualization limits | No global cutoff; current V1 scenes require no renderer virtualization | **Resolved for current V1 scenes** | High — re-profile on material density change |
 | Runtime content | Versioned generated JSON chunks | **Resolved** | High |
 | Canonical validation/compiler | Python toolchain | **Resolved** | High |
-| RSC source-schema evolution | Coordinated additive target 1.3.0; 1.2.0 remains current until migrated | **Provisionally Resolved** | Medium–High — initial-five migration pilot |
-| Population metadata | Optional `population` block | **Provisionally Resolved** | Medium–High — initial-five migration pilot |
+| RSC source-schema evolution | Current mixed 1.2/1.4 corpus; 1.4.0 Product/Anatomy migration implemented, 1.3 compatibility retained | **Resolved** | High |
+| Population metadata | Optional structured `population` block in migrated sources | **Resolved for 1.4.0 sources** | High |
 | Generated member IDs | `<aggregate-id>--member-<member-key>` | **Resolved** | High |
 | Entity capabilities | Language-neutral reusable capability registry | **Resolved** | High |
+| Noninteractive anatomy | Authored configuration-local Anatomy Depictions; non-entity/noninteractive; schematic-vs-documented placement explicit | **Resolved and implemented** | High |
+| Product Catalog | One revisioned Product Definition YAML per file under `content/products/` | **Resolved and implemented** | High |
+| Product references | Exact `product_ref`; inline identity allowed only as uncataloged/migration fallback; conflicts error | **Resolved migration policy** | High |
+| Product runtime | Generated product index + exact revision refs; no physical runtime Product entities | **Resolved** | High |
 | Scenario storage | One YAML catalog per Reference Configuration | **Resolved** | High |
 | Scenario validation | Configuration-aware Python cross-file validation | **Resolved** | High |
 | Concept storage | Source-of-Truth YAML+Markdown hybrid | **Resolved** | High |
@@ -735,8 +898,8 @@ Framework/library versions should be pinned when implementation begins and updat
 | Concept search | Fuse.js client-side | **Resolved** | High |
 | Concept graph visualization | Not required in V1; relationship lists | **Resolved by Source of Truth** | High |
 | Markdown rendering | react-markdown + remark-gfm; raw HTML disabled | **Resolved** | High |
-| Property YAML | Structured values keyed by Property ID | **Provisionally Resolved** | Medium–High — migration examples |
-| Property Registry | Minimal initial-five-driven global registry | **Provisionally Resolved** | Medium — property audit |
+| Property YAML | Structured values keyed by Property ID for migrated sources | **Resolved and implemented** | High |
+| Property Registry | Incremental global registry; current V1 baseline has 45 definitions | **Resolved and implemented** | High |
 | Numeric math | decimal.js / equivalent only by explicit revision | **Resolved** | High |
 | User unit preferences | No V1 global preference system | **Resolved by Source of Truth** | High |
 | App Back/Forward | Global controls + browser-history adapter | **Resolved** | High |
@@ -749,42 +912,22 @@ Framework/library versions should be pinned when implementation begins and updat
 | Unit tests | Vitest + existing Python tests | **Resolved** | High |
 | E2E | Playwright | **Resolved** | High |
 
-### 5.13 Intentionally open implementation questions
+### 5.13 Renderer benchmark outcome and remaining verification
 
-Only performance-derived renderer parameters remain genuinely open.
+The two former performance-derived open questions are **resolved for the current Version-1 representative scenes** by the post-anatomy Chromium benchmark in `reports/implementation/render-benchmark.json`:
 
-#### OPEN-RENDER-001 — Dense-renderer fallback threshold
+- **Dense-renderer fallback:** not required for current V1 scenes; remain SVG-first.
+- **Renderer virtualization:** not required for current V1 scenes.
 
-**Status: Still Open**  
-**Preferred default:** remain SVG-first; introduce a Canvas/WebGL backplane only when representative scenes demonstrate a real bottleneck.
+The densest audited initial-five context is the DGX H100 node with 9 interactive entities + 4 Anatomy Depictions; the benchmark also confirms Anatomy Depictions create no focus targets. Synthetic density cases are retained as headroom evidence, not as a semantic object-count policy.
 
-**Evidence required:** measure representative initial-five scenes with realistic labels, typed Cross-Connections, Hover/Focus Preview, Selection, Scenario emphasis, and keyboard/accessibility targets. Record frame/update latency, input latency, hit-testing cost, DOM/scene size, and memory behavior.
+**Review trigger:** re-profile if semantic visibility/materialization increases materially, layout behavior changes substantially, or measured interaction performance regresses. Do not change Expansion Mode, identity, Selection, Navigation, or accessibility to satisfy renderer budgets.
 
-No product-owner input is currently required unless the measurements reveal a conflict between performance and an established interaction/accessibility rule.
+**Remaining release evidence:** the benchmark was executed with a system Chromium build. The approved browser-support policy still requires dependency-backed Chromium/Firefox/WebKit Playwright verification in an environment with the project dependencies and browsers installed. That is a release-verification item, not an unresolved product/rendering decision.
 
-#### OPEN-RENDER-002 — Visibility/virtualization numeric limits
+### Current rendering acceptance gate
 
-**Status: Still Open**  
-**Preferred default:** semantic aggregation first, then viewport/dynamic renderer budgeting where measured need exists; do not establish one global count threshold.
-
-**Evidence required:** the same representative rendering prototype and interaction tests. Numeric limits should remain implementation configuration, not canonical Reference-System facts.
-
-No other approved implementation-phase item currently requires a new product decision.
-
-### Early rendering prototype acceptance gate
-
-Before treating IMP-RENDER-001/002/004 as final, prototype representative scenes from the initial five Reference Systems with:
-
-- aggregate and Representative Member rendering;
-- typed Cross-Connections;
-- hover/focus Preview;
-- persistent Selection;
-- explicit Enter/Follow actions;
-- keyboard-focus targets;
-- Scenario emphasis; and
-- realistic information density and labels.
-
-The prototype should exercise Chromium, Firefox, and WebKit. Exact numeric pass/fail budgets may be set when the prototype harness exists, but the test must verify that performance optimization does not change semantic Expansion Mode, identity, Selection, Navigation, or accessibility behavior.
+For material future density changes, rerun representative scenes with aggregate/Representative Member rendering, typed Cross-Connections, Preview/focus, persistent Selection, Enter/Follow actions, keyboard targets, Scenario emphasis, realistic labels, and Anatomy Depictions. Cross-browser E2E remains required by IMP-WEB-003/IMP-TEST-001.
 
 ## 6. Future native client target
 
@@ -872,6 +1015,8 @@ Avoid these patterns because they make both Version 1 harder to test and a later
 - placing required Inspect/Select/Enter semantics only inside hover or other browser-specific gestures;
 - serializing framework component state as the durable application state format; or
 - requiring a remote service/database for core static architecture exploration when the same validated content can be bundled locally.
+- inferring generic hardware anatomy in React/SVG templates from `entity_type` or product family instead of consuming authored Anatomy Depictions; or
+- turning Product Definitions into globally shared runtime physical objects.
 
 ## 9. Cross-language conformance strategy
 
@@ -937,29 +1082,35 @@ These boundaries improve browser maintainability and testing even if a native cl
 
 Before the browser implementation architecture is considered stable, verify:
 
-- [ ] TypeScript strict mode, React, Redux Toolkit, and Vite are integrated without leaking framework types into semantic contracts;
-- [ ] domain/state modules can run unit tests without a DOM/browser runtime;
-- [ ] stable IDs and Context Locators, not rendered objects, drive semantic state;
-- [ ] current renderer coordinates are derived/presentation data;
-- [ ] the initial-five SVG/layout prototype has been run and the two OPEN-RENDER items have evidence-backed outcomes;
-- [ ] semantic aggregation precedes any renderer virtualization/fallback;
-- [ ] browser history is not the authoritative project history model;
-- [ ] browser persistence/file APIs are isolated behind explicit adapters where used;
-- [ ] V1 semantic state remains in-memory unless a separately justified preference uses the persistence adapter;
-- [ ] content parsing/normalization is distinct from content transport;
-- [ ] canonical validation/runtime JSON generation is deterministic and Python-driven;
-- [ ] runtime artifacts record their format/source revisions and remain regenerable;
-- [ ] the coordinated RSC schema migration has been piloted on the initial five before 1.3.0 is finalized;
-- [ ] population metadata, canonical Concept links, Scenario catalogs, and structured Properties validate in the Ship-Ready profile;
-- [ ] cross-file validation semantics are explicit and test-covered;
-- [ ] Explore renderer emits semantic actions rather than directly rewriting domain state;
-- [ ] Detail and Concepts consume semantic/view-model data rather than renderer internals;
-- [ ] no essential interaction depends solely on hover or DOM-specific behavior;
-- [ ] generated/runtime content remains language-neutral enough for future C++ consumption;
-- [ ] Vitest, Playwright, Python validation tests, and language-neutral state-transition fixtures cover the major Navigation/Cross-View rules;
-- [ ] static deployment works without a required application server/database; and
-- [ ] no Version-1 dependency has been added solely to mimic a future native stack.
+- [x] TypeScript strict mode, React, Redux Toolkit, and Vite are integrated with browser/platform seams kept outside semantic contracts;
+- [x] domain/state modules are structured for browser-independent semantic testing;
+- [x] stable IDs and Context Locators, not rendered objects, drive semantic state;
+- [x] Product Definitions use global revisioned non-instance IDs while physical entities remain configuration-local;
+- [x] `product_ref` resolution/inline-identity compatibility is validated with no silent conflicts;
+- [x] required generic Anatomy Depictions are authored/evidence-bearing and never become semantic entities or fake focus targets;
+- [x] current renderer coordinates are derived/presentation data;
+- [x] the post-anatomy Chromium SVG/layout prototype has been run; current V1 scenes do not require a dense backplane or renderer virtualization; cross-browser E2E remains release evidence;
+- [x] semantic aggregation precedes any renderer virtualization/fallback;
+- [x] browser history is not the authoritative project history model;
+- [x] browser persistence/file APIs are isolated behind explicit adapters where used;
+- [x] V1 semantic state remains in-memory unless a separately justified preference uses the persistence adapter;
+- [x] content parsing/normalization is distinct from content transport;
+- [x] canonical validation/runtime JSON generation is deterministic and Python-driven;
+- [x] runtime artifacts record their format/source revisions and remain regenerable;
+- [x] the current mixed 1.2/1.4 source corpus is handled explicitly; the additive 1.4.0 Product/Anatomy migration is implemented and validated while 1.2.0 compatibility remains deliberate;
+- [x] population metadata, canonical initial-five Concept links, Scenario catalogs, and structured Properties validate in the current content/readiness profile;
+- [x] cross-file validation semantics are explicit and covered by the current Python test/validation path;
+- [x] Explore renderer emits semantic actions rather than directly rewriting domain state;
+- [x] Detail and Concepts consume semantic/view-model data rather than renderer internals;
+- [x] no essential interaction depends solely on hover or DOM-specific behavior;
+- [x] generated/runtime content remains language-neutral enough for future C++ consumption;
+- [x] Product Catalog runtime artifacts are generated/reproducible and contain no deployment/Scenario state;
+- [x] entered-context coverage audits account for Anatomy Depictions without inflating entity/population counts;
+- [x] Python validation/test coverage and language-neutral semantic fixtures cover the current canonical/content contracts;
+- [ ] dependency-backed Vitest and Playwright verification must be rerun in an environment with the project npm dependencies/browser binaries installed;
+- [x] static deployment is configured without a required application server/database; and
+- [x] no Version-1 dependency has been added solely to mimic a future native stack.
 
 ## 12. Summary
 
-> **Implement Version 1 as a browser-first layered 2D application using the current TypeScript/React/Redux/Vite browser stack, generated language-neutral runtime content, Python source validation, and an SVG-first Explore renderer whose performance fallback remains prototype-gated. Preserve portability through stable semantic contracts, pure state transitions, explicit data/schema migrations, conformance fixtures, and narrow platform adapters—not through premature native code. If a native client is later built, target C++20-or-later with Qt 6 and treat it as a new standalone frontend over the established project semantics rather than as a packaged web application.**
+> **Implement Version 1 as a browser-first layered 2D application using the current TypeScript/React/Redux/Vite browser stack, generated language-neutral runtime content, Python source validation, and an SVG-first Explore renderer that is sufficient for the current Version-1 representative scenes; re-profile only when semantic density materially changes. The richer physical-first content model now includes authored noninteractive Anatomy Depictions for orientation-only hardware and a revisioned Product Catalog for reusable product/model facts, while all deployed physical identity/Containment/Scenario state remains configuration-local in RSCs. Preserve portability through stable semantic contracts, pure state transitions, explicit data/schema migrations, conformance fixtures, and narrow platform adapters—not through premature native code. If a native client is later built, target C++20-or-later with Qt 6 and treat it as a new standalone frontend over the established project semantics rather than as a packaged web application.**

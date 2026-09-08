@@ -1,55 +1,53 @@
-# Version 1 release verification report
+# Version 1 verification status
 
-**Release handoff date:** 2026-08-28
+**Documentation reconciliation date:** 2026-09-07  
+**Current repository basis:** the supplied `systems-for-modern-ai.zip` reviewed in this pass.
 
 ## Scope
 
-This report records the release-verification state of the complete handoff repository. A gate is marked **PASS** only when it actually executed successfully in the assembly environment. Network-dependent gates that could not execute are marked **ENVIRONMENT BLOCKED**, not inferred as passes.
+This document summarizes the **current repository verification state** without treating older generated release reports as current evidence. Historical 2026-08-28 report artifacts remain under `reports/release/` and describe the pre-Product/Anatomy snapshot; their 1.3.0/36-property/37-runtime-file/8-test counts are not current repository counts.
 
-## Gate results
+A gate is marked **PASS** only when it was executed successfully against the current repository or is directly supported by a current generated report. Environment-dependent gates that were not rerun remain **PENDING / ENVIRONMENT** rather than inferred as passes.
 
-| Gate | Result | Evidence / note |
+## Current gate results
+
+| Gate | Current result | Evidence / note |
 |---|---|---|
-| Canonical RSC validation | **PASS** | 16 system YAML files / 18 configurations; mixed 1.2.0 + initial-five 1.3.0; zero errors. |
-| Canonical Concept validation | **PASS** | 15 canonical Concepts; zero warnings/errors. |
-| Concept validator unit tests | **PASS** | 8/8 Python validator tests. |
-| RSC ↔ Concept compatibility | **PASS with expected migration warnings** | Zero errors. 27 legacy Concept-link warnings are confined to later-candidate systems and do not enter the V1 user experience. |
-| Initial-five V1 migration validation | **PASS** | 5 systems, 15 Concepts, 36 Property definitions, zero errors. |
-| Runtime generation | **PASS** | Deterministic runtime JSON generated and mirrored to `public/runtime/`. |
-| Runtime determinism | **PASS** | 37 generated runtime files compare deterministically. |
-| Runtime referential/integrity validation | **PASS** | 37 files, zero errors. |
+| Canonical RSC validation | **PASS** | 16 system YAML files / 18 configurations; active schema 1.4.0; current authored distribution is 8 files / 9 configurations on 1.4.0 and 8 files / 9 configurations on 1.2.0; zero errors. |
+| Product / Anatomy validation | **PASS** | Product Catalog + Anatomy contract validation passes; 3/3 dedicated Python tests pass. |
+| Canonical Concept validation | **PASS** | 15 canonical Concepts; zero canonical warnings/errors. |
+| Concept validator unit tests | **PASS** | 9/9 Python validator tests. |
+| RSC ↔ Concept compatibility | **PASS with expected migration warnings** | Zero errors; 27 legacy Concept-link warnings remain on later-candidate sources outside the five-system Version-1 user-facing set. |
+| Initial-five V1 validation | **PASS** | 5 systems, 15 Concepts, 45 Property Definitions, zero errors. |
+| Runtime generation / determinism | **PASS** | 54 generated runtime artifacts compare deterministically and validate with zero runtime-integrity errors. |
+| Branch coverage audit | **PASS** | 75 audited branches, zero errors. |
+| Physical-orientation readiness audit | **PASS (mechanical content gate)** | 65 entered contexts checked, zero errors under RDY-018. |
 | Property conformance fixtures | **PASS** | 5/5 exact decimal/property fixtures. |
-| Content-readiness audit | **PASS for executable content gates** | Zero content errors. External Documentation Confidence evidence remains unavailable. |
-| Fallback TypeScript parser/strict-core check | **PASS** | Global TypeScript compiler plus local declaration shims parses/types the project core after source fixes. This is supplementary, not a substitute for the pinned dependency-backed gate. |
-| `npm install` | **ENVIRONMENT BLOCKED** | Assembly sandbox cannot resolve `registry.npmjs.org` (DNS/network egress unavailable). |
-| Playwright browser installation | **ENVIRONMENT BLOCKED** | Requires npm package installation and browser downloads; sandbox egress unavailable. |
-| Pinned `npm run typecheck` | **ENVIRONMENT BLOCKED** | Pinned TypeScript package cannot be installed in this sandbox. |
-| Vitest | **ENVIRONMENT BLOCKED** | Pinned dependencies cannot be installed in this sandbox. |
-| Vite production build | **ENVIRONMENT BLOCKED** | Pinned dependencies cannot be installed in this sandbox. |
-| Playwright Chromium/Firefox/WebKit | **ENVIRONMENT BLOCKED** | Pinned Playwright package/browser binaries cannot be installed in this sandbox. |
-| Clean ZIP extraction — Python generation/validation | **PASS** | The archive was extracted to a new directory; runtime generation, complete Python validation, determinism, runtime integrity, property fixtures, and readiness audit all reran successfully. |
-| Clean ZIP extraction — `npm install` | **ENVIRONMENT BLOCKED** | Fresh-copy install was attempted; it timed out because `registry.npmjs.org` cannot be resolved from the assembly sandbox. No `node_modules` were created. |
-| Clean ZIP extraction — Vite/Vitest/Playwright | **ENVIRONMENT BLOCKED** | These gates depend on the blocked npm install and therefore could not be executed from the fresh copy. |
+| Renderer density benchmark | **PASS for current V1 representative scenes in Chromium** | Current benchmark concludes no dense Canvas/WebGL backplane or renderer virtualization is required; Anatomy Depictions create zero focus targets. |
+| Overall content/readiness tool | **CONTENT PASS; SHIP-READY PENDING** | Zero content errors. Pending release evidence: Documentation Confidence artifact and dependency-backed cross-browser E2E. |
+| Dependency-backed TypeScript / Vitest / Vite | **PENDING / ENVIRONMENT** | `node_modules` is not included in the snapshot and this offline review environment cannot fetch npm packages. No pass is inferred. |
+| Playwright Chromium / Firefox / WebKit | **PENDING / ENVIRONMENT** | Approved three-engine verification must be rerun in an environment with project dependencies and browser binaries installed. |
 
-## Implementation defects corrected during release verification
+The current Python/content result can be reproduced with:
 
-Release verification found and corrected source-level implementation issues without changing approved product behavior:
+```text
+python scripts/content/validate_all.py
+```
 
-- repaired malformed TypeScript/TSX in the runtime repository, Detail view model, and App presentation;
-- kept representative-member navigation/selection in typed exemplar Context Locators instead of silently promoting exemplar children to canonical member identity;
-- made typed Cross-Connections keyboard-focusable, selectable, inspectable, and deliberately followable;
-- added current Scenario state to Detail and non-color-only Scenario emphasis to Explore targets;
-- separated direct Explore/Concepts view switching from semantic Return;
-- fixed Concept validator test resolution so the one canonical Organizational Content Inventory under `docs/` remains the taxonomy source rather than creating a duplicate copy.
+## Remaining release-evidence gaps
 
-The full canonical/runtime validator suite still passes after these corrections.
+1. **Documentation Confidence evidence:** the shared repository does not contain the candidate-comparison ratings artifact needed to reproduce the Source-of-Truth requirement that detailed initial systems have Documentation Confidence ≥ 3. The readiness tool correctly records this as unavailable rather than inventing a score.
+2. **Dependency-backed browser/client verification:** TypeScript/Vitest/Vite/Playwright gates must be run in a normal dependency-capable environment. The populated `package-lock.json` supports `npm ci`; network access or a populated npm cache is still needed to fetch missing packages.
+3. **Three-engine rendering/E2E evidence:** the current density benchmark used Chromium. Firefox/WebKit behavior remains part of the established release test policy.
 
-## External blocker
+These are verification/evidence gaps; they do not authorize changing established product behavior or weakening readiness requirements.
 
-The supplied authoritative source set does not contain the candidate-comparison ratings artifact required to reproduce **Documentation Confidence ≥ 3** for detailed initial systems. Readiness tooling records this as unavailable rather than assigning unsupported scores.
+## Historical report artifacts
 
-## Environment caveat
+The following files are retained as historical evidence and should not be read as the current post-1.4.0 release state:
 
-The assembly sandbox has no outbound DNS/network path to the npm registry. Consequently the network-dependent JavaScript release gates could not be truthfully executed here. The repository contains the exact-version dependency manifest, test/build configuration, and Windows commands required to execute those gates on a network-enabled machine.
+- `reports/release/release-verification.json`
+- `reports/release/fresh-copy-verification.txt`
+- older baseline validator/test snapshots under `reports/baseline/` and `content/concepts/*_run.txt`
 
-The same egress limitation prevented npm from expanding the included npm v3 lock snapshot with the complete transitive dependency graph. The direct dependencies are exact-version pinned; run `npm install` on the first network-enabled clean installation. Preserve the resulting completed `package-lock.json`, then use `npm ci` thereafter.
+Regenerate release/report artifacts after the next full dependency-capable verification rather than editing generated evidence to match documentation.

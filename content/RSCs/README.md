@@ -1,9 +1,9 @@
 # Reference-System canonical sources
 
-This directory intentionally supports a **mixed source-schema corpus** during the Version-1 migration.
+This directory intentionally supports a **mixed source-schema corpus** during incremental migration. The current authored corpus contains **8 system files / 9 configurations on 1.4.0** and **8 system files / 9 configurations on 1.2.0**. No current authored system file remains on 1.3.0, but its compatibility schema is preserved.
 
-- `reference_system.schema.v1.2.0.json` validates retained later-candidate 1.2.0 sources.
-- `reference_system.schema.v1.3.0.json` preserves the pre-anatomy/Product-Catalog 1.3.0 contract used by the five initial systems in the supplied baseline.
+- `reference_system.schema.v1.2.0.json` validates retained 1.2.0 sources.
+- `reference_system.schema.v1.3.0.json` preserves the pre-anatomy/Product-Catalog 1.3.0 contract for compatibility/history.
 - `reference_system.schema.json` is the current additive **1.4.0** authoring contract. It adds exact `product_ref` references, authored noninteractive `anatomy` depictions, and the controlled `system_memory` / `power_system` entity types.
 
 Do not mass-rewrite older sources merely to make the corpus homogeneous. Migration is deliberate and file-by-file. Canonical physical identity remains configuration-local.

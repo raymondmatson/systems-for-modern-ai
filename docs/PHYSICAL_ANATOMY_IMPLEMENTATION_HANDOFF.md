@@ -1,7 +1,7 @@
 ---
 title: "Systems for Modern AI — Physical Anatomy and Product Catalog Implementation Handoff"
 project: "Systems for Modern AI Project"
-status: "Implementation handoff"
+status: "Completed implementation handoff — historical record"
 last_updated: "2026-09-07"
 source_of_truth_version: "0.8"
 implementation_plan_version: "0.3"
@@ -10,8 +10,8 @@ implementation_plan_version: "0.3"
 # Systems for Modern AI — Physical Anatomy and Product Catalog Implementation Handoff
 
 **Last updated:** 2026-09-07  
-**Status:** Implementation handoff  
-**Authority:** Product/behavior semantics are owned by `Systems_for_Modern_AI_Project_Source_of_Truth.md`. Technical defaults and migration contracts are owned by `Delivery_Rendering_and_Platform_Implementation_Plan.md`. `../CONTENT_ADDITION_MANIFEST.md` is the baseline-reconciled content work queue. This handoff orders executable work; it does not override those sources.
+**Status:** Completed implementation handoff — historical record  
+**Authority:** Product/behavior semantics are owned by `Systems_for_Modern_AI_Project_Source_of_Truth.md`. Technical defaults and migration contracts are owned by `Delivery_Rendering_and_Platform_Implementation_Plan.md`. `CONTENT_ADDITION_MANIFEST.md` preserves the historical reconciliation and records the completed current content state. This file records the implementation work package that produced the current Product/Anatomy repository state; it is retained for traceability and does not override those sources or define a current work queue.
 
 ## 1. Concise change summary
 
@@ -32,7 +32,13 @@ Planning also established the lightweight reusable-product organization:
 
 `docs/Organizational_Content_Inventory.md` required **no Planning edit** in this pass. It already includes the relevant server hardware, memory, networking, power, cooling, management, packaging, and other physical taxonomy needed for the planned additions. It remains a classification system rather than a BOM or behavior registry.
 
-## 2. Supplied repository baseline and reconciliation findings
+## Current completion note
+
+The executable work described below has been applied to the current repository. The active RSC schema is 1.4.0 for migrated sources; Product Catalog, exact `product_ref`, Anatomy Depictions, `system_memory`/`power_system`, canonical Concept-validator inventory-path handling, runtime generation, physical-orientation auditing, and the device-interior follow-up are present. Current Python validation reports 16 systems / 18 configurations, 15 Concepts, 45 Property Definitions, 54 deterministic runtime artifacts, 75 audited branches, and 65 entered contexts with zero physical-orientation errors.
+
+The original task descriptions and baseline observations below are retained as historical implementation rationale. Do **not** interpret their imperative wording, 1.2/1.3 counts, stale-runtime observations, or unchecked boxes as current repository status. Current status is governed by the canonical sources, `docs/IMPLEMENTATION.md`, `docs/CONTENT_ADDITION_MANIFEST.md` completion sections, and `docs/RELEASE_REPORT.md`.
+
+## 2. Historical pre-implementation baseline and reconciliation findings
 
 The executable baseline for this handoff is the supplied `systems-for-modern-ai.zip`. There is no assumed newer repository containing the additions historically reported in the earlier content manifest.
 
@@ -44,7 +50,7 @@ Direct inspection found:
 - `content/RSCs/README.md` still says 1.2.0 is current and is stale relative to the repository;
 - the baseline Concept library contains **15 Concepts**;
 - many additions in the historical manifest are absent or partial even though their historical status says “Implemented”; and
-- the reconciled current state for every manifest ID is now recorded in `../CONTENT_ADDITION_MANIFEST.md` under **Baseline ZIP reconciliation — current planning authority**.
+- the pre-implementation reconciliation for every manifest ID is preserved in `CONTENT_ADDITION_MANIFEST.md`; current repository status is recorded in that manifest's implementation-completion sections.
 
 ### 2.1 Read-only validation observations from this Planning pass
 
@@ -77,7 +83,7 @@ No TypeScript unit/build/E2E claim was revalidated during this Planning-only pas
 | Readiness | RDY-001–018 | Initial five must pass the new entered-context Physical Orientation Completion Test after content migration. |
 | Platform/rendering | PLT + implementation plan | Keep the existing browser-first 2D architecture; no renderer replacement is requested. Re-run dense-scene performance after anatomy expansion. |
 
-## 4. Implementation work in dependency order
+## 4. Historical implementation work completed in dependency order
 
 ### IMP-ANAT-001 — Preserve baseline, enumerate versioned callers, and repair stale authoring metadata
 
@@ -601,28 +607,28 @@ The physical-anatomy clarification does **not** promote these into Version 1:
 
 The Product Catalog is intentionally smaller than a reusable-architecture engine. Implementing it must not silently pull SHR-004–021 future composition into the current task.
 
-## 7. Implementation completion checklist
+## 7. Historical completion checklist and current result
 
-Implementation is complete for this handoff only when:
+The implementation work package is complete for canonical/content/runtime Python gates:
 
-- [ ] supplied baseline/historical-manifest distinctions remain explicit;
-- [ ] Product Catalog and `product_ref` contracts are implemented/validated without shared physical identity;
-- [ ] Anatomy Depictions are implemented/validated/rendered/accessibly summarized without semantic entity behavior;
-- [ ] current mixed source-schema versions remain deliberately supported/migrated;
-- [ ] Concept-validator canonical inventory path is repaired without duplicating the inventory;
-- [ ] all initial-five P1 manifest gaps are either implemented or explicitly evidence-blocked at the safe boundary;
-- [ ] P2 initial-five orientation items are researched and either implemented, intentionally omitted, or bounded with evidence;
-- [ ] deliberate manifest closures remain closed unless new source evidence explicitly changes them;
-- [ ] no later candidate is promoted into Version 1;
-- [ ] runtime artifacts are regenerated and deterministic;
-- [ ] branch/duplicate/stale-reference audits pass;
-- [ ] Concept, Property, Product, RSC, Scenario, runtime, TypeScript, build, E2E, accessibility, readiness, and performance gates pass as applicable;
-- [ ] every initial-five user-enterable context passes DEP-033/RDY-018;
-- [ ] `IMPLEMENTATION_CHANGELOG.md` and release/modified-files outputs report **actual** changes and validation results rather than historical claims.
+- [x] baseline/historical-manifest distinctions remain explicit;
+- [x] Product Catalog and exact `product_ref` contracts are implemented/validated without shared physical identity;
+- [x] Anatomy Depictions are implemented/validated/rendered/accessibly summarized without semantic entity behavior;
+- [x] mixed source-schema compatibility remains explicit (current authored 1.4.0 and retained 1.2.0 sources; 1.3.0 compatibility schema preserved);
+- [x] Concept-validator canonical inventory path is repaired without duplicating the inventory;
+- [x] initial-five physical-orientation additions and device-interior follow-up are applied at supported evidence boundaries;
+- [x] deliberate manifest closures/evidence limits remain explicit;
+- [x] no later candidate is promoted into Version 1;
+- [x] runtime artifacts are regenerated and deterministic;
+- [x] branch/stale-reference/content audits in the Python validation path pass;
+- [x] every initial-five user-enterable context passes DEP-033/RDY-018 mechanically (65 contexts / 0 errors); and
+- [x] the implementation changelog records the applied Product/Anatomy work.
 
-## 8. Remaining questions requiring user input
+Remaining **release evidence**, not incomplete Product/Anatomy implementation: dependency-backed TypeScript/Vitest/Vite/Playwright execution in a normal installed environment, and reproducible Documentation Confidence evidence required by RDY-009.
 
-The implementation can proceed safely without these answers because each item has an explicit generic, representative, or black-box boundary. Confirm the following only if the repository should become more device-specific:
+## 8. Optional evidence inputs for greater device specificity
+
+The current implementation is intentionally safe without these answers because each item has an explicit generic, representative, or black-box boundary. Provide the following only if future content should become more device-specific:
 
 1. **GB300 cache population:** the retained source set contains conflicting cache-population descriptions. Confirm the intended NVL72 reference revision and whether Explore should display 4 E1.S devices per compute tray, 8 × 4 TB devices, or another exact population/capacity. Until confirmed, cache media/controller anatomy remains generic and the ambiguous exact count is not promoted into the depiction.
 2. **Meta Arista 7800 identity:** confirm the exact 7800 generation/chassis used in the modeled 24,576-H100 cluster, and line-card population if known. Until then, the interior is labeled representative 7800-family anatomy rather than a specific chassis fact.

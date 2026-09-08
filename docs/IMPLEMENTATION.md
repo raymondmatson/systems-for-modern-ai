@@ -38,8 +38,8 @@ Renderer optimization may change visual materialization only; it may not change 
 
 ## Schema state
 
-- Later-candidate RSC content remains valid under the preserved 1.2.0 schema.
-- The five Version-1 systems use the coordinated additive 1.4.0 migration. It retains the 1.3.0 population/Concept/Scenario/property model and adds exact revisioned Product Catalog references plus noninteractive Anatomy Depictions for source-supported physical orientation.
+- The current authored RSC corpus is split evenly by configuration: **9 configurations on 1.4.0** and **9 configurations on preserved 1.2.0**. The five Version-1 systems are all on 1.4.0; AMD Helios, AWS Trainium2/Rainier, and both OCI configurations have also migrated to 1.4.0 as later-candidate content work.
+- The coordinated additive 1.4.0 contract retains the 1.3.0 population/Concept/Scenario/property model and adds exact revisioned Product Catalog references plus noninteractive Anatomy Depictions for source-supported physical orientation. The 1.3.0 schema is retained for compatibility/history even though no current authored system file uses it.
 - Concept metadata remains separately versioned at 1.0.0.
 
 ## Device-interior physical coverage
