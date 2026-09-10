@@ -1,0 +1,272 @@
+{
+  "contractVersion": "1.0.0",
+  "purpose": "Deterministic Phase 0 fixtures for the enclosure-first Explore visual pilot. These fixtures lock presentation inputs without changing canonical Reference-System semantics.",
+  "verifiedAgainst": {
+    "referenceSystemSchemaVersion": "1.4.0",
+    "runtimeFormatVersion": "1.1.0",
+    "capabilitySchemaVersion": "1.0.0"
+  },
+  "semanticBoundary": {
+    "requiresSourceSchemaChange": false,
+    "productionSemanticDataMutations": false,
+    "geometryIsPresentationOnly": true,
+    "anatomyRemainsNoninteractive": true,
+    "conceptDerivedTopologyInferenceAllowed": false
+  },
+  "pilotContexts": [
+    {
+      "id": "h100-representative-compute-node",
+      "systemId": "nvidia-dgx-h100-superpod",
+      "configurationId": "h100-superpod-4su-reference",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "aggregateId": "dgx-h100-node",
+        "path": [
+          "dgx-h100-node"
+        ]
+      },
+      "validationScenarios": [
+        "baseline-normal-operation",
+        "checkpoint-storage-pressure"
+      ],
+      "primaryScenarioId": "checkpoint-storage-pressure",
+      "learningFocus": "Distinguish node-local GPU/NVSwitch scale-up from compute/storage paths that leave the representative node enclosure."
+    },
+    {
+      "id": "gb300-rack",
+      "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+      "configurationId": "gb300-nvl72-superpod-reference",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "entityId": "gb300-nvl72-rack"
+      },
+      "validationScenarios": [
+        "baseline-normal-operation",
+        "east-west-compute-plane-degradation"
+      ],
+      "primaryScenarioId": "east-west-compute-plane-degradation",
+      "learningFocus": "Distinguish the repeated compute-tray and NVLink-switch-tray populations contained by the rack from scale-out relationships that cross the rack boundary."
+    },
+    {
+      "id": "meta-root",
+      "systemId": "meta-h100-roce-24k",
+      "configurationId": "meta-24576-h100-roce",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "meta-h100-roce-24k",
+        "configurationId": "meta-24576-h100-roce",
+        "entityId": "meta-h100-roce"
+      },
+      "validationScenarios": [
+        "baseline-normal-operation",
+        "checkpoint-storage-burst",
+        "roce-congestion"
+      ],
+      "primaryScenarioId": "checkpoint-storage-burst",
+      "secondaryScenarioId": "roce-congestion",
+      "learningFocus": "Trace compute to storage through the RoCE architecture while keeping physical connectivity, data-path semantics, and Scenario emphasis distinct."
+    }
+  ],
+  "anatomyCases": [
+    {
+      "fixtureId": "documented-schematic-power",
+      "synthetic": true,
+      "depiction": {
+        "id": "fixture-documented-schematic-power",
+        "label": "Power-supply assembly",
+        "inventory": {
+          "category": "Server-level hardware",
+          "item": "Power supplies"
+        },
+        "evidence": {
+          "status": "documented",
+          "sourceIds": [
+            "fixture-source-documented"
+          ],
+          "note": "Synthetic Phase 0 fixture for a documented component with schematic placement."
+        },
+        "depictionKind": "power",
+        "placementBasis": "schematic",
+        "count": {
+          "value": "6",
+          "basis": "documented_fixed"
+        }
+      }
+    },
+    {
+      "fixtureId": "simplified-schematic-cooling",
+      "synthetic": true,
+      "depiction": {
+        "id": "fixture-simplified-schematic-cooling",
+        "label": "Representative cooling assembly",
+        "inventory": {
+          "category": "Server-level hardware",
+          "item": "Cooling assemblies"
+        },
+        "evidence": {
+          "status": "simplified",
+          "sourceIds": [
+            "fixture-source-simplified"
+          ],
+          "note": "Synthetic Phase 0 fixture for simplified anatomy whose exact product detail is intentionally not asserted."
+        },
+        "depictionKind": "cooling",
+        "placementBasis": "schematic"
+      }
+    },
+    {
+      "fixtureId": "documented-placement-io",
+      "synthetic": true,
+      "depiction": {
+        "id": "fixture-documented-placement-io",
+        "label": "Documented I/O assembly placement",
+        "inventory": {
+          "category": "Server-level hardware",
+          "item": "I/O assemblies"
+        },
+        "evidence": {
+          "status": "documented",
+          "sourceIds": [
+            "fixture-source-documented-placement"
+          ],
+          "note": "Synthetic contract-only fixture. No initial-five production Anatomy Depiction currently uses documented placement."
+        },
+        "depictionKind": "io",
+        "placementBasis": "documented"
+      }
+    }
+  ],
+  "relationshipCases": [
+    {
+      "fixtureId": "physical-connectivity",
+      "relationshipType": "physical_connectivity",
+      "directionality": "undirected"
+    },
+    {
+      "fixtureId": "data-communication-path",
+      "relationshipType": "data_communication_path",
+      "directionality": "source_to_target"
+    },
+    {
+      "fixtureId": "dependency-service",
+      "relationshipType": "dependency_service",
+      "directionality": "source_to_target"
+    },
+    {
+      "fixtureId": "affinity-locality",
+      "relationshipType": "affinity_locality",
+      "directionality": "undirected",
+      "syntheticBecauseAbsentFromCurrentGeneratedRuntime": true
+    },
+    {
+      "fixtureId": "shared-resource-membership",
+      "relationshipType": "shared_resource_membership",
+      "directionality": "undirected",
+      "syntheticBecauseAbsentFromCurrentGeneratedRuntime": true
+    },
+    {
+      "fixtureId": "redundancy-protection",
+      "relationshipType": "redundancy_protection",
+      "directionality": "bidirectional",
+      "syntheticBecauseAbsentFromCurrentGeneratedRuntime": true
+    },
+    {
+      "fixtureId": "control-management",
+      "relationshipType": "control_management",
+      "directionality": "source_to_target"
+    }
+  ],
+  "expansionModeCases": [
+    {
+      "fixtureId": "aggregate-only",
+      "expansionMode": "aggregate_only",
+      "individuallyAddressable": false,
+      "syntheticOnly": false
+    },
+    {
+      "fixtureId": "representative-member",
+      "expansionMode": "representative_member",
+      "individuallyAddressable": false,
+      "syntheticOnly": false
+    },
+    {
+      "fixtureId": "addressable-members",
+      "expansionMode": "addressable_members",
+      "individuallyAddressable": true,
+      "syntheticOnly": true,
+      "note": "Supported by the 1.4.0 schema and TypeScript domain contract but not currently used by generated production content."
+    }
+  ],
+  "visualRoleFallback": "neutral_support",
+  "allowedVisualRoles": [
+    "compute",
+    "memory",
+    "network",
+    "storage",
+    "power",
+    "cooling",
+    "management",
+    "io_interconnect",
+    "structure",
+    "neutral_support"
+  ],
+  "visualRoleMap": {
+    "accelerator_die": "compute",
+    "ai_accelerator": "compute",
+    "apu": "compute",
+    "collective_engine": "io_interconnect",
+    "compute_assembly": "compute",
+    "compute_cluster": "compute",
+    "compute_core": "compute",
+    "compute_group": "compute",
+    "compute_node": "compute",
+    "compute_tray": "compute",
+    "cooling_system": "cooling",
+    "cpu": "compute",
+    "cpu_die": "compute",
+    "dma_engine": "io_interconnect",
+    "dpu": "io_interconnect",
+    "fabric_appliance": "network",
+    "gpu": "compute",
+    "hbm": "memory",
+    "hpc_ai_system": "compute",
+    "inference_system": "compute",
+    "local_storage": "storage",
+    "management_node": "management",
+    "memory_appliance": "memory",
+    "network_fabric": "network",
+    "network_switch": "network",
+    "nic": "io_interconnect",
+    "on_chip_memory": "memory",
+    "optical_network": "network",
+    "pod_group": "structure",
+    "power_system": "power",
+    "preprocess_server": "compute",
+    "rack": "structure",
+    "rack_group": "structure",
+    "rack_scale_system": "structure",
+    "rack_topology_domain": "structure",
+    "scale_up_switch": "network",
+    "smartnic": "io_interconnect",
+    "sparse_core": "compute",
+    "storage_group": "storage",
+    "storage_server": "storage",
+    "storage_system": "storage",
+    "switch_asic": "network",
+    "switch_tray": "network",
+    "system_memory": "memory",
+    "tensor_core": "compute",
+    "topology_group": "network",
+    "tpu": "compute"
+  },
+  "visualRoleFallbackFixture": {
+    "entityType": "fixture-unknown-entity-type",
+    "expectedVisualRole": "neutral_support",
+    "synthetic": true,
+    "note": "Exercises the required renderer fallback without adding an unregistered production entity type."
+  }
+}
