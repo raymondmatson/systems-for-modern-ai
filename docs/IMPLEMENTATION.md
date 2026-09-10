@@ -27,12 +27,15 @@ The semantic core stores project IDs and typed Context Locators. It does not sto
 - `src/state/store.ts` — Redux Toolkit host for semantic AppState; Redux is not the semantic contract.
 - `src/view-model/` — deterministic Explore layout/scene and Detail view models.
 - `src/runtime/repository.ts` — browser transport adapter for generated runtime JSON.
-- `src/app/App.tsx` — browser presentation and semantic action dispatch.
+- `src/app/App.tsx` — browser application shell, semantic action dispatch, Preview timing, and Explore/Concepts orchestration.
+- `src/app/explore/` — composable SVG Explore presentation layers and supporting Explore-only views; these consume view-model data and callbacks and do not own semantic state transitions.
 - `scripts/content/` — canonical validation, 1.4 physical-anatomy/Product-Catalog migration/runtime compilation, runtime integrity, property fixtures, and readiness.
 
 ## Rendering decision
 
 Version 1 remains SVG-first. Current initial-five authored scenes are heavily aggregated and do not justify a Canvas/WebGL dense-layer backplane or renderer virtualization. The benchmark evidence is recorded under `reports/implementation/`.
+
+The Explore SVG is organized into a stable eight-layer presentation order: Scenario underlays; enclosure frame; Anatomy/background context; Cross-Connections/routing; interactive entity shells; labels/counts/role rails; Scenario markers; and Selection/focus/descendant overlays. Phase 1 establishes these composition seams while later visual-design phases populate the reserved enclosure, boundary-connection, visual-key, and state-overlay layers. `App.tsx` continues to supply semantic callbacks rather than placing state-transition rules inside renderer components.
 
 Renderer optimization may change visual materialization only; it may not change semantic identity, Expansion Mode, Selection, Navigation, or accessibility targets.
 

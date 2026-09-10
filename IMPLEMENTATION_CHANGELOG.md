@@ -1,5 +1,15 @@
 # Implementation Changelog
 
+## 2026-09-10 — Visual Design Phase 1 Explore renderer composition refactor
+
+- **Change or issue addressed:** The Explore SVG renderer and semantic companion views were concentrated in the 1,100+ line `src/app/App.tsx`, which made the approved enclosure/role/connection/state redesign difficult to stage without cue-order and interaction regressions.
+- **Reason for the change:** Phase 1 of the approved visual-design plan requires composable Explore rendering seams and a fixed SVG layer order before later phases introduce new visual treatments.
+- **Files added or modified:** `src/app/App.tsx`, `src/app/explore/*`, `src/styles/app.css`, `tests/unit/explore-renderer-layers.test.ts`, `tests/e2e/explore.spec.ts`, `docs/IMPLEMENTATION.md`, `docs/VISUAL_DESIGN_PHASE1_RENDERER_COMPOSITION.md`, and this changelog.
+- **Summary of the implementation:** Extracted `ExploreCanvas`, node/label, connection, Anatomy, Scenario-description, external-connection, and semantic-outline presentation from `App.tsx`; added reserved Phase-2/4 renderer seams for enclosure, boundary connections, and the Visual Key; established the eight approved SVG layer groups; and moved node labels to a noninteractive dedicated label layer. Current state styling remains on existing shells/edges until Phase 5 so this refactor does not prematurely implement the new visual language. No canonical content/schema, generated runtime, view-model geometry, or state-engine semantics changed.
+- **Validation/testing:** `python scripts/content/validate_all.py` passes, including deterministic runtime checks and the 65-context physical-orientation audit. A dependency-free TypeScript smoke check over `src` and unit tests passes with temporary external-module/JSX declarations outside the repository. Source-level contract checks confirm the renderer components do not import state-engine transitions, layer order matches the approved contract, and Phase 2/4 reserved components remain presentation-only. Full pinned `npm test`, `npm run typecheck`, build, and Playwright execution could not be rerun because `node_modules` is absent from the shared ZIP and `npm ci` could not complete in the offline container; the partial install was removed and `package-lock.json` remained unchanged.
+- **Result and remaining limitation:** **Phase 1 implementation complete.** Browser-level behavioral confirmation remains pending a dependency-capable environment, but dedicated unit/E2E regression coverage is included for the new renderer composition.
+- **Deployment status:** Not yet deployed; user will apply this patch and redeploy.
+
 ## 2026-09-07 — Runtime capability contract and H100 representative-population correction
 
 - **Change or issue addressed:** GitHub `npm test` reported the H100 GPU aggregate as `aggregate_only` where the established nested representative-member contract requires representative expansion, while the deployed browser could render a blank page during initial Detail construction.

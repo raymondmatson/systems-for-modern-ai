@@ -4,7 +4,6 @@ import {
   useRef,
   useState,
   type KeyboardEvent,
-  type MouseEvent,
 } from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import Fuse from 'fuse.js';
@@ -16,7 +15,6 @@ import type {
   Configuration,
   Entity,
   ContextLocator,
-  Population,
   ReturnContext,
 } from '../domain/types';
 import {
@@ -56,19 +54,12 @@ import {
 import type {AppDispatch, RootState} from '../state/store';
 import {replace} from '../state/store';
 import {buildDetailVM, type DetailAction, type DetailVM} from '../view-model/detail';
-import {
-  buildExploreScene,
-  buildPreviewVM,
-  type SceneConnection,
-  type SceneNode,
-} from '../view-model/explore';
-import {
-  entityTypeLabel,
-  formatMetadataValue,
-  relationshipTypeLabel,
-  representativeEntityLabel,
-  svgLabelLines,
-} from '../view-model/labels';
+import {buildExploreScene, buildPreviewVM} from '../view-model/explore';
+import {formatMetadataValue, representativeEntityLabel} from '../view-model/labels';
+import {ExploreCanvas} from './explore/ExploreCanvas';
+import {ContextConnections, SemanticExploreOutline} from './explore/ExploreSupportingViews';
+import {ScenarioStrip} from './explore/ScenarioStrip';
+import {VisualKey} from './explore/VisualKey';
 
 const repository = new BrowserContentRepository();
 
@@ -338,7 +329,7 @@ function App({boot}: {boot: BootContent}) {
               <div className="canvas-heading">
                 <div>
                   <h1>{locationHeading(configuration, state.explore.structuralLocation)}</h1>
-                  <p>{scenario?.description}</p>
+                  <ScenarioStrip description={scenario?.description} />
                 </div>
                 <button onClick={() => apply(toggleDetail(state))}>
                   {state.explore.detailVisible ? 'Hide details' : 'Show details'}
@@ -355,101 +346,24 @@ function App({boot}: {boot: BootContent}) {
                 </div>
               )}
 
-              <div className="canvas-viewport">
-                <svg
-                  className="explore-canvas"
-                  viewBox={`0 0 ${scene.width} ${scene.height}`}
-                  role="group"
-                  aria-label={`Explore ${locationHeading(configuration, state.explore.structuralLocation)}`}
-                  data-layout={scene.layoutKind}
-                  onClick={(event: MouseEvent<SVGSVGElement>) => {
-                    if (event.target === event.currentTarget) {
-                      clearPreviewTimers();
-                      apply(clearSelection(stateRef.current));
-                    }
-                  }}
-                >
-                  {scene.connections.map((connection) => (
-                    <ConnectionGlyph
-                      key={connection.id}
-                      connection={connection}
-                      nodes={scene.nodes}
-                      previewHandlers={previewHandlers}
-                      selectTarget={selectTarget}
-                    />
-                  ))}
+              <ExploreCanvas
+                scene={scene}
+                locationLabel={locationHeading(configuration, state.explore.structuralLocation)}
+                previewHandlers={previewHandlers}
+                selectTarget={selectTarget}
+                onEmptyCanvasClick={() => {
+                  clearPreviewTimers();
+                  apply(clearSelection(stateRef.current));
+                }}
+              />
 
-                  {scene.nodes.map((node) => (
-                    <NodeGlyph
-                      key={`${node.entity.id}-${node.locator.kind}`}
-                      node={node}
-                      previewHandlers={previewHandlers}
-                      selectTarget={selectTarget}
-                    />
-                  ))}
+              <VisualKey scene={scene} />
 
-                  {scene.anatomyDepictions.length > 0 && (
-                    <text
-                      className="anatomy-section-label"
-                      x="40"
-                      y={Math.min(...scene.anatomyDepictions.map((item) => item.y)) - 18}
-                      aria-hidden="true"
-                    >
-                      Physical anatomy · noninteractive
-                    </text>
-                  )}
-
-                  {scene.anatomyDepictions.map((item) => (
-                    <g
-                      key={`anatomy-${item.depiction.id}`}
-                      className={`anatomy-depiction anatomy-${item.depiction.depictionKind} evidence-${item.depiction.evidence.status}`}
-                      transform={`translate(${item.x} ${item.y})`}
-                      aria-hidden="true"
-                      data-placement-basis={item.depiction.placementBasis}
-                      data-evidence-status={item.depiction.evidence.status}
-                    >
-                      <rect width={item.width} height={item.height} rx="8" />
-                      <text className="anatomy-label" x="12" y="23">
-                        {item.labelLines.map((line, index) => (
-                          <tspan key={`${item.depiction.id}-line-${index}`} x="12" dy={index === 0 ? 0 : 16}>{line}</tspan>
-                        ))}
-                      </text>
-                      <text className="anatomy-meta" x="12" y="61">
-                        {item.evidenceLabel} · {item.placementLabel}
-                      </text>
-                      {item.countLabel && (
-                        <text className="anatomy-count" x="12" y="78">{item.countLabel}</text>
-                      )}
-                    </g>
-                  ))}
-
-                  {scene.nodes.length === 0 && scene.anatomyDepictions.length === 0 && (
-                    <text className="empty-scene" x={scene.width / 2} y={scene.height / 2} textAnchor="middle">
-                      No deeper modeled structure at this location.
-                    </text>
-                  )}
-                </svg>
-              </div>
-
-              {scene.contextConnections.length > 0 && (
-                <section className="context-connections" aria-labelledby="cross-connections-title">
-                  <h2 id="cross-connections-title">Cross-connections beyond this visual grouping</h2>
-                  <div className="connection-cards">
-                    {scene.contextConnections.map((connection) => (
-                      <button
-                        key={connection.id}
-                        aria-pressed={connection.selected}
-                        onClick={() => selectTarget(connection.locator)}
-                        {...previewHandlers(connection.locator)}
-                      >
-                        <strong>{connection.name}</strong>
-                        <span>{relationshipTypeLabel(connection.relationshipType)}</span>
-                        <small>{connection.endpointLabels.join(' ↔ ')}</small>
-                      </button>
-                    ))}
-                  </div>
-                </section>
-              )}
+              <ContextConnections
+                scene={scene}
+                selectTarget={selectTarget}
+                previewHandlers={previewHandlers}
+              />
 
               <SemanticExploreOutline
                 scene={scene}
@@ -557,208 +471,6 @@ function ArchitecturalContextControls({
         </select>
       </label>
       {tier !== undefined && <span className="tier">Tier {tier}</span>}
-    </section>
-  );
-}
-
-function NodeGlyph({
-  node,
-  previewHandlers,
-  selectTarget,
-}: {
-  node: SceneNode;
-  previewHandlers: (locator: ContextLocator) => Record<string, () => void>;
-  selectTarget: (locator: ContextLocator) => void;
-}) {
-  const lines = svgLabelLines(node.entity.name);
-  const stateDescription = [
-    node.location ? 'current location' : undefined,
-    node.selected ? 'selected' : undefined,
-    node.containsSelection ? 'contains current selection' : undefined,
-    node.scenarioEmphasized ? 'affected by active scenario' : undefined,
-    node.locator.kind === 'representative_member' ? 'representative context' : undefined,
-  ]
-    .filter(Boolean)
-    .join(', ');
-  const typeY = lines.length > 1 ? 67 : 55;
-  const metaY = lines.length > 1 ? 84 : 75;
-  return (
-    <g
-      transform={`translate(${node.x} ${node.y})`}
-      className={`node ${node.selected ? 'selected ' : ''}${node.previewed ? 'previewed ' : ''}${
-        node.location ? 'location ' : ''
-      }${node.containsSelection ? 'contains-selection ' : ''}${
-        node.scenarioEmphasized ? 'scenario-emphasized ' : ''
-      }`}
-      tabIndex={0}
-      role="button"
-      aria-pressed={node.selected}
-      aria-current={node.location ? 'location' : undefined}
-      aria-label={`${node.entity.name}, ${entityTypeLabel(node.entity.entityType)}${
-        stateDescription ? `, ${stateDescription}` : ''
-      }`}
-      {...previewHandlers(node.locator)}
-      onClick={() => selectTarget(node.locator)}
-      onKeyDown={(event) => {
-        if (event.key === 'Enter' || event.key === ' ') {
-          event.preventDefault();
-          event.stopPropagation();
-          selectTarget(node.locator);
-        }
-      }}
-    >
-      <rect width={node.width} height={node.height} rx="10" />
-      <text className="node-name" x="12" y="27">
-        {lines.map((line, index) => (
-          <tspan key={line} x="12" dy={index === 0 ? 0 : 17}>
-            {line}
-          </tspan>
-        ))}
-      </text>
-      <text className="node-type" x="12" y={typeY}>
-        {entityTypeLabel(node.entity.entityType)}
-      </text>
-      {node.entity.population && (
-        <text className="node-meta" x="12" y={metaY}>
-          {populationText(node.entity.population)}
-        </text>
-      )}
-      <title>{node.entity.name}</title>
-    </g>
-  );
-}
-
-function ConnectionGlyph({
-  connection,
-  nodes,
-  previewHandlers,
-  selectTarget,
-}: {
-  connection: SceneConnection;
-  nodes: SceneNode[];
-  previewHandlers: (locator: ContextLocator) => Record<string, () => void>;
-  selectTarget: (locator: ContextLocator) => void;
-}) {
-  const endpoints = connection.endpointNodeIds
-    .map((id) => nodes.find((node) => node.entity.id === id))
-    .filter((node): node is SceneNode => Boolean(node));
-  if (endpoints.length < 2) return null;
-  const centers = endpoints.map((node) => ({
-    x: node.x + node.width / 2,
-    y: node.y + node.height / 2,
-  }));
-  const segments =
-    centers.length === 2
-      ? [[centers[0]!, centers[1]!] as const]
-      : centers.map((center) => {
-          const hub = {
-            x: centers.reduce((sum, point) => sum + point.x, 0) / centers.length,
-            y: centers.reduce((sum, point) => sum + point.y, 0) / centers.length,
-          };
-          return [center, hub] as const;
-        });
-  const stateDescription = [
-    connection.selected ? 'selected' : undefined,
-    connection.scenarioEmphasized ? 'affected by active scenario' : undefined,
-    connection.aggregated ? 'summarized at this scale' : undefined,
-  ]
-    .filter(Boolean)
-    .join(', ');
-
-  return (
-    <g
-      className={`edge ${connection.selected ? 'selected ' : ''}${
-        connection.previewed ? 'previewed ' : ''
-      }${connection.scenarioEmphasized ? 'scenario-emphasized ' : ''}${
-        connection.aggregated ? 'aggregated ' : ''
-      }`}
-      tabIndex={0}
-      role="button"
-      aria-pressed={connection.selected}
-      aria-label={`${connection.name}, ${relationshipTypeLabel(connection.relationshipType)}, ${
-        connection.endpointLabels.join(' to ')
-      }${stateDescription ? `, ${stateDescription}` : ''}`}
-      {...previewHandlers(connection.locator)}
-      onClick={() => selectTarget(connection.locator)}
-      onKeyDown={(event) => {
-        if (event.key === 'Enter' || event.key === ' ') {
-          event.preventDefault();
-          event.stopPropagation();
-          selectTarget(connection.locator);
-        }
-      }}
-    >
-      {segments.map(([start, end], segmentIndex) => (
-        <g key={segmentIndex}>
-          <line className="edge-hit" x1={start.x} y1={start.y} x2={end.x} y2={end.y} />
-          <line className="edge-visible" x1={start.x} y1={start.y} x2={end.x} y2={end.y} />
-        </g>
-      ))}
-      {centers.length > 2 && (
-        <circle
-          className="edge-hub"
-          cx={centers.reduce((sum, point) => sum + point.x, 0) / centers.length}
-          cy={centers.reduce((sum, point) => sum + point.y, 0) / centers.length}
-          r="6"
-        />
-      )}
-      <title>
-        {connection.name}: {connection.endpointLabels.join(' ↔ ')}
-      </title>
-    </g>
-  );
-}
-
-function SemanticExploreOutline({
-  scene,
-  selectTarget,
-  previewHandlers,
-}: {
-  scene: ReturnType<typeof buildExploreScene>;
-  selectTarget: (locator: ContextLocator) => void;
-  previewHandlers: (locator: ContextLocator) => Record<string, () => void>;
-}) {
-  const allConnections = [...scene.connections, ...scene.contextConnections];
-  if (scene.nodes.length === 0 && allConnections.length === 0) return null;
-  return (
-    <section className="semantic-outline" aria-label="Explore semantic structure">
-      <h2>Explore structure</h2>
-      <div className="semantic-targets">
-        {scene.nodes.map((node) => (
-          <button
-            key={`semantic-${node.entity.id}`}
-            aria-pressed={node.selected}
-            onClick={() => selectTarget(node.locator)}
-            {...previewHandlers(node.locator)}
-          >
-            <strong>{node.entity.name}</strong>
-            <span>{entityTypeLabel(node.entity.entityType)}</span>
-            {(node.scenarioEmphasized || node.containsSelection || node.locator.kind === 'representative_member') && (
-              <small>
-                {[
-                  node.locator.kind === 'representative_member' ? 'Representative' : undefined,
-                  node.containsSelection ? 'Contains current selection' : undefined,
-                  node.scenarioEmphasized ? 'Scenario affected' : undefined,
-                ]
-                  .filter(Boolean)
-                  .join(' · ')}
-              </small>
-            )}
-          </button>
-        ))}
-        {allConnections.map((connection) => (
-          <button
-            key={`semantic-${connection.id}`}
-            aria-pressed={connection.selected}
-            onClick={() => selectTarget(connection.locator)}
-            {...previewHandlers(connection.locator)}
-          >
-            <strong>{connection.name}</strong>
-            <span>{relationshipTypeLabel(connection.relationshipType)}</span>
-            <small>{connection.endpointLabels.join(' ↔ ')}</small>
-          </button>
-        ))}
-      </div>
     </section>
   );
 }
@@ -1143,12 +855,6 @@ function locationHeading(configuration: Configuration, locator: ContextLocator) 
   }
   if (locator.kind === 'entity') return configuration.entities[locator.entityId]?.name ?? locator.entityId;
   return configuration.entities[configuration.rootEntityId]?.name ?? configuration.name;
-}
-
-function populationText(population: Population) {
-  if (population.count.form === 'unknown') return 'Population unknown';
-  const count = population.count.value ? `${population.count.value} members` : 'Repeated population';
-  return `${count} · ${formatMetadataValue(population.expansionMode)}`;
 }
 
 function occurrenceLabel(boot: BootContent, occurrence: RuntimeOccurrence) {

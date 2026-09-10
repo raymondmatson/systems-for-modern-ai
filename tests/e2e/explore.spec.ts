@@ -119,6 +119,29 @@ test('Architectural Context controls are shared in Concepts and configuration sw
   await expect(page.getByRole('heading', {name: 'Remote Direct Memory Access'})).toBeVisible();
 });
 
+test('Explore SVG exposes the approved composable layer order without changing semantic targets', async ({page}) => {
+  await page.goto('./');
+  const layers = await page.locator('svg.explore-canvas > g[data-layer]').evaluateAll((elements) =>
+    elements.map((element) => element.getAttribute('data-layer')),
+  );
+  expect(layers).toEqual([
+    'scenario-underlays',
+    'enclosure-frame',
+    'anatomy-context',
+    'connections-routing',
+    'interactive-entity-shells',
+    'labels-counts-role-rails',
+    'scenario-markers',
+    'selection-focus-descendant-overlays',
+  ]);
+
+  const firstTarget = page.locator('svg [data-layer="interactive-entity-shells"] [role="button"]').first();
+  await firstTarget.focus();
+  await expect(page.getByLabel('Inspect preview')).toBeVisible();
+  await page.keyboard.press('Enter');
+  await expect(firstTarget).toHaveAttribute('aria-pressed', 'true');
+});
+
 test('cross-tier relationships remain discoverable and semantic outline mirrors visual targets', async ({page}) => {
   await page.goto('./');
   await expect(page.getByRole('region', {name: 'Explore semantic structure'})).toBeVisible();
