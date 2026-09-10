@@ -83,6 +83,11 @@ export function EnclosureGlyph({enclosure}: {enclosure: SceneEnclosure | undefin
       <text className="enclosure-context" x={enclosure.x + 20} y={enclosure.y + 47}>
         {enclosure.typeLabel} · {enclosure.contextLabel}
       </text>
+      {enclosure.arrangementNotice && (
+        <text className="enclosure-arrangement-notice" x={enclosure.x + 20} y={enclosure.y + 66}>
+          {enclosure.arrangementNotice}
+        </text>
+      )}
       {enclosure.representative && (
         <g className="representative-ribbon" transform={`translate(${enclosure.x + enclosure.width - 132} ${enclosure.y + 14})`}>
           <rect width="112" height="24" rx="12" />

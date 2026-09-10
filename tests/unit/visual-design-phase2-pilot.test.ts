@@ -97,7 +97,7 @@ describe('Phase 2 H100 + GB300 pilot presentation', () => {
     expect(switches?.population?.countLabel).toBe('×9');
   });
 
-  it('keeps current Anatomy Depictions outside the enclosure until Phase 3 integration', () => {
+  it('keeps the Phase 2 enclosure contract compatible with later integrated anatomy', () => {
     const configuration = config(h100, 'h100-superpod-4su-reference');
     const location: ContextLocator = {
       kind: 'representative_member',
@@ -111,7 +111,10 @@ describe('Phase 2 H100 + GB300 pilot presentation', () => {
       configuration,
     );
     expect(scene.anatomyDepictions.length).toBeGreaterThan(0);
-    const enclosureBottom = scene.enclosure!.y + scene.enclosure!.height;
-    expect(Math.min(...scene.anatomyDepictions.map((item) => item.y))).toBeGreaterThan(enclosureBottom);
+    expect(scene.enclosure?.interior).toBeDefined();
+    for (const item of scene.anatomyDepictions) {
+      expect(item.x).toBeGreaterThanOrEqual(scene.enclosure!.interior.x);
+      expect(item.y).toBeGreaterThanOrEqual(scene.enclosure!.interior.y);
+    }
   });
 });

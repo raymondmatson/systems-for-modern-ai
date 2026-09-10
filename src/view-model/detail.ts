@@ -356,7 +356,18 @@ export function buildDetailVM(
         containment.push([
           'Visible anatomy',
           entity.anatomyDepictions
-            .map((item) => `${item.label}${item.placementBasis === 'schematic' ? ' (schematic)' : ''}`)
+            .map((item) => {
+              const placement = item.placementBasis === 'schematic'
+                ? 'schematic placement'
+                : 'documented placement';
+              const evidence = `${formatMetadataValue(item.evidence.status)} evidence`;
+              const count = item.count?.value
+                ? `; count ${item.count.value} (${formatMetadataValue(item.count.basis)})`
+                : item.count
+                  ? `; count basis ${formatMetadataValue(item.count.basis)}`
+                  : '';
+              return `${item.label} — ${evidence}; ${placement}${count}`;
+            })
             .join('; '),
         ]);
       }

@@ -66,27 +66,49 @@ export function formatMetadataValue(value: string): string {
   return humanizeIdentifier(value);
 }
 
-export function svgLabelLines(value: string, maxCharacters = 24): string[] {
-  if (value.length <= maxCharacters) return [value];
-  const words = value.split(/\s+/);
+export interface SvgLabelFit {
+  lines: string[];
+  truncated: boolean;
+}
+
+export function svgLabelFit(
+  value: string,
+  maxCharacters = 24,
+  maxLines = 2,
+): SvgLabelFit {
+  const words = value.trim().split(/\s+/).filter(Boolean);
+  if (words.length === 0) return {lines: [''], truncated: false};
+
   const lines: string[] = [];
   let current = '';
-  for (const word of words) {
+  let index = 0;
+  while (index < words.length && lines.length < maxLines) {
+    const word = words[index]!;
     const candidate = current ? `${current} ${word}` : word;
-    if (candidate.length <= maxCharacters || !current) {
+    if (candidate.length <= maxCharacters || current.length === 0) {
       current = candidate;
+      index += 1;
       continue;
     }
     lines.push(current);
-    current = word;
-    if (lines.length === 2) break;
+    current = '';
   }
-  if (lines.length < 2 && current) lines.push(current);
-  const consumed = lines.join(' ').length;
-  if (consumed < value.length && lines.length > 0) {
+  if (current && lines.length < maxLines) lines.push(current);
+
+  const consumedWords = lines.join(' ').split(/\s+/).filter(Boolean).length;
+  const truncated = consumedWords < words.length;
+  if (truncated && lines.length > 0) {
     const last = lines.length - 1;
     const available = Math.max(4, maxCharacters - 1);
-    lines[last] = `${lines[last]!.slice(0, available)}…`;
+    lines[last] = `${lines[last]!.replace(/[.…]+$/, '').slice(0, available)}…`;
   }
-  return lines.slice(0, 2);
+  return {lines, truncated};
+}
+
+export function svgLabelLines(
+  value: string,
+  maxCharacters = 24,
+  maxLines = 2,
+): string[] {
+  return svgLabelFit(value, maxCharacters, maxLines).lines;
 }

@@ -1,7 +1,8 @@
 import type {MouseEvent} from 'react';
 
 import type {buildExploreScene} from '../../view-model/explore';
-import {AnatomyGlyph, AnatomySectionLabel} from './AnatomyGlyph';
+import {AnatomyGlyph} from './AnatomyGlyph';
+import {CompositionRegionGlyph} from './CompositionRegionGlyph';
 import {BoundaryConnectionGlyph} from './BoundaryConnectionGlyph';
 import {ConnectionGlyph} from './ConnectionGlyph';
 import {EnclosureGlyph} from './EnclosureGlyph';
@@ -43,7 +44,9 @@ export function ExploreCanvas({
         </g>
 
         <g data-layer={EXPLORE_SVG_LAYER_ORDER[2]} aria-hidden="true">
-          <AnatomySectionLabel items={scene.anatomyDepictions} />
+          {scene.compositionRegions.map((region) => (
+            <CompositionRegionGlyph key={`region-${region.id}`} region={region} />
+          ))}
           {scene.anatomyDepictions.map((item) => (
             <AnatomyGlyph key={`anatomy-${item.depiction.id}`} item={item} />
           ))}

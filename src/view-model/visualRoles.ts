@@ -129,6 +129,21 @@ const shellFamilyByEntityType: Record<string, StructuralShellFamily> = {
   tpu: 'device',
 };
 
+
+const visualRoleByDepictionKind: Record<string, VisualRole> = {
+  compute: 'compute',
+  memory: 'memory',
+  network: 'network',
+  storage: 'storage',
+  power: 'power',
+  cooling: 'cooling',
+  management: 'management',
+  io: 'io_interconnect',
+  structural: 'structure',
+  support: 'neutral_support',
+  other: 'neutral_support',
+};
+
 const visualRoleLabels: Record<VisualRole, string> = {
   compute: 'Compute',
   memory: 'Memory',
@@ -144,6 +159,10 @@ const visualRoleLabels: Record<VisualRole, string> = {
 
 export function visualRoleForEntityType(entityType: string): VisualRole {
   return visualRoleByEntityType[entityType] ?? 'neutral_support';
+}
+
+export function visualRoleForDepictionKind(depictionKind: string): VisualRole {
+  return visualRoleByDepictionKind[depictionKind] ?? 'neutral_support';
 }
 
 export function structuralShellFamilyForEntityType(entityType: string): StructuralShellFamily {

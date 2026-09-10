@@ -1,5 +1,5 @@
 import type {SceneNode} from '../../view-model/explore';
-import {entityTypeLabel, svgLabelLines} from '../../view-model/labels';
+import {entityTypeLabel} from '../../view-model/labels';
 import type {PreviewHandlers, SelectTarget} from './types';
 import {RoleIcon} from './RoleIcon';
 
@@ -54,6 +54,22 @@ function AggregateBackplates({node}: {node: SceneNode}) {
   );
 }
 
+function MediaFallback({node}: {node: SceneNode}) {
+  if (node.mediaMode === 'compact') {
+    return (
+      <g className="node-media-fallback compact" aria-hidden="true">
+        <RoleIcon role={node.visualRole} x={16} y={18} />
+      </g>
+    );
+  }
+  return (
+    <g className="node-media-fallback full" aria-hidden="true">
+      <rect className="node-media-region" x="17" y="17" width="48" height="48" rx="8" />
+      <RoleIcon role={node.visualRole} x={28} y={28} />
+    </g>
+  );
+}
+
 export function NodeGlyph({
   node,
   previewHandlers,
@@ -76,6 +92,8 @@ export function NodeGlyph({
       data-visual-role={node.visualRole}
       data-shell-family={node.shellFamily}
       data-has-media="false"
+      data-media-mode={node.mediaMode}
+      data-label-truncated={node.labelTruncated ? 'true' : 'false'}
       data-population={node.population?.countLabel ?? 'single'}
       tabIndex={0}
       role="button"
@@ -97,8 +115,7 @@ export function NodeGlyph({
       <AggregateBackplates node={node} />
       <rect className="node-shell" width={node.width} height={node.height} rx={shellRadius(node)} />
       <rect className="node-role-rail" x="0" y="0" width="7" height={node.height} rx="3" />
-      <rect className="node-media-region" x="17" y="17" width="48" height="48" rx="8" />
-      <RoleIcon role={node.visualRole} x={28} y={28} />
+      <MediaFallback node={node} />
       <ShellFamilyDetail node={node} />
       <title>{node.entity.name}</title>
     </g>
@@ -110,19 +127,25 @@ export function NodeGlyph({
  * The layer remains noninteractive so pointer input resolves to NodeGlyph.
  */
 export function NodeLabelGlyph({node}: {node: SceneNode}) {
-  const lines = svgLabelLines(node.entity.name, 20);
-  const nameX = 78;
-  const typeY = lines.length > 1 ? 66 : 52;
-  const metaY = 92;
+  const lines = node.labelLines;
+  const compact = node.mediaMode === 'compact';
+  const nameX = compact ? 50 : 78;
+  const nameY = compact ? 24 : 26;
+  const lineHeight = compact ? 15 : 16;
+  const typeY = Math.min(
+    node.population ? node.height - 34 : node.height - 15,
+    nameY + Math.max(0, lines.length - 1) * lineHeight + 22,
+  );
+  const metaY = node.height - 15;
   return (
     <g
-      className="node-label-layer"
+      className={`node-label-layer media-${node.mediaMode}`}
       transform={`translate(${node.x} ${node.y})`}
       aria-hidden="true"
     >
-      <text className="node-name" x={nameX} y="26">
+      <text className="node-name" x={nameX} y={nameY}>
         {lines.map((line, index) => (
-          <tspan key={`${line}-${index}`} x={nameX} dy={index === 0 ? 0 : 16}>
+          <tspan key={`${line}-${index}`} x={nameX} dy={index === 0 ? 0 : lineHeight}>
             {line}
           </tspan>
         ))}

@@ -5,9 +5,15 @@ import type {
   Entity,
   AnatomyDepiction,
 } from '../domain/types';
-import {layoutForContext, type LayoutRect} from './layout';
+import {
+  layoutForContext,
+  type LayoutRect,
+  type LayoutRegion,
+  type NodeMediaMode,
+} from './layout';
 import {
   structuralShellFamilyForEntityType,
+  visualRoleForDepictionKind,
   visualRoleForEntityType,
   visualRoleLabel,
   type StructuralShellFamily,
@@ -17,6 +23,7 @@ import {
   entityTypeLabel,
   relationshipTypeLabel,
   representativeEntityLabel,
+  svgLabelFit,
 } from './labels';
 
 export interface ScenePopulationPresentation {
@@ -37,6 +44,8 @@ export interface SceneEnclosure {
   height: number;
   headerHeight: number;
   interior: LayoutRect;
+  portReserve: {top: number; right: number; bottom: number; left: number};
+  arrangementNotice?: string;
   representative: boolean;
   contextLabel: string;
   population?: ScenePopulationPresentation;
@@ -52,6 +61,9 @@ export interface SceneNode {
   visualRole: VisualRole;
   visualRoleLabel: string;
   shellFamily: StructuralShellFamily;
+  mediaMode: NodeMediaMode;
+  labelLines: string[];
+  labelTruncated: boolean;
   population?: ScenePopulationPresentation;
   selected: boolean;
   containsSelection: boolean;
@@ -59,6 +71,8 @@ export interface SceneNode {
   location: boolean;
   scenarioEmphasized: boolean;
 }
+
+export type SceneCompositionRegion = LayoutRegion;
 
 export interface SceneConnection {
   id: string;
@@ -78,6 +92,9 @@ export interface SceneAnatomyDepiction {
   labelLines: string[];
   evidenceLabel: string;
   placementLabel: string;
+  showPlacementBadge: boolean;
+  visualRole: VisualRole;
+  visualRoleLabel: string;
   countLabel?: string;
   x: number;
   y: number;
@@ -96,33 +113,6 @@ function sameLocator(a: ContextLocator | undefined, b: ContextLocator) {
   return a !== undefined && JSON.stringify(a) === JSON.stringify(b);
 }
 
-function wrapAnatomyLabel(label: string, maxChars = 29): string[] {
-  const words = label.trim().split(/\s+/).filter(Boolean);
-  if (words.length === 0) return [''];
-
-  const lines: string[] = [];
-  let current = '';
-  let consumed = 0;
-  for (const word of words) {
-    const candidate = current ? `${current} ${word}` : word;
-    if (candidate.length <= maxChars || current.length === 0) {
-      current = candidate;
-      consumed += 1;
-      continue;
-    }
-    lines.push(current);
-    if (lines.length === 2) break;
-    current = word;
-    consumed += 1;
-  }
-  if (lines.length < 2 && current) lines.push(current);
-  if (consumed < words.length && lines.length > 0) {
-    const last = lines.length - 1;
-    lines[last] = `${lines[last].replace(/[.…]+$/, '')}…`;
-  }
-  return lines.slice(0, 2);
-}
-
 function anatomyEvidenceLabel(depiction: AnatomyDepiction): string {
   switch (depiction.evidence.status) {
     case 'documented': return 'verified';
@@ -135,9 +125,8 @@ function anatomyEvidenceLabel(depiction: AnatomyDepiction): string {
 }
 
 function anatomyCountLabel(depiction: AnatomyDepiction): string | undefined {
-  if (!depiction.count) return undefined;
-  const basis = depiction.count.basis.replaceAll('_', ' ');
-  return depiction.count.value ? `${depiction.count.value} · ${basis}` : basis;
+  if (!depiction.count?.value) return undefined;
+  return `×${depiction.count.value}`;
 }
 
 
@@ -402,6 +391,7 @@ export function buildExploreScene(state: AppState, configuration: Configuration)
       nodes: [] as SceneNode[],
       connections: [] as SceneConnection[],
       contextConnections: [] as SceneConnection[],
+      compositionRegions: [] as SceneCompositionRegion[],
       anatomyDepictions: [] as SceneAnatomyDepiction[],
       width: 760,
       height: 360,
@@ -446,6 +436,11 @@ export function buildExploreScene(state: AppState, configuration: Configuration)
       visualRole: visualRoleForEntityType(entity.entityType),
       visualRoleLabel: visualRoleLabel(visualRoleForEntityType(entity.entityType)),
       shellFamily: structuralShellFamilyForEntityType(entity.entityType),
+      mediaMode: position.mediaMode,
+      ...(() => {
+        const fit = svgLabelFit(entity.name, position.labelMaxCharacters, position.labelMaxLines);
+        return {labelLines: fit.lines, labelTruncated: fit.truncated};
+      })(),
       population: populationPresentation(entity.population),
       selected: sameLocator(state.explore.selection, locator),
       containsSelection: nodeContainsSelection(
@@ -460,21 +455,27 @@ export function buildExploreScene(state: AppState, configuration: Configuration)
     };
   });
 
-  const anatomyColumns = Math.min(3, Math.max(1, current.anatomyDepictions?.length ?? 1));
-  const anatomyDepictions: SceneAnatomyDepiction[] = (current.anatomyDepictions ?? []).map((depiction, index) => ({
-    depiction,
-    labelLines: wrapAnatomyLabel(depiction.label),
-    evidenceLabel: anatomyEvidenceLabel(depiction),
-    placementLabel: depiction.placementBasis === 'schematic'
-      ? 'schematic placement'
-      : 'documented placement',
-    countLabel: anatomyCountLabel(depiction),
-    x: 40 + (index % anatomyColumns) * 232,
-    y: layout.height + 52 + Math.floor(index / anatomyColumns) * 106,
-    width: 214,
-    height: 92,
-  }));
-  const anatomyRows = Math.ceil(anatomyDepictions.length / anatomyColumns);
+  const anatomyPositions = new Map(layout.anatomy.map((item) => [item.id, item]));
+  const placementBases = new Set((current.anatomyDepictions ?? []).map((item) => item.placementBasis));
+  const anatomyDepictions: SceneAnatomyDepiction[] = (current.anatomyDepictions ?? []).map((depiction) => {
+    const position = anatomyPositions.get(depiction.id);
+    if (!position) throw new Error(`Missing Phase 3 anatomy layout for ${depiction.id}`);
+    const visualRole = visualRoleForDepictionKind(depiction.depictionKind);
+    const maxChars = Math.max(18, Math.floor((position.width - 64) / 6.4));
+    return {
+      depiction,
+      labelLines: svgLabelFit(depiction.label, maxChars, position.width < 200 ? 3 : 2).lines,
+      evidenceLabel: anatomyEvidenceLabel(depiction),
+      placementLabel: depiction.placementBasis === 'schematic'
+        ? 'schematic placement'
+        : 'documented placement',
+      showPlacementBadge: placementBases.size > 1 || depiction.placementBasis === 'documented',
+      visualRole,
+      visualRoleLabel: visualRoleLabel(visualRole),
+      countLabel: anatomyCountLabel(depiction),
+      ...position,
+    };
+  });
 
   const connections: SceneConnection[] = [];
   const contextConnections: SceneConnection[] = [];
@@ -525,9 +526,10 @@ export function buildExploreScene(state: AppState, configuration: Configuration)
     nodes,
     connections,
     contextConnections,
+    compositionRegions: layout.regions,
     anatomyDepictions,
-    width: Math.max(layout.width, anatomyDepictions.length ? 760 : layout.width),
-    height: layout.height + (anatomyRows ? 66 + anatomyRows * 106 : 0),
+    width: layout.width,
+    height: layout.height,
     layoutKind: layout.kind,
   };
 }

@@ -158,7 +158,9 @@ test('Phase 2 enclosure and component shell cues remain presentation-only and ke
   await expect(gpu).toHaveAttribute('data-shell-family', 'device');
   await expect(gpu).toHaveAttribute('data-has-media', 'false');
   await expect(gpu).toHaveAttribute('data-population', '×8');
-  await expect(gpu.locator('.node-media-region')).toHaveCount(1);
+  await expect(gpu).toHaveAttribute('data-media-mode', /full|compact/);
+  const mediaMode = await gpu.getAttribute('data-media-mode');
+  await expect(gpu.locator('.node-media-region')).toHaveCount(mediaMode === 'full' ? 1 : 0);
   await expect(gpu.locator('.node-stack-backplate')).toHaveCount(2);
 
   await gpu.focus();
@@ -246,7 +248,15 @@ test('authored Anatomy Depictions are visible but noninteractive and summarized 
   await expect(depiction).toHaveAttribute('aria-hidden', 'true');
   await expect(depiction).toHaveAttribute('data-evidence-status', /documented|inferred|simplified|proprietary|unknown/);
   await expect(depiction).not.toHaveAttribute('tabindex', /.+/);
-  await expect(page.locator('svg .anatomy-section-label')).toContainText('Physical anatomy');
+  const anatomyRegion = page.locator('svg .composition-region[data-region-kind="anatomy-support"]');
+  await expect(anatomyRegion).toBeVisible();
+  await expect(anatomyRegion.locator('.composition-region-label')).toContainText('Physical anatomy');
+  const enclosure = page.locator('svg .scene-enclosure').first();
+  const [enclosureBox, anatomyBox] = await Promise.all([enclosure.boundingBox(), depiction.boundingBox()]);
+  expect(enclosureBox).not.toBeNull();
+  expect(anatomyBox).not.toBeNull();
+  expect(anatomyBox!.y).toBeGreaterThanOrEqual(enclosureBox!.y);
+  expect(anatomyBox!.y + anatomyBox!.height).toBeLessThanOrEqual(enclosureBox!.y + enclosureBox!.height + 1);
 
   await expect(page.getByLabel('Detail')).toContainText('Visible anatomy');
   await expect(page.getByRole('region', {name: 'Explore semantic structure'}).locator('.anatomy-depiction')).toHaveCount(0);

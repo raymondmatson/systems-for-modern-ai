@@ -235,7 +235,7 @@ describe('Explore and Detail view models', () => {
     expect(scene.anatomyDepictions[0]?.placementLabel).toBe('schematic placement');
     expect(scene.anatomyDepictions[0]?.labelLines.length).toBeLessThanOrEqual(2);
     const detail = buildDetailVM(state, configuration, {capabilities, propertyRegistry, concepts});
-    expect(detail.containment).toContainEqual(['Visible anatomy', 'Power-supply assembly (schematic)']);
+    expect(detail.containment).toContainEqual(['Visible anatomy', 'Power-supply assembly — Documented evidence; schematic placement']);
   });
 
   it('uses the resolved Product Catalog identity in Detail without changing entity identity', () => {
@@ -293,6 +293,8 @@ describe('Explore and Detail view models', () => {
     const scene = buildExploreScene(enteredState, anatomicalConfiguration);
     expect(scene.anatomyDepictions).toHaveLength(1);
     expect(scene.anatomyDepictions[0]?.evidenceLabel).toBe('representative');
-    expect(scene.anatomyDepictions[0]?.width).toBe(214);
+    expect(scene.anatomyDepictions[0]?.width).toBeGreaterThanOrEqual(180);
+    expect(scene.anatomyDepictions[0]?.visualRole).toBe('compute');
+    expect(scene.anatomyDepictions[0]?.y).toBeLessThan(scene.enclosure!.y + scene.enclosure!.height);
   });
 });
