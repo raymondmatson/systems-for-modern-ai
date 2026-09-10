@@ -39,7 +39,7 @@ export function ExploreCanvas({
         <g data-layer={EXPLORE_SVG_LAYER_ORDER[0]} aria-hidden="true" />
 
         <g data-layer={EXPLORE_SVG_LAYER_ORDER[1]} aria-hidden="true">
-          <EnclosureGlyph current={scene.current} />
+          <EnclosureGlyph enclosure={scene.enclosure} />
         </g>
 
         <g data-layer={EXPLORE_SVG_LAYER_ORDER[2]} aria-hidden="true">

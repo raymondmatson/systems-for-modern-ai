@@ -5,12 +5,42 @@ import type {
   Entity,
   AnatomyDepiction,
 } from '../domain/types';
-import {layoutForContext} from './layout';
+import {layoutForContext, type LayoutRect} from './layout';
+import {
+  structuralShellFamilyForEntityType,
+  visualRoleForEntityType,
+  visualRoleLabel,
+  type StructuralShellFamily,
+  type VisualRole,
+} from './visualRoles';
 import {
   entityTypeLabel,
   relationshipTypeLabel,
   representativeEntityLabel,
 } from './labels';
+
+export interface ScenePopulationPresentation {
+  countLabel: string;
+  basisLabel: string;
+  expansionLabel: string;
+  accessibleLabel: string;
+}
+
+export interface SceneEnclosure {
+  entity: Entity;
+  title: string;
+  typeLabel: string;
+  shellFamily: StructuralShellFamily;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  headerHeight: number;
+  interior: LayoutRect;
+  representative: boolean;
+  contextLabel: string;
+  population?: ScenePopulationPresentation;
+}
 
 export interface SceneNode {
   entity: Entity;
@@ -19,6 +49,10 @@ export interface SceneNode {
   y: number;
   width: number;
   height: number;
+  visualRole: VisualRole;
+  visualRoleLabel: string;
+  shellFamily: StructuralShellFamily;
+  population?: ScenePopulationPresentation;
   selected: boolean;
   containsSelection: boolean;
   previewed: boolean;
@@ -104,6 +138,65 @@ function anatomyCountLabel(depiction: AnatomyDepiction): string | undefined {
   if (!depiction.count) return undefined;
   const basis = depiction.count.basis.replaceAll('_', ' ');
   return depiction.count.value ? `${depiction.count.value} · ${basis}` : basis;
+}
+
+
+function populationPresentation(population: Entity['population']): ScenePopulationPresentation | undefined {
+  if (!population) return undefined;
+  const basisLabel = population.count.basis.replaceAll('_', ' ');
+  const accessibleExpansionLabel = population.expansionMode.replaceAll('_', ' ');
+  const expansionLabel = population.expansionMode === 'representative_member'
+    ? 'representative'
+    : population.expansionMode === 'addressable_members'
+      ? 'addressable'
+      : 'aggregate';
+  const countLabel = population.count.form === 'unknown'
+    ? '×?'
+    : population.count.value
+      ? `×${population.count.value}`
+      : 'Repeated';
+  const accessibleCount = population.count.form === 'unknown'
+    ? 'population count unknown'
+    : population.count.value
+      ? `population ${population.count.value}`
+      : 'repeated population';
+  return {
+    countLabel,
+    basisLabel,
+    expansionLabel,
+    accessibleLabel: `${accessibleCount}, count basis ${basisLabel}, ${accessibleExpansionLabel}`,
+  };
+}
+
+function buildSceneEnclosure(
+  state: AppState,
+  configuration: Configuration,
+  current: Entity,
+  layout: ReturnType<typeof layoutForContext>,
+): SceneEnclosure {
+  const structuralLocation = state.explore.structuralLocation;
+  const representative = structuralLocation.kind === 'representative_member';
+  const currentPopulation = populationPresentation(current.population);
+  const aggregate = structuralLocation.kind === 'representative_member'
+    ? configuration.entities[structuralLocation.aggregateId]
+    : undefined;
+  const aggregatePopulation = currentPopulation ?? populationPresentation(aggregate?.population);
+  const title = representative ? representativeEntityLabel(current) : current.name;
+  const populationSuffix = representative && aggregatePopulation
+    ? ` · exemplar from population ${aggregatePopulation.countLabel}`
+    : '';
+  return {
+    entity: current,
+    title,
+    typeLabel: entityTypeLabel(current.entityType),
+    shellFamily: structuralShellFamilyForEntityType(current.entityType),
+    ...layout.enclosure,
+    representative,
+    contextLabel: representative
+      ? `Representative context${populationSuffix}`
+      : 'Current structural location',
+    population: aggregatePopulation,
+  };
 }
 
 function entityIdForRepresentative(locator: Extract<ContextLocator, {kind: 'representative_member'}>) {
@@ -305,6 +398,7 @@ export function buildExploreScene(state: AppState, configuration: Configuration)
   if (!current) {
     return {
       current: undefined,
+      enclosure: undefined as SceneEnclosure | undefined,
       nodes: [] as SceneNode[],
       connections: [] as SceneConnection[],
       contextConnections: [] as SceneConnection[],
@@ -319,6 +413,7 @@ export function buildExploreScene(state: AppState, configuration: Configuration)
     .map((id) => configuration.entities[id])
     .filter((entity): entity is Entity => Boolean(entity));
   const layout = layoutForContext(current, visibleEntities);
+  const enclosure = buildSceneEnclosure(state, configuration, current, layout);
   const positions = new Map(layout.nodes.map((node) => [node.id, node]));
   const visible = new Set(visibleEntities.map((entity) => entity.id));
   const scenario = configuration.scenarios[state.explore.scenarioId];
@@ -348,6 +443,10 @@ export function buildExploreScene(state: AppState, configuration: Configuration)
       ...position,
       entity,
       locator,
+      visualRole: visualRoleForEntityType(entity.entityType),
+      visualRoleLabel: visualRoleLabel(visualRoleForEntityType(entity.entityType)),
+      shellFamily: structuralShellFamilyForEntityType(entity.entityType),
+      population: populationPresentation(entity.population),
       selected: sameLocator(state.explore.selection, locator),
       containsSelection: nodeContainsSelection(
         configuration,
@@ -422,6 +521,7 @@ export function buildExploreScene(state: AppState, configuration: Configuration)
 
   return {
     current,
+    enclosure,
     nodes,
     connections,
     contextConnections,

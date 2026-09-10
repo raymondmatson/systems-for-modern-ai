@@ -35,9 +35,11 @@ The semantic core stores project IDs and typed Context Locators. It does not sto
 
 Version 1 remains SVG-first. Current initial-five authored scenes are heavily aggregated and do not justify a Canvas/WebGL dense-layer backplane or renderer virtualization. The benchmark evidence is recorded under `reports/implementation/`.
 
-The Explore SVG is organized into a stable eight-layer presentation order: Scenario underlays; enclosure frame; Anatomy/background context; Cross-Connections/routing; interactive entity shells; labels/counts/role rails; Scenario markers; and Selection/focus/descendant overlays. Phase 1 establishes these composition seams while later visual-design phases populate the reserved enclosure, boundary-connection, visual-key, and state-overlay layers. `App.tsx` continues to supply semantic callbacks rather than placing state-transition rules inside renderer components.
+The Explore SVG is organized into a stable eight-layer presentation order: Scenario underlays; enclosure frame; Anatomy/background context; Cross-Connections/routing; interactive entity shells; labels/counts/role rails; Scenario markers; and Selection/focus/descendant overlays. Phase 1 established these composition seams. Phase 2 now populates the enclosure layer and semantic component shells with derived Structural-Location bounds, structural shell families, `entity_type`-driven role rails/icons, a reserved media region, Representative-context headers, and bounded aggregate repetition/count cues. Anatomy remains in its detached grid until Phase 3; boundary connections/Visual Key remain deferred to Phase 4; orthogonal state overlays remain deferred to Phase 5. `App.tsx` continues to supply semantic callbacks rather than placing state-transition rules inside renderer components.
 
 Renderer optimization may change visual materialization only; it may not change semantic identity, Expansion Mode, Selection, Navigation, or accessibility targets.
+
+Phase 2 presentation geometry remains discardable view-model state. `src/view-model/visualRoles.ts` implements the Phase-0-frozen `entity_type` → visual-role mapping with a neutral fallback; inventory category and entity names do not drive rendering behavior. Interactive component shells reserve a media region but no canonical image/asset field or loader exists yet. Population backplates/count chips are visual replicas only and do not create member identity.
 
 ## Schema state
 

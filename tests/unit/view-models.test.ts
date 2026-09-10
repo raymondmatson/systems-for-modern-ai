@@ -135,6 +135,8 @@ describe('Explore and Detail view models', () => {
     expect(scene.connections[0]?.endpointNodeIds).toEqual(['rack-a', 'fabric']);
     expect(scene.connections[0]?.endpointLabels).toEqual(['H100 GPU', 'Fabric switch', 'Backend Fabric']);
     expect(scene.connections[0]?.aggregated).toBe(true);
+    expect(scene.enclosure).toMatchObject({title: 'System', shellFamily: 'system-domain'});
+    expect(scene.nodes.find((node) => node.entity.id === 'rack-a')).toMatchObject({visualRole: 'structure', shellFamily: 'rack-enclosure'});
     expect(scene.nodes.find((node) => node.entity.id === 'rack-a')?.scenarioEmphasized).toBe(true);
   });
 

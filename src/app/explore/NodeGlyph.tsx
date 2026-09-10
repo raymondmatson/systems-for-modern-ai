@@ -1,17 +1,7 @@
 import type {SceneNode} from '../../view-model/explore';
-import {
-  entityTypeLabel,
-  formatMetadataValue,
-  svgLabelLines,
-} from '../../view-model/labels';
-import type {Population} from '../../domain/types';
+import {entityTypeLabel, svgLabelLines} from '../../view-model/labels';
 import type {PreviewHandlers, SelectTarget} from './types';
-
-function populationText(population: Population) {
-  if (population.count.form === 'unknown') return 'Population unknown';
-  const count = population.count.value ? `${population.count.value} members` : 'Repeated population';
-  return `${count} · ${formatMetadataValue(population.expansionMode)}`;
-}
+import {RoleIcon} from './RoleIcon';
 
 function nodeStateDescription(node: SceneNode) {
   return [
@@ -25,6 +15,45 @@ function nodeStateDescription(node: SceneNode) {
     .join(', ');
 }
 
+function shellRadius(node: SceneNode) {
+  switch (node.shellFamily) {
+    case 'rack-enclosure': return 4;
+    case 'fabric-domain': return 6;
+    case 'device': return 14;
+    case 'system-domain': return 12;
+    default: return 9;
+  }
+}
+
+function ShellFamilyDetail({node}: {node: SceneNode}) {
+  const w = node.width;
+  const h = node.height;
+  switch (node.shellFamily) {
+    case 'rack-enclosure':
+      return <path className="node-shell-detail" d={`M10 8v${h - 16}M${w - 10} 8v${h - 16}`} />;
+    case 'assembly':
+      return <path className="node-shell-detail" d={`M12 9h38l7 7h${Math.max(12, w - 69)}`} />;
+    case 'device':
+      return <path className="node-shell-detail" d={`M0 34h7M0 67h7M${w - 7} 34h7M${w - 7} 67h7`} />;
+    case 'fabric-domain':
+      return <path className="node-shell-detail" d={`M12 8h18M8 12v18M${w - 12} 8h-18M${w - 8} 12v18`} />;
+    case 'support':
+      return <path className="node-shell-detail" d={`M${w - 40} 9h28v10`} />;
+    default:
+      return null;
+  }
+}
+
+function AggregateBackplates({node}: {node: SceneNode}) {
+  if (!node.population) return null;
+  return (
+    <g className="node-aggregate-stack" aria-hidden="true">
+      <rect className="node-stack-backplate node-stack-backplate-2" x="8" y="8" width={node.width} height={node.height} rx={shellRadius(node)} />
+      <rect className="node-stack-backplate node-stack-backplate-1" x="4" y="4" width={node.width} height={node.height} rx={shellRadius(node)} />
+    </g>
+  );
+}
+
 export function NodeGlyph({
   node,
   previewHandlers,
@@ -35,19 +64,24 @@ export function NodeGlyph({
   selectTarget: SelectTarget;
 }) {
   const stateDescription = nodeStateDescription(node);
+  const populationDescription = node.population ? `, ${node.population.accessibleLabel}` : '';
   return (
     <g
       transform={`translate(${node.x} ${node.y})`}
-      className={`node ${node.selected ? 'selected ' : ''}${node.previewed ? 'previewed ' : ''}${
+      className={`node role-${node.visualRole} shell-${node.shellFamily} ${node.selected ? 'selected ' : ''}${node.previewed ? 'previewed ' : ''}${
         node.location ? 'location ' : ''
       }${node.containsSelection ? 'contains-selection ' : ''}${
         node.scenarioEmphasized ? 'scenario-emphasized ' : ''
       }`}
+      data-visual-role={node.visualRole}
+      data-shell-family={node.shellFamily}
+      data-has-media="false"
+      data-population={node.population?.countLabel ?? 'single'}
       tabIndex={0}
       role="button"
       aria-pressed={node.selected}
       aria-current={node.location ? 'location' : undefined}
-      aria-label={`${node.entity.name}, ${entityTypeLabel(node.entity.entityType)}${
+      aria-label={`${node.entity.name}, ${entityTypeLabel(node.entity.entityType)}, ${node.visualRoleLabel} role${populationDescription}${
         stateDescription ? `, ${stateDescription}` : ''
       }`}
       {...previewHandlers(node.locator)}
@@ -60,40 +94,52 @@ export function NodeGlyph({
         }
       }}
     >
-      <rect width={node.width} height={node.height} rx="10" />
+      <AggregateBackplates node={node} />
+      <rect className="node-shell" width={node.width} height={node.height} rx={shellRadius(node)} />
+      <rect className="node-role-rail" x="0" y="0" width="7" height={node.height} rx="3" />
+      <rect className="node-media-region" x="17" y="17" width="48" height="48" rx="8" />
+      <RoleIcon role={node.visualRole} x={28} y={28} />
+      <ShellFamilyDetail node={node} />
       <title>{node.entity.name}</title>
     </g>
   );
 }
 
 /**
- * Text is rendered in a dedicated layer above entity shells. It is deliberately
- * noninteractive so pointer interaction continues to resolve to NodeGlyph.
+ * Text and count badges are rendered in a dedicated layer above entity shells.
+ * The layer remains noninteractive so pointer input resolves to NodeGlyph.
  */
 export function NodeLabelGlyph({node}: {node: SceneNode}) {
-  const lines = svgLabelLines(node.entity.name);
-  const typeY = lines.length > 1 ? 67 : 55;
-  const metaY = lines.length > 1 ? 84 : 75;
+  const lines = svgLabelLines(node.entity.name, 20);
+  const nameX = 78;
+  const typeY = lines.length > 1 ? 66 : 52;
+  const metaY = 92;
   return (
     <g
       className="node-label-layer"
       transform={`translate(${node.x} ${node.y})`}
       aria-hidden="true"
     >
-      <text className="node-name" x="12" y="27">
+      <text className="node-name" x={nameX} y="26">
         {lines.map((line, index) => (
-          <tspan key={`${line}-${index}`} x="12" dy={index === 0 ? 0 : 17}>
+          <tspan key={`${line}-${index}`} x={nameX} dy={index === 0 ? 0 : 16}>
             {line}
           </tspan>
         ))}
       </text>
-      <text className="node-type" x="12" y={typeY}>
-        {entityTypeLabel(node.entity.entityType)}
+      <text className="node-type" x={nameX} y={typeY}>
+        {node.visualRoleLabel} · {entityTypeLabel(node.entity.entityType)}
       </text>
-      {node.entity.population && (
-        <text className="node-meta" x="12" y={metaY}>
-          {populationText(node.entity.population)}
-        </text>
+      {node.population && (
+        <g className="node-population-label">
+          <rect className="node-count-chip" x={nameX} y={metaY - 14} width="50" height="20" rx="10" />
+          <text className="node-count-text" x={nameX + 25} y={metaY} textAnchor="middle">
+            {node.population.countLabel}
+          </text>
+          <text className="node-expansion-text" x={nameX + 58} y={metaY}>
+            {node.population.expansionLabel}
+          </text>
+        </g>
       )}
     </g>
   );

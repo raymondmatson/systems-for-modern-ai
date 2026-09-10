@@ -142,6 +142,31 @@ test('Explore SVG exposes the approved composable layer order without changing s
   await expect(firstTarget).toHaveAttribute('aria-pressed', 'true');
 });
 
+test('Phase 2 enclosure and component shell cues remain presentation-only and keyboard reachable', async ({page}) => {
+  await page.goto('./');
+  const rootEnclosure = page.locator('svg [data-layer="enclosure-frame"] .scene-enclosure');
+  await expect(rootEnclosure).toHaveAttribute('data-shell-family', 'system-domain');
+  await expect(rootEnclosure).toHaveAttribute('data-representative', 'false');
+
+  await enterRepresentativeH100Node(page);
+  const representativeEnclosure = page.locator('svg [data-layer="enclosure-frame"] .scene-enclosure');
+  await expect(representativeEnclosure).toHaveAttribute('data-shell-family', 'assembly');
+  await expect(representativeEnclosure).toHaveAttribute('data-representative', 'true');
+
+  const gpu = page.locator('svg [data-layer="interactive-entity-shells"] [role="button"][aria-label*="NVIDIA H100 GPUs"]').first();
+  await expect(gpu).toHaveAttribute('data-visual-role', 'compute');
+  await expect(gpu).toHaveAttribute('data-shell-family', 'device');
+  await expect(gpu).toHaveAttribute('data-has-media', 'false');
+  await expect(gpu).toHaveAttribute('data-population', '×8');
+  await expect(gpu.locator('.node-media-region')).toHaveCount(1);
+  await expect(gpu.locator('.node-stack-backplate')).toHaveCount(2);
+
+  await gpu.focus();
+  await expect(page.getByLabel('Inspect preview')).toBeVisible();
+  await page.keyboard.press('Enter');
+  await expect(gpu).toHaveAttribute('aria-pressed', 'true');
+});
+
 test('cross-tier relationships remain discoverable and semantic outline mirrors visual targets', async ({page}) => {
   await page.goto('./');
   await expect(page.getByRole('region', {name: 'Explore semantic structure'})).toBeVisible();
