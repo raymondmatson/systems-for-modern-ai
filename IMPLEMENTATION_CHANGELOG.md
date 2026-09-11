@@ -1,5 +1,12 @@
 # Implementation Changelog
 
+## 2026-09-10 — Phase 7 Ironwood exact-Enter E2E locator correction
+
+- **Issue:** GitHub `npm run test:e2e` passed 76 tests and failed only the Phase-7 Ironwood torus test in Chromium, Firefox, and WebKit. The failure was a Playwright strict-mode collision: `getByRole('button', {name: 'Enter'})` also matched several Ironwood targets whose accessible names contain `Data-center`, because Playwright role-name matching is substring-based unless `exact: true` is requested.
+- **Cause:** This is a recurrence of the earlier E2E locator-ambiguity class, newly introduced by the Phase-7 Ironwood test rather than a regression in the Ironwood topology implementation. The actual exact `Enter` action was present and was one of the five matches.
+- **Fix:** Added one `enterAction(page)` helper using `getByRole('button', {name: 'Enter', exact: true})` and routed every plain Enter action in `tests/e2e/explore.spec.ts` through it. This preserves the interaction contract and prevents component/relationship names containing `center` from being mistaken for the Enter action in any architecture. No application, topology, canonical-content, state, or accessibility behavior changed.
+- **Validation:** Full Python canonical/runtime validation remains green. Static E2E-contract checks confirm there are no remaining non-exact `Enter` role locators and all five Enter actions use the shared exact-match helper. Dependency-light TypeScript compilation of the modified E2E spec passes. Exact three-engine Playwright execution remains authoritative in the dependency-capable GitHub environment because the shared source ZIP does not contain `node_modules` or installed Playwright browsers.
+
 ## 2026-09-10 — Phase 7 Cerebras transfer-test alignment after canonical preprocessing update
 
 - **Issue:** GitHub `npm test` failed only in `visual-design-phase7-transfer.test.ts` because the new Phase-7 root assertion hard-coded an older Cerebras sibling order and the retired `cg3-input` identifier. The current canonical hierarchy, generated runtime, readiness evidence, and Phase-7A protocol consistently use `cg3-preprocess` and order the root children `CS-3 → MemoryX → SwarmX → preprocessing → management`.

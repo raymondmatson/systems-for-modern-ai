@@ -17,6 +17,10 @@ function detailHeading(page: Page, name: string | RegExp) {
   return page.getByLabel('Detail').getByRole('heading', {name, level: 2});
 }
 
+function enterAction(page: Page) {
+  return page.getByRole('button', {name: 'Enter', exact: true});
+}
+
 function escapeRegExp(value: string) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
@@ -31,7 +35,7 @@ function interactiveEntity(page: Page, accessibleName: string) {
 async function enterRepresentativeH100Node(page: Page) {
   const scalable = interactiveEntity(page, 'Scalable Unit (representative)');
   await scalable.click();
-  await page.getByRole('button', {name: 'Enter'}).click();
+  await enterAction(page).click();
   const node = interactiveEntity(page, 'DGX H100 compute node');
   await node.click();
   await page.getByRole('button', {name: 'Explore representative member'}).click();
@@ -75,7 +79,7 @@ test('Inspect, Select, Enter, and empty-background clearing remain distinct', as
   await expect(page.getByRole('button', {name: 'Clear selection'})).toHaveCount(0);
 
   await scalable.click();
-  await page.getByRole('button', {name: 'Enter'}).click();
+  await enterAction(page).click();
   await expect(currentLocationHeading(page, 'Scalable Unit (representative)')).toBeVisible();
   await expect(page.getByRole('button', {name: 'Clear selection'})).toHaveCount(0);
 });
@@ -299,7 +303,7 @@ test('relationship-enterable switch interiors expose physical anatomy instead of
   await page.goto('./');
   const computeSwitches = interactiveEntity(page, 'Compute-fabric InfiniBand switches');
   await computeSwitches.click();
-  await page.getByRole('button', {name: 'Enter'}).click();
+  await enterAction(page).click();
 
   await expect(currentLocationHeading(page, 'Compute-fabric InfiniBand switches')).toBeVisible();
   await expect(page.locator('svg .anatomy-depiction')).toHaveCount(5);
@@ -431,7 +435,7 @@ test('Phase 7 Ironwood cube shows a nonsemantic flattened 3D torus with paired w
 
   const cube = interactiveEntity(page, 'Ironwood cube / rack');
   await cube.click();
-  await page.getByRole('button', {name: 'Enter'}).click();
+  await enterAction(page).click();
   await expect(currentLocationHeading(page, 'Ironwood cube / rack')).toBeVisible();
 
   const topology = page.locator('svg .topology-depiction');
@@ -473,7 +477,7 @@ test('Phase 7 Cerebras representative contexts compact sparse space and keep 900
 
   const wse = interactiveEntity(page, 'WSE-3 wafer-scale accelerator');
   await wse.click();
-  await page.getByRole('button', {name: 'Enter'}).click();
+  await enterAction(page).click();
   await expect(currentLocationHeading(page, /WSE-3 wafer-scale accelerator/)).toBeVisible();
   const wseCanvas = page.locator('svg.explore-canvas');
   const wseViewBox = await wseCanvas.getAttribute('viewBox');
