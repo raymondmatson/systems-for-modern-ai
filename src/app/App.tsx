@@ -413,6 +413,7 @@ function ArchitecturalContextControls({
       <label>
         Reference System
         <select
+          aria-label="Reference System"
           value={system.id}
           onChange={(event) => {
             const destination = boot.systems[event.target.value];
@@ -442,6 +443,7 @@ function ArchitecturalContextControls({
       <label>
         Configuration
         <select
+          aria-label="Configuration"
           value={configuration.id}
           onChange={(event) =>
             apply(
@@ -460,6 +462,7 @@ function ArchitecturalContextControls({
       <label>
         Scenario
         <select
+          aria-label="Scenario"
           value={scenario?.id ?? configuration.defaultScenarioId}
           onChange={(event) => apply(changeScenario(index, state, event.target.value))}
         >
@@ -688,6 +691,10 @@ function Concepts({
           {name: 'markdown', weight: 0.05},
         ],
         threshold: 0.35,
+        // Canonical explanatory Markdown is intentionally searchable at low weight even
+        // when the matching phrase appears deep in the article. Fuse's default
+        // location penalty otherwise suppresses those established full-article matches.
+        ignoreLocation: true,
       }),
     [boot],
   );

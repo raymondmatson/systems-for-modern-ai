@@ -4,21 +4,45 @@ const DEFAULT_SYSTEM = 'nvidia-dgx-h100-superpod';
 const DEFAULT_CONFIGURATION = 'h100-superpod-4su-reference';
 const DEFAULT_SCENARIO = 'baseline-normal-operation';
 
+
+function contextSelect(page: Page, name: 'Reference System' | 'Configuration' | 'Scenario') {
+  return page.getByRole('combobox', {name, exact: true});
+}
+
+function currentLocationHeading(page: Page, name: string | RegExp) {
+  return page.locator('.canvas-heading').getByRole('heading', {name, level: 1});
+}
+
+function detailHeading(page: Page, name: string | RegExp) {
+  return page.getByLabel('Detail').getByRole('heading', {name, level: 2});
+}
+
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function interactiveEntity(page: Page, accessibleName: string) {
+  return page
+    .locator('svg [data-layer="interactive-entity-shells"]')
+    .getByRole('button', {name: new RegExp(`^${escapeRegExp(accessibleName)},`)})
+    .first();
+}
+
 async function enterRepresentativeH100Node(page: Page) {
-  const scalable = page.locator('svg [role="button"][aria-label*="Scalable Unit"]').first();
+  const scalable = interactiveEntity(page, 'Scalable Unit (representative)');
   await scalable.click();
   await page.getByRole('button', {name: 'Enter'}).click();
-  const node = page.locator('svg [role="button"][aria-label*="DGX H100 compute node"]').first();
+  const node = interactiveEntity(page, 'DGX H100 compute node');
   await node.click();
   await page.getByRole('button', {name: 'Explore representative member'}).click();
-  await expect(page.getByRole('heading', {name: /Representative Compute node/})).toBeVisible();
+  await expect(currentLocationHeading(page, /Representative Compute node/)).toBeVisible();
 }
 
 async function selectH100Gpu(page: Page) {
   await enterRepresentativeH100Node(page);
-  const gpu = page.locator('svg [role="button"][aria-label*="NVIDIA H100 GPUs"]').first();
+  const gpu = interactiveEntity(page, 'NVIDIA H100 GPUs');
   await gpu.click();
-  await expect(page.getByRole('heading', {name: 'NVIDIA H100 GPUs'})).toBeVisible();
+  await expect(detailHeading(page, 'NVIDIA H100 GPUs')).toBeVisible();
   return gpu;
 }
 
@@ -26,17 +50,17 @@ test('starts in the approved default Explore context', async ({page}) => {
   await page.goto('./');
   await expect(page.getByText('Systems for Modern AI').first()).toBeVisible();
   await expect(page.getByRole('button', {name: 'Explore'})).toHaveAttribute('aria-pressed', 'true');
-  await expect(page.getByLabel('Reference System')).toHaveValue(DEFAULT_SYSTEM);
-  await expect(page.getByLabel('Configuration')).toHaveValue(DEFAULT_CONFIGURATION);
-  await expect(page.getByLabel('Scenario')).toHaveValue(DEFAULT_SCENARIO);
-  await expect(page.getByRole('heading', {name: 'DGX H100 SuperPOD'})).toBeVisible();
+  await expect(contextSelect(page, 'Reference System')).toHaveValue(DEFAULT_SYSTEM);
+  await expect(contextSelect(page, 'Configuration')).toHaveValue(DEFAULT_CONFIGURATION);
+  await expect(contextSelect(page, 'Scenario')).toHaveValue(DEFAULT_SCENARIO);
+  await expect(currentLocationHeading(page, 'DGX H100 SuperPOD')).toBeVisible();
   await expect(page.getByText('Current location')).toBeVisible();
   await expect(page.getByRole('button', {name: 'Clear selection'})).toHaveCount(0);
 });
 
 test('Inspect, Select, Enter, and empty-background clearing remain distinct', async ({page}) => {
   await page.goto('./');
-  const scalable = page.locator('svg [role="button"][aria-label*="Scalable Unit"]').first();
+  const scalable = interactiveEntity(page, 'Scalable Unit (representative)');
 
   await scalable.hover();
   await page.waitForTimeout(275);
@@ -45,14 +69,14 @@ test('Inspect, Select, Enter, and empty-background clearing remain distinct', as
   await scalable.click();
   await expect(page.getByRole('button', {name: 'Clear selection'})).toBeVisible();
   await expect(scalable).toHaveAttribute('aria-pressed', 'true');
-  await expect(page.getByRole('heading', {name: 'Scalable Unit (representative)'})).toBeVisible();
+  await expect(detailHeading(page, 'Scalable Unit (representative)')).toBeVisible();
 
   await page.locator('svg.explore-canvas').click({position: {x: 5, y: 5}});
   await expect(page.getByRole('button', {name: 'Clear selection'})).toHaveCount(0);
 
   await scalable.click();
   await page.getByRole('button', {name: 'Enter'}).click();
-  await expect(page.getByRole('heading', {name: 'Scalable Unit (representative)'})).toBeVisible();
+  await expect(currentLocationHeading(page, 'Scalable Unit (representative)')).toBeVisible();
   await expect(page.getByRole('button', {name: 'Clear selection'})).toHaveCount(0);
 });
 
@@ -77,7 +101,7 @@ test('Direct View Change remains distinct from contextual Return', async ({page}
   await expect(returnButton).toBeVisible();
 
   await page.getByRole('button', {name: 'Explore'}).click();
-  await expect(page.getByRole('heading', {name: /Representative Compute node/})).toBeVisible();
+  await expect(currentLocationHeading(page, /Representative Compute node/)).toBeVisible();
   await expect(returnButton).toBeVisible();
 
   await page.getByRole('button', {name: 'Concepts'}).click();
@@ -99,30 +123,34 @@ test('Explore-origin Return survives Concept-to-Concept browsing', async ({page}
   }
 
   await returnButton.click();
-  await expect(page.getByRole('heading', {name: /Representative Compute node/})).toBeVisible();
-  await expect(page.getByRole('heading', {name: 'NVIDIA H100 GPUs'})).toBeVisible();
+  await expect(currentLocationHeading(page, /Representative Compute node/)).toBeVisible();
+  await expect(detailHeading(page, 'NVIDIA H100 GPUs')).toBeVisible();
 });
 
 test('Architectural Context controls are shared in Concepts and configuration switch preserves the Concept', async ({page}) => {
   await page.goto('./');
   await page.getByRole('button', {name: 'Concepts'}).click();
-  await expect(page.getByLabel('Reference System')).toBeVisible();
-  await expect(page.getByLabel('Configuration')).toBeVisible();
-  await expect(page.getByLabel('Scenario')).toBeVisible();
+  await expect(contextSelect(page, 'Reference System')).toBeVisible();
+  await expect(contextSelect(page, 'Configuration')).toBeVisible();
+  await expect(contextSelect(page, 'Scenario')).toBeVisible();
 
   await page.getByLabel('Search concepts').fill('RDMA');
   await page.getByRole('button', {name: /^Remote Direct Memory Access/}).first().click();
   await expect(page.getByRole('heading', {name: 'Remote Direct Memory Access'})).toBeVisible();
 
-  await page.getByLabel('Reference System').selectOption('meta-h100-roce-24k');
-  await expect(page.getByLabel('Scenario')).toHaveValue('baseline-normal-operation');
+  await contextSelect(page, 'Reference System').selectOption('meta-h100-roce-24k');
+  await expect(contextSelect(page, 'Scenario')).toHaveValue('baseline-normal-operation');
   await expect(page.getByRole('heading', {name: 'Remote Direct Memory Access'})).toBeVisible();
 });
 
 test('Explore SVG exposes the approved composable layer order without changing semantic targets', async ({page}) => {
   await page.goto('./');
-  const layers = await page.locator('svg.explore-canvas > g[data-layer]').evaluateAll((elements) =>
-    elements.map((element) => element.getAttribute('data-layer')),
+  const canvas = page.locator('svg.explore-canvas');
+  await expect(canvas).toBeVisible();
+  const layers = await canvas.evaluate((svg) =>
+    Array.from(svg.children)
+      .filter((element) => element.tagName.toLowerCase() === 'g' && element.hasAttribute('data-layer'))
+      .map((element) => element.getAttribute('data-layer')),
   );
   expect(layers).toEqual([
     'scenario-underlays',
@@ -153,7 +181,7 @@ test('Phase 2 enclosure and component shell cues remain presentation-only and ke
   await expect(representativeEnclosure).toHaveAttribute('data-shell-family', 'assembly');
   await expect(representativeEnclosure).toHaveAttribute('data-representative', 'true');
 
-  const gpu = page.locator('svg [data-layer="interactive-entity-shells"] [role="button"][aria-label*="NVIDIA H100 GPUs"]').first();
+  const gpu = interactiveEntity(page, 'NVIDIA H100 GPUs');
   await expect(gpu).toHaveAttribute('data-visual-role', 'compute');
   await expect(gpu).toHaveAttribute('data-shell-family', 'device');
   await expect(gpu).toHaveAttribute('data-has-media', 'false');
@@ -171,16 +199,20 @@ test('Phase 2 enclosure and component shell cues remain presentation-only and ke
 
 test('cross-tier relationships remain discoverable and semantic outline mirrors visual targets', async ({page}) => {
   await page.goto('./');
-  await expect(page.getByRole('region', {name: 'Explore semantic structure'})).toBeVisible();
-  await expect(page.getByText('Cross-connections beyond this enclosure')).toBeVisible();
-  await expect(page.getByText('Intra-node NVLink/NVSwitch fabric').first()).toBeVisible();
+  const semanticOutline = page.getByRole('region', {name: 'Explore semantic structure'});
+  await expect(semanticOutline).toBeVisible();
+  await expect(page.getByText('Connections summarized inside visible aggregates')).toBeVisible();
+  const summarizedNvlink = page.locator('.context-connections button').filter({hasText: 'Intra-node NVLink/NVSwitch fabric'}).first();
+  const semanticNvlink = semanticOutline.locator('button').filter({hasText: 'Intra-node NVLink/NVSwitch fabric'}).first();
+  await expect(summarizedNvlink).toBeVisible();
+  await expect(semanticNvlink).toBeVisible();
 });
 
 test('moving outward by breadcrumb preserves a meaningful deeper Selection and marks its visible ancestor', async ({page}) => {
   await page.goto('./');
   await selectH100Gpu(page);
   await page.getByRole('button', {name: 'Scalable Unit (representative)'}).click();
-  await expect(page.getByRole('heading', {name: 'NVIDIA H100 GPUs'})).toBeVisible();
+  await expect(detailHeading(page, 'NVIDIA H100 GPUs')).toBeVisible();
   await expect(page.getByRole('button', {name: 'Clear selection'})).toBeVisible();
   const aggregate = page.locator('.semantic-outline button').filter({hasText: 'DGX H100 compute node'}).first();
   await expect(aggregate).toContainText('Contains current selection');
@@ -193,15 +225,15 @@ test('Follow retains the physical origin and relationship as traversal context',
   await relationship.click();
   await page.getByRole('button', {name: 'Follow to Compute-fabric InfiniBand switches'}).click();
   await expect(page.getByText('Traversal context')).toBeVisible();
-  await expect(page.getByText('Representative Compute node')).toBeVisible();
-  await expect(page.getByText('DGX node to compute fabric')).toBeVisible();
+  await expect(page.getByLabel('Detail').getByText('Representative Compute node')).toBeVisible();
+  await expect(page.getByLabel('Detail').getByText('DGX node to compute fabric')).toBeVisible();
 });
 
 test('nested representative breadcrumbs retain exemplar terminology', async ({page}) => {
   await page.goto('./');
   await selectH100Gpu(page);
   await page.getByRole('button', {name: 'Explore representative member'}).click();
-  await expect(page.getByRole('heading', {name: 'Representative GPU'})).toBeVisible();
+  await expect(currentLocationHeading(page, 'Representative GPU')).toBeVisible();
   await expect(page.locator('.breadcrumbs')).toContainText('Representative GPU');
 });
 
@@ -264,11 +296,11 @@ test('authored Anatomy Depictions are visible but noninteractive and summarized 
 
 test('relationship-enterable switch interiors expose physical anatomy instead of an empty scene', async ({page}) => {
   await page.goto('./');
-  const computeSwitches = page.locator('svg [role="button"][aria-label*="Compute-fabric InfiniBand switches"]').first();
+  const computeSwitches = interactiveEntity(page, 'Compute-fabric InfiniBand switches');
   await computeSwitches.click();
   await page.getByRole('button', {name: 'Enter'}).click();
 
-  await expect(page.getByRole('heading', {name: 'Compute-fabric InfiniBand switches'})).toBeVisible();
+  await expect(currentLocationHeading(page, 'Compute-fabric InfiniBand switches')).toBeVisible();
   await expect(page.locator('svg .anatomy-depiction')).toHaveCount(5);
   await expect(page.locator('svg .anatomy-depiction').first()).toHaveAttribute('data-evidence-status', 'documented');
   await expect(page.locator('svg .empty-scene')).toHaveCount(0);
@@ -308,14 +340,14 @@ test('Phase 5A calibrated boundary labels preserve full pilot destination names 
 
 test('Phase 5 Scenario strip and orthogonal node state overlays coexist without replacing base role cues', async ({page}) => {
   await page.goto('./');
-  await page.getByLabel('Scenario').selectOption('checkpoint-storage-pressure');
+  await contextSelect(page, 'Scenario').selectOption('checkpoint-storage-pressure');
   const strip = page.getByRole('region', {name: 'Scenario context'});
   await expect(strip).toContainText('Checkpoint / storage pressure');
   await expect(strip).toContainText('Physical structure unchanged');
   await expect(strip).toContainText('Affected:');
 
   await enterRepresentativeH100Node(page);
-  const storageNic = page.locator('svg [role="button"][aria-label*="ConnectX-7 storage / in-band Ethernet cards"]').first();
+  const storageNic = interactiveEntity(page, 'ConnectX-7 storage / in-band Ethernet cards');
   await storageNic.focus();
   await expect(page.locator('svg .node-focus-brackets')).toHaveCount(1);
   await page.keyboard.press('Enter');
@@ -340,10 +372,10 @@ test('Chromium forced-colors mode retains non-color Selection, focus, and relati
   test.skip(browserName !== 'chromium', 'Playwright forced-colors emulation is Chromium-only; ordinary non-color state/relationship checks still run in every configured browser.');
   await page.emulateMedia({forcedColors: 'active'});
   await page.goto('./');
-  await page.getByLabel('Scenario').selectOption('checkpoint-storage-pressure');
+  await contextSelect(page, 'Scenario').selectOption('checkpoint-storage-pressure');
   await enterRepresentativeH100Node(page);
 
-  const storageNic = page.locator('svg [role="button"][aria-label*="ConnectX-7 storage / in-band Ethernet cards"]').first();
+  const storageNic = interactiveEntity(page, 'ConnectX-7 storage / in-band Ethernet cards');
   await storageNic.focus();
   await expect(page.locator('svg .node-focus-brackets')).toHaveCount(1);
   await page.keyboard.press('Enter');
@@ -361,7 +393,7 @@ test('semantic outline and SVG target remain state-parallel for the same entity'
   await page.goto('./');
   await enterRepresentativeH100Node(page);
 
-  const visual = page.locator('svg [role="button"][aria-label*="NVIDIA H100 GPUs"]').first();
+  const visual = interactiveEntity(page, 'NVIDIA H100 GPUs');
   const semantic = page
     .getByRole('region', {name: 'Explore semantic structure'})
     .locator('button')
