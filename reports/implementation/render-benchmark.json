@@ -266,13 +266,14 @@
     "denseBackplane": "not_required_for_current_initial_five",
     "virtualization": "not_required_for_current_initial_five",
     "accessibility": "anatomy_depictions_create_no_focus_targets_in_all_phase5a_pilot_states",
-    "semanticOutlinePolicy": "provisional_keep_until_pinned_accessibility_matrix; current Chromium probe confirms both SVG targets and semantic-outline buttons are exposed, so duplicate navigation cost must be evaluated in the pinned keyboard/screen-reader gate before consolidation",
+    "semanticOutlinePolicy": "retain_current_svg_targets_and_semantic_outline_after_user_confirmed_phase6_accessibility_validation; revisit only if later Testing finds a concrete keyboard/screen-reader/action-parity regression",
     "reviewRule": "Re-profile if semantic/presentation visibility materially increases; performance tuning must not alter semantic Expansion Mode, identity, Selection, Navigation, or accessibility targets."
   },
   "limitations": [
     "Benchmark JSX adapter executes the exact Explore components but bypasses React reconciliation.",
     "System Chromium is implementation evidence, not the pinned three-engine Playwright matrix.",
     "Accessibility.getFullAXTree is Chromium accessibility-tree evidence, not a screen-reader study.",
-    "Synthetic headroom is a separate stress series and is not used as a proxy for real scene density."
+    "Synthetic headroom is a separate stress series and is not used as a proxy for real scene density.",
+    "Phase-6 retain/consolidate closure is based on user-confirmed external validation after Implementation Continued fixes; the benchmark itself did not perform that screen-reader/browser-matrix validation."
   ]
 }

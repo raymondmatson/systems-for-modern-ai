@@ -12,6 +12,12 @@ import {
   type NodeMediaMode,
 } from './layout';
 import {
+  buildTopologyDepiction,
+  shouldCompactTransferContext,
+  topologyDepictionSpecForContext,
+  type SceneTopologyDepiction,
+} from './topologyDepictions';
+import {
   structuralShellFamilyForEntityType,
   visualRoleForDepictionKind,
   visualRoleForEntityType,
@@ -469,6 +475,7 @@ export function buildExploreScene(state: AppState, configuration: Configuration)
       contextConnections: [] as SceneConnection[],
       compositionRegions: [] as SceneCompositionRegion[],
       anatomyDepictions: [] as SceneAnatomyDepiction[],
+      topologyDepictions: [] as SceneTopologyDepiction[],
       scenario: buildScenarioPresentation(state, configuration),
       width: 760,
       height: 360,
@@ -488,10 +495,15 @@ export function buildExploreScene(state: AppState, configuration: Configuration)
     );
     return inside && outside;
   });
+  const topologySpec = topologyDepictionSpecForContext(configuration, current);
   const layout = layoutForContext(
     current,
     visibleEntities,
-    {boundaryGutter: hasBoundaryCrossing ? 150 : 0},
+    {
+      boundaryGutter: hasBoundaryCrossing ? 150 : 0,
+      compactSparse: shouldCompactTransferContext(configuration, current),
+      topologyDepiction: topologySpec,
+    },
   );
   const enclosure = buildSceneEnclosure(state, configuration, current, layout);
   const positions = new Map(layout.nodes.map((node) => [node.id, node]));
@@ -565,6 +577,12 @@ export function buildExploreScene(state: AppState, configuration: Configuration)
       countLabel: anatomyCountLabel(depiction),
       ...position,
     };
+  });
+
+  const topologyDepictions: SceneTopologyDepiction[] = layout.topologyDepictions.map((position) => {
+    const depiction = buildTopologyDepiction(configuration, current, position);
+    if (!depiction) throw new Error(`Missing Phase 7 topology depiction source basis for ${position.id}`);
+    return depiction;
   });
 
   const connections: SceneConnection[] = [];
@@ -695,6 +713,7 @@ export function buildExploreScene(state: AppState, configuration: Configuration)
     contextConnections,
     compositionRegions: layout.regions,
     anatomyDepictions,
+    topologyDepictions,
     scenario: buildScenarioPresentation(state, configuration),
     width: layout.width,
     height: layout.height,

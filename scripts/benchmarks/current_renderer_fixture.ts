@@ -102,11 +102,12 @@ const path = require('path');
 const ROOT = process.argv[2];
 const COMPILED_ROOT = process.argv[3];
 const sceneId = process.argv[4];
+const fixtureRelativePath = process.argv[5] || 'tests/fixtures/visual-regression-phase5a.json';
 const fixture = JSON.parse(
-  fs.readFileSync(path.join(ROOT, 'tests/fixtures/visual-regression-phase5a.json'), 'utf8'),
+  fs.readFileSync(path.join(ROOT, fixtureRelativePath), 'utf8'),
 );
 const spec = fixture.scenes.find((scene: any) => scene.id === sceneId);
-if (!spec) throw new Error(`Unknown Phase 5A scene: ${sceneId}`);
+if (!spec) throw new Error(`Unknown current-renderer scene ${sceneId} in ${fixtureRelativePath}`);
 const system = JSON.parse(fs.readFileSync(path.join(ROOT, spec.systemRuntime), 'utf8'));
 const configuration = system.configurations[spec.configurationId];
 if (!configuration) throw new Error(`Missing configuration ${spec.configurationId}`);

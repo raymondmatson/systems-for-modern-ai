@@ -35,6 +35,15 @@ export interface LayoutAnatomy extends LayoutRect {
   id: string;
 }
 
+export interface LayoutTopologyDepiction extends LayoutRect {
+  id: string;
+}
+
+export interface LayoutTopologyDepictionSpec {
+  id: string;
+  height: number;
+}
+
 export interface LayoutEnclosure extends LayoutRect {
   headerHeight: number;
   interior: LayoutRect;
@@ -44,11 +53,14 @@ export interface LayoutEnclosure extends LayoutRect {
 
 export interface LayoutOptions {
   boundaryGutter?: number;
+  compactSparse?: boolean;
+  topologyDepiction?: LayoutTopologyDepictionSpec;
 }
 
 export interface LayoutResult {
   nodes: LayoutNode[];
   anatomy: LayoutAnatomy[];
+  topologyDepictions: LayoutTopologyDepiction[];
   regions: LayoutRegion[];
   width: number;
   height: number;
@@ -56,7 +68,7 @@ export interface LayoutResult {
   enclosure: LayoutEnclosure;
 }
 
-type BaseLayoutResult = Omit<LayoutResult, 'anatomy' | 'enclosure'>;
+type BaseLayoutResult = Omit<LayoutResult, 'anatomy' | 'topologyDepictions' | 'enclosure'>;
 
 const nodeWidth = 236;
 const nodeHeight = 112;
@@ -161,7 +173,21 @@ function anatomyLayout(
   };
 }
 
-function withEnclosure(layout: BaseLayoutResult, anatomy: AnatomyDepiction[]): LayoutResult {
+function compactSparseLayout(layout: BaseLayoutResult, enabled: boolean): BaseLayoutResult {
+  if (!enabled || layout.nodes.length > 3) return layout;
+  const derivedBottom = Math.max(
+    180,
+    ...layout.nodes.map((node) => node.y + node.height + 24),
+    ...layout.regions.map((region) => region.y + region.height + 18),
+  );
+  return {...layout, height: Math.min(layout.height, derivedBottom)};
+}
+
+function withEnclosure(
+  layout: BaseLayoutResult,
+  anatomy: AnatomyDepiction[],
+  topologySpec?: LayoutTopologyDepictionSpec,
+): LayoutResult {
   const notice = anatomyArrangementNotice(layout.kind, anatomy);
   const headerHeight = notice ? enclosureNoticeHeaderHeight : enclosureHeaderHeight;
   const semanticBottom = Math.max(
@@ -169,14 +195,28 @@ function withEnclosure(layout: BaseLayoutResult, anatomy: AnatomyDepiction[]): L
     ...layout.nodes.map((node) => node.y + node.height + 24),
     ...layout.regions.map((region) => region.y + region.height + 18),
   );
-  const anatomyStartY = semanticBottom + (anatomy.length ? 10 : 0);
+  const topologyStartY = semanticBottom + (topologySpec ? 10 : 0);
+  const topologyDepictions: LayoutTopologyDepiction[] = topologySpec
+    ? [{
+        id: topologySpec.id,
+        x: regionInsetX,
+        y: topologyStartY,
+        width: layout.width - regionInsetX * 2,
+        height: topologySpec.height,
+      }]
+    : [];
+  const topologyBottom = topologyDepictions.length
+    ? topologyDepictions[0].y + topologyDepictions[0].height
+    : semanticBottom;
+  const anatomyStartY = topologyBottom + (anatomy.length ? 10 : 0);
   const anatomyResult = anatomyLayout(layout.width, anatomyStartY, anatomy);
-  const contentBottom = Math.max(semanticBottom, anatomyResult.bottom);
+  const contentBottom = Math.max(semanticBottom, topologyBottom, anatomyResult.bottom);
 
   const shiftedNodes = layout.nodes.map((node) => ({...node, y: node.y + headerHeight}));
   const shiftedRegions = [...layout.regions, ...(anatomyResult.region ? [anatomyResult.region] : [])]
     .map((region) => ({...region, y: region.y + headerHeight}));
   const shiftedAnatomy = anatomyResult.items.map((item) => ({...item, y: item.y + headerHeight}));
+  const shiftedTopology = topologyDepictions.map((item) => ({...item, y: item.y + headerHeight}));
   const height = contentBottom + headerHeight + enclosureBottomMargin;
   const enclosure: LayoutEnclosure = {
     x: enclosureMarginX,
@@ -198,6 +238,7 @@ function withEnclosure(layout: BaseLayoutResult, anatomy: AnatomyDepiction[]): L
     nodes: shiftedNodes,
     regions: shiftedRegions,
     anatomy: shiftedAnatomy,
+    topologyDepictions: shiftedTopology,
     height,
     enclosure,
   };
@@ -442,6 +483,7 @@ function withBoundaryGutter(layout: LayoutResult, gutter: number): LayoutResult 
     width: layout.width + gutter * 2,
     nodes: layout.nodes.map(shiftRect),
     anatomy: layout.anatomy.map(shiftRect),
+    topologyDepictions: layout.topologyDepictions.map(shiftRect),
     regions: layout.regions.map(shiftRect),
     enclosure: {
       ...shiftRect(layout.enclosure),
@@ -485,7 +527,12 @@ export function layoutForContext(
     layout = gridLayout(entities, Math.min(3, Math.max(1, entities.length)), 'generic');
   }
 
-  const enclosed = withEnclosure(layout, current.anatomyDepictions ?? []);
+  const compacted = compactSparseLayout(layout, options.compactSparse ?? false);
+  const enclosed = withEnclosure(
+    compacted,
+    current.anatomyDepictions ?? [],
+    options.topologyDepiction,
+  );
   return withBoundaryGutter(enclosed, options.boundaryGutter ?? 0);
 }
 

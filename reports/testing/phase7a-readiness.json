@@ -1,0 +1,70 @@
+{
+  "phase": "7A",
+  "date": "2026-09-10",
+  "status": "READY_AWAITING_MODERATED_HUMAN_SESSIONS",
+  "basis": "Protocol/readiness verification only. This is not participant comprehension evidence.",
+  "protocol": "reports/testing/phase7a-comprehension-protocol.md",
+  "resultsTemplate": "reports/testing/phase7a-results-template.json",
+  "studyAssets": [
+    {
+      "path": "reports/implementation/phase6-study-images/h100-checkpoint.png",
+      "exists": true,
+      "bytes": 191740,
+      "sha256": "3e96d06dc3478ea2bb4624a9b2fc3875bf24c81c47175769ffef7ce8618b44ca"
+    },
+    {
+      "path": "reports/implementation/phase6-study-images/gb300-storage-pressure.png",
+      "exists": true,
+      "bytes": 140024,
+      "sha256": "bcf6da4b5c94eb4aadea862cad08d07f43a0f0a289dd64b762dc9d187d9c6613"
+    },
+    {
+      "path": "reports/implementation/phase6-study-images/meta-checkpoint.png",
+      "exists": true,
+      "bytes": 112599,
+      "sha256": "9c9414d7a470177bf4eb304c3fbe4cb2662e30b51a310a3719d5819e400a6053"
+    },
+    {
+      "path": "reports/implementation/phase7-transfer-images/ironwood-root-transfer.png",
+      "exists": true,
+      "bytes": 171984,
+      "sha256": "ea469a9f24f9239b9c942c0b3bc7f86c4a2869c5231a9c8654544cbe1e0bb68e"
+    },
+    {
+      "path": "reports/implementation/phase7-transfer-images/ironwood-cube-flattened-torus.png",
+      "exists": true,
+      "bytes": 200612,
+      "sha256": "e3cd5933aaccbff1297abe9baa9501d9e0cdcd335a0797d1eaef35b47729aa75"
+    },
+    {
+      "path": "reports/implementation/phase7-transfer-images/cerebras-root-transfer.png",
+      "exists": true,
+      "bytes": 182770,
+      "sha256": "7f7d60237840a64ec6542e5c74d44b922c90b0f36570b7c4a0e23a4bf555beff"
+    },
+    {
+      "path": "reports/implementation/phase7-transfer-images/cerebras-representative-cs3-transfer.png",
+      "exists": true,
+      "bytes": 224527,
+      "sha256": "0c115dff6f9767e4ef0244924b3b5ac5497709d8bf3a3190988164f4f7624659"
+    },
+    {
+      "path": "reports/implementation/phase7-transfer-images/cerebras-representative-wse3-transfer.png",
+      "exists": true,
+      "bytes": 111926,
+      "sha256": "bc1fadf8712b8ac50bc0668cb3c72bb18d6d978c37e42a25f037a1b75aa96b10"
+    }
+  ],
+  "checks": {
+    "allStudyAssetsPresent": true,
+    "mentionsMetaDistinction": true,
+    "mentionsIronwoodWrapSameConnection": true,
+    "mentionsCerebras900000": true,
+    "statesHumanEvidenceRequired": true,
+    "criticalMisconceptionCoverage": true
+  },
+  "allReadinessChecksPass": true,
+  "humanSessionsRunInThisHandoff": false,
+  "gateResult": "NOT_EVALUATED",
+  "blocker": "Phase 7A requires moderated human sessions and measured task/misconception outcomes; no participant dataset was supplied or generated in this handoff."
+}

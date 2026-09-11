@@ -1,0 +1,67 @@
+{
+  "phase": 7,
+  "date": "2026-09-10",
+  "status": "PASS",
+  "basis": "Patch-local regression comparison between the supplied post-Implementation-Continued baseline snapshot and the Phase-7 working tree using the exact current-renderer benchmark adapter. Timing samples are intentionally not treated as equality evidence.",
+  "phase5aPilotScenes": [
+    {
+      "sceneId": "h100-representative-baseline",
+      "markupSha256Baseline": "52bbebfd0b7382cd3be44b00bd818b51c125e6c012c4c3fe10842d164015afcb",
+      "markupSha256Phase7": "52bbebfd0b7382cd3be44b00bd818b51c125e6c012c4c3fe10842d164015afcb",
+      "markupIdentical": true,
+      "structuralMetricsIdentical": true
+    },
+    {
+      "sceneId": "h100-checkpoint-selected-storage-nic",
+      "markupSha256Baseline": "9498c9ab389279df137d68e42bef3f7b7845a2b14833758871f76058c13b2fcf",
+      "markupSha256Phase7": "9498c9ab389279df137d68e42bef3f7b7845a2b14833758871f76058c13b2fcf",
+      "markupIdentical": true,
+      "structuralMetricsIdentical": true
+    },
+    {
+      "sceneId": "gb300-rack-baseline",
+      "markupSha256Baseline": "b7c13f6b0c64aa0a1d0f134bb8bf391d5fbc9654e176e48938f5c0a36208078f",
+      "markupSha256Phase7": "b7c13f6b0c64aa0a1d0f134bb8bf391d5fbc9654e176e48938f5c0a36208078f",
+      "markupIdentical": true,
+      "structuralMetricsIdentical": true
+    },
+    {
+      "sceneId": "gb300-storage-pressure-selected-compute",
+      "markupSha256Baseline": "3ef1b191b788a1a9b8052bc72b0c0a6ae022fcba4f70d19ecf753063a11af1d3",
+      "markupSha256Phase7": "3ef1b191b788a1a9b8052bc72b0c0a6ae022fcba4f70d19ecf753063a11af1d3",
+      "markupIdentical": true,
+      "structuralMetricsIdentical": true
+    },
+    {
+      "sceneId": "meta-root-baseline",
+      "markupSha256Baseline": "f721439a5d1d43fc517749000cdd5268fb52d23966c8992b9f13c7dc47361463",
+      "markupSha256Phase7": "f721439a5d1d43fc517749000cdd5268fb52d23966c8992b9f13c7dc47361463",
+      "markupIdentical": true,
+      "structuralMetricsIdentical": true
+    },
+    {
+      "sceneId": "meta-checkpoint-selected-storage-path",
+      "markupSha256Baseline": "42c058203e79799c8691476e62e93058edaa74b14e7c39281f4f58aebb1992c5",
+      "markupSha256Phase7": "42c058203e79799c8691476e62e93058edaa74b14e7c39281f4f58aebb1992c5",
+      "markupIdentical": true,
+      "structuralMetricsIdentical": true
+    },
+    {
+      "sceneId": "meta-roce-congestion-selected-fabric",
+      "markupSha256Baseline": "2d091d36c49fad6bf4afe9750504cc7a328dc54519bab3b2813bebe9cf2e58e6",
+      "markupSha256Phase7": "2d091d36c49fad6bf4afe9750504cc7a328dc54519bab3b2813bebe9cf2e58e6",
+      "markupIdentical": true,
+      "structuralMetricsIdentical": true
+    }
+  ],
+  "allSevenPilotMarkupsIdentical": true,
+  "allSevenStructuralMetricsIdentical": true,
+  "css": {
+    "baselineBytes": 20028,
+    "phase7Bytes": 21214,
+    "baselineIsExactPrefixOfPhase7": true,
+    "phase7AddedBytes": 1186,
+    "interpretation": "Phase-7 CSS additions are append-only topology-specific rules; existing Phase-6/5A selectors are byte-for-byte preserved."
+  },
+  "conclusion": "Phase-7 transfer branches do not invalidate the seven frozen Phase-5A pilot screenshot/accessibility baselines: exact serialized markup and non-timing structural metrics are unchanged, and existing CSS is preserved with topology-scoped additions appended. User-confirmed Phase-6 pinned validation therefore remains applicable to those unchanged pilot states. This report does not claim that the Phase-7 transfer-specific Vitest/Playwright cases were executed in the pinned dependency environment."
+}

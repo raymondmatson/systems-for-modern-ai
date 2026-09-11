@@ -423,3 +423,63 @@ test('boundary relationship remains selectable and Follow preserves traversal co
   await expect(page.getByText('Traversal context')).toBeVisible();
   await expect(page.getByText('Via relationship')).toBeVisible();
 });
+
+test('Phase 7 Ironwood cube shows a nonsemantic flattened 3D torus with paired wraparound markers', async ({page}) => {
+  await page.goto('./');
+  await contextSelect(page, 'Reference System').selectOption('google-tpu7x-ironwood');
+  await expect(currentLocationHeading(page, 'Ironwood TPU7x Superpod')).toBeVisible();
+
+  const cube = interactiveEntity(page, 'Ironwood cube / rack');
+  await cube.click();
+  await page.getByRole('button', {name: 'Enter'}).click();
+  await expect(currentLocationHeading(page, 'Ironwood cube / rack')).toBeVisible();
+
+  const topology = page.locator('svg .topology-depiction');
+  await expect(topology).toBeVisible();
+  await expect(topology).toHaveAttribute('aria-hidden', 'true');
+  await expect(topology).toHaveAttribute('data-topology-kind', 'flattened-3d-torus');
+  await expect(topology.locator('[role="button"], [tabindex]')).toHaveCount(0);
+  await expect(topology.locator('.topology-connection')).toHaveCount(3);
+
+  for (const dimension of ['A', 'B', 'C']) {
+    const connection = topology.locator(`.topology-connection[data-topology-dimension="${dimension}"]`);
+    await expect(connection).toHaveCount(1);
+    await expect(connection.locator('.topology-link')).toHaveCount(2);
+    const markers = await connection.locator('.topology-continuation-marker').evaluateAll((items) =>
+      items.map((item) => item.getAttribute('data-continuation-label')),
+    );
+    expect(markers).toHaveLength(2);
+    expect(new Set(markers).size).toBe(1);
+  }
+
+  const guide = page.getByLabel('Flattened torus topology explanation');
+  await expect(guide).toContainText('A, B, and C are abstract topology dimensions, not physical axes');
+  await expect(guide).toContainText('two visually separated portions of one conceptual wraparound connection');
+  await expect(page.getByRole('region', {name: 'Explore semantic structure'})).not.toContainText('A1');
+});
+
+test('Phase 7 Cerebras representative contexts compact sparse space and keep 900000 cores symbolic', async ({page}) => {
+  await page.goto('./');
+  await contextSelect(page, 'Reference System').selectOption('cerebras-cs3-condor-galaxy3');
+  await expect(currentLocationHeading(page, 'Condor Galaxy 3')).toBeVisible();
+
+  const cs3 = interactiveEntity(page, 'CS-3 systems');
+  await cs3.click();
+  await page.getByRole('button', {name: 'Explore representative member'}).click();
+  await expect(currentLocationHeading(page, /Representative Compute node/)).toBeVisible();
+  const cs3Canvas = page.locator('svg.explore-canvas');
+  const cs3ViewBox = await cs3Canvas.getAttribute('viewBox');
+  expect(Number(cs3ViewBox?.split(/\s+/)[3])).toBeLessThan(560);
+
+  const wse = interactiveEntity(page, 'WSE-3 wafer-scale accelerator');
+  await wse.click();
+  await page.getByRole('button', {name: 'Enter'}).click();
+  await expect(currentLocationHeading(page, /WSE-3 wafer-scale accelerator/)).toBeVisible();
+  const wseCanvas = page.locator('svg.explore-canvas');
+  const wseViewBox = await wseCanvas.getAttribute('viewBox');
+  expect(Number(wseViewBox?.split(/\s+/)[3])).toBeLessThan(320);
+
+  const cores = interactiveEntity(page, 'AI compute cores');
+  await expect(cores).toHaveAttribute('data-population', '×900000');
+  await expect(page.locator('svg [data-layer="interactive-entity-shells"] .node')).toHaveCount(3);
+});

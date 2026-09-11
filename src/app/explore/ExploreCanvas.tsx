@@ -20,6 +20,7 @@ import {
   NodeScenarioMarkerGlyph,
   NodeScenarioUnderlayGlyph,
 } from './StateOverlayGlyphs';
+import {TopologyGlyph} from './TopologyGlyph';
 import {EXPLORE_SVG_LAYER_ORDER} from './layers';
 import type {PreviewHandlers, SelectTarget} from './types';
 
@@ -83,6 +84,9 @@ export function ExploreCanvas({
         <g data-layer={EXPLORE_SVG_LAYER_ORDER[2]} aria-hidden="true">
           {scene.compositionRegions.map((region) => (
             <CompositionRegionGlyph key={`region-${region.id}`} region={region} />
+          ))}
+          {scene.topologyDepictions.map((depiction) => (
+            <TopologyGlyph key={`topology-${depiction.id}`} depiction={depiction} />
           ))}
           {scene.anatomyDepictions.map((item) => (
             <AnatomyGlyph key={`anatomy-${item.depiction.id}`} item={item} />
@@ -153,7 +157,7 @@ export function ExploreCanvas({
           ))}
         </g>
 
-        {scene.nodes.length === 0 && scene.anatomyDepictions.length === 0 && (
+        {scene.nodes.length === 0 && scene.anatomyDepictions.length === 0 && scene.topologyDepictions.length === 0 && (
           <text
             className="empty-scene"
             x={scene.width / 2}

@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Phase 7 Ironwood/Cerebras transfer scenes and sparse-context calibration states.",
+  "scenes": [
+    {
+      "id": "ironwood-root-transfer",
+      "systemRuntime": "runtime/generated/systems/google-tpu7x-ironwood.json",
+      "configurationId": "tpu7x-9216-chip-superpod",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "google-tpu7x-ironwood",
+        "configurationId": "tpu7x-9216-chip-superpod",
+        "entityId": "ironwood-superpod"
+      },
+      "requiredCues": [
+        "topology-domain-separate-from-optical-network",
+        "cooling-boundary",
+        "zero-image-fallback"
+      ]
+    },
+    {
+      "id": "ironwood-cube-flattened-torus",
+      "systemRuntime": "runtime/generated/systems/google-tpu7x-ironwood.json",
+      "configurationId": "tpu7x-9216-chip-superpod",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "google-tpu7x-ironwood",
+        "configurationId": "tpu7x-9216-chip-superpod",
+        "entityId": "ironwood-cube"
+      },
+      "requiredCues": [
+        "flattened-3d-torus",
+        "abstract-dimensions-a-b-c",
+        "paired-wraparound-markers",
+        "presentation-only-topology",
+        "sparse-context-compaction",
+        "true-boundary-stubs"
+      ]
+    },
+    {
+      "id": "cerebras-root-transfer",
+      "systemRuntime": "runtime/generated/systems/cerebras-cs3-condor-galaxy3.json",
+      "configurationId": "condor-galaxy-3-64-cs3",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "cerebras-cs3-condor-galaxy3",
+        "configurationId": "condor-galaxy-3-64-cs3",
+        "entityId": "cg3"
+      },
+      "requiredCues": [
+        "cs3-memoryx-swarmx-disaggregation",
+        "n-ary-weight-stream",
+        "zero-image-fallback"
+      ]
+    },
+    {
+      "id": "cerebras-representative-cs3-transfer",
+      "systemRuntime": "runtime/generated/systems/cerebras-cs3-condor-galaxy3.json",
+      "configurationId": "condor-galaxy-3-64-cs3",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "cerebras-cs3-condor-galaxy3",
+        "configurationId": "condor-galaxy-3-64-cs3",
+        "aggregateId": "cg3-cs3",
+        "path": ["cg3-cs3"]
+      },
+      "requiredCues": [
+        "representative-context",
+        "integrated-support-anatomy",
+        "disaggregated-boundary-stubs",
+        "sparse-context-compaction"
+      ]
+    },
+    {
+      "id": "cerebras-representative-wse3-transfer",
+      "systemRuntime": "runtime/generated/systems/cerebras-cs3-condor-galaxy3.json",
+      "configurationId": "condor-galaxy-3-64-cs3",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "cerebras-cs3-condor-galaxy3",
+        "configurationId": "condor-galaxy-3-64-cs3",
+        "aggregateId": "cg3-cs3",
+        "path": ["cg3-cs3", "cg3-wse3"]
+      },
+      "requiredCues": [
+        "symbolic-900000-core-aggregate",
+        "on-chip-sram",
+        "wafer-mesh",
+        "no-literal-core-array"
+      ]
+    }
+  ]
+}

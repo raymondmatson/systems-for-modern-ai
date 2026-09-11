@@ -1,6 +1,6 @@
 # Phase 6 comprehension-study packet
 
-**Status:** Prepared during Phase 6; human testing has **not** been run.  
+**Status:** Prepared during Phase 6. Phase 6 later closed via project-owner user-confirmed external validation; human comprehension testing still has **not** been run. Phase 7A execution should use `reports/testing/phase7a-comprehension-protocol.md`, which supersedes this packet as the active moderated-study protocol.  
 **Purpose:** Give Testing a fixed pilot protocol for the later moderated comprehension gate without treating software/render validation as evidence of learning.  
 **Authoritative interaction environment:** The project application after the pinned Phase-6 browser matrix passes.  
 **Visuals included here:** Current-renderer **system-Chromium study candidates**, not the authoritative Playwright screenshot-regression baselines. They are included so task wording and expected answers can be reviewed now. Replace/confirm them against the pinned baselines before moderated testing if the pinned render differs materially.
@@ -135,4 +135,4 @@ For each task record:
 
 ## 8. Phase-6 handoff note
 
-This packet is structurally ready. Before Phase 7A human testing, Testing must replace or explicitly confirm the candidate images against the authoritative pinned screenshot baselines and incorporate any Phase-7 Ironwood/Cerebras transfer changes. No human-comprehension claim is made by this document.
+Phase 6 is now closed by project-owner user-confirmed external validation after the Implementation Continued fixes; those dependency-backed runs were not performed by this Visual Design handoff. Phase 7 has also completed the Ironwood/Cerebras transfer work. The active Phase-7A moderator protocol is now `reports/testing/phase7a-comprehension-protocol.md`. This Phase-6 packet remains historical preparation evidence only and makes no human-comprehension claim.

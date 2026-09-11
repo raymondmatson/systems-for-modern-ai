@@ -1,0 +1,25 @@
+{
+  "phase": "7A",
+  "status": "AWAITING_MODERATED_HUMAN_SESSIONS",
+  "datePrepared": "2026-09-10",
+  "protocol": "reports/testing/phase7a-comprehension-protocol.md",
+  "thresholds": {
+    "criticalSemanticMisconceptionsAllowed": 0,
+    "coreTaskAccuracyMinimum": 0.85,
+    "relationshipFamilyFirstPassAccuracyMinimum": 0.75,
+    "colorOrHoverOnlyTasksAllowed": 0
+  },
+  "participants": [],
+  "sessions": [],
+  "aggregate": {
+    "participantCount": 0,
+    "coreTaskAccuracy": null,
+    "relationshipFamilyFirstPassAccuracy": null,
+    "criticalSemanticMisconceptions": [],
+    "gateResult": "NOT_EVALUATED"
+  },
+  "notes": [
+    "This file is a results template only. No moderated human-comprehension result was produced in the Phase-7/7A implementation handoff.",
+    "Do not replace null/not-evaluated fields with automated or assistant-review results."
+  ]
+}

@@ -1,0 +1,277 @@
+{
+  "phase": "7",
+  "date": "2026-09-10",
+  "status": "PASS",
+  "basis": "Exact current Explore view-model/components through the renderer benchmark JSX adapter; rendered/geometry-inspected in system Chromium. This is transfer implementation evidence, not human comprehension evidence.",
+  "compiler": {
+    "path": "/opt/nvm/versions/node/v22.16.0/bin/tsc",
+    "version": "Version 5.8.3"
+  },
+  "fixture": "tests/fixtures/visual-regression-phase7.json",
+  "cases": [
+    {
+      "sceneId": "ironwood-root-transfer",
+      "requiredCues": [
+        "topology-domain-separate-from-optical-network",
+        "cooling-boundary",
+        "zero-image-fallback"
+      ],
+      "renderer": {
+        "viewModelMedianMs": 0.272288,
+        "componentSerializeMedianMs": 1.669638,
+        "interactiveNodes": 4,
+        "anatomyDepictions": 0,
+        "canvasConnections": 3,
+        "contextConnections": 3,
+        "boundaryConnections": 0,
+        "summarizedConnections": 3,
+        "width": 820,
+        "height": 674,
+        "layoutKind": "system"
+      },
+      "browser": {
+        "width": 820,
+        "height": 674,
+        "nodeCount": 4,
+        "anatomyCount": 0,
+        "truncatedNodeLabels": 0,
+        "topologyCount": 0,
+        "topologyFocusTargets": 0,
+        "topologyConnections": [],
+        "topologyKeyCollidesWithCanonicalConnection": false,
+        "topologyAriaHidden": null,
+        "torusGuideVisible": false,
+        "torusGuideMentionsSharedPortions": false,
+        "core900kCount": 0,
+        "enclosureUnusedBottomPx": 45.07294464111328,
+        "semanticOutlineButtons": 10
+      },
+      "screenshot": {
+        "path": "reports/implementation/phase7-transfer-images/ironwood-root-transfer.png",
+        "sha256": "ea469a9f24f9239b9c942c0b3bc7f86c4a2869c5231a9c8654544cbe1e0bb68e",
+        "bytes": 171984
+      },
+      "errors": [],
+      "status": "PASS"
+    },
+    {
+      "sceneId": "ironwood-cube-flattened-torus",
+      "requiredCues": [
+        "flattened-3d-torus",
+        "abstract-dimensions-a-b-c",
+        "paired-wraparound-markers",
+        "presentation-only-topology",
+        "sparse-context-compaction",
+        "true-boundary-stubs"
+      ],
+      "renderer": {
+        "viewModelMedianMs": 0.251559,
+        "componentSerializeMedianMs": 2.0414,
+        "interactiveNodes": 1,
+        "anatomyDepictions": 0,
+        "canvasConnections": 0,
+        "contextConnections": 6,
+        "boundaryConnections": 3,
+        "summarizedConnections": 3,
+        "width": 1240,
+        "height": 538,
+        "layoutKind": "fabric"
+      },
+      "browser": {
+        "width": 1240,
+        "height": 538,
+        "nodeCount": 1,
+        "anatomyCount": 0,
+        "truncatedNodeLabels": 0,
+        "topologyCount": 1,
+        "topologyFocusTargets": 0,
+        "topologyConnections": [
+          {
+            "key": "ironwood-torus-wrap-a1",
+            "dimension": "A",
+            "segments": 2,
+            "markers": [
+              "A1",
+              "A1"
+            ]
+          },
+          {
+            "key": "ironwood-torus-wrap-b1",
+            "dimension": "B",
+            "segments": 2,
+            "markers": [
+              "B1",
+              "B1"
+            ]
+          },
+          {
+            "key": "ironwood-torus-wrap-c1",
+            "dimension": "C",
+            "segments": 2,
+            "markers": [
+              "C1",
+              "C1"
+            ]
+          }
+        ],
+        "topologyKeyCollidesWithCanonicalConnection": false,
+        "topologyAriaHidden": "true",
+        "torusGuideVisible": true,
+        "torusGuideMentionsSharedPortions": true,
+        "core900kCount": 0,
+        "enclosureUnusedBottomPx": 0,
+        "semanticOutlineButtons": 7
+      },
+      "screenshot": {
+        "path": "reports/implementation/phase7-transfer-images/ironwood-cube-flattened-torus.png",
+        "sha256": "e3cd5933aaccbff1297abe9baa9501d9e0cdcd335a0797d1eaef35b47729aa75",
+        "bytes": 200612
+      },
+      "errors": [],
+      "status": "PASS"
+    },
+    {
+      "sceneId": "cerebras-root-transfer",
+      "requiredCues": [
+        "cs3-memoryx-swarmx-disaggregation",
+        "n-ary-weight-stream",
+        "zero-image-fallback"
+      ],
+      "renderer": {
+        "viewModelMedianMs": 0.374286,
+        "componentSerializeMedianMs": 2.182467,
+        "interactiveNodes": 5,
+        "anatomyDepictions": 0,
+        "canvasConnections": 4,
+        "contextConnections": 2,
+        "boundaryConnections": 0,
+        "summarizedConnections": 2,
+        "width": 900,
+        "height": 674,
+        "layoutKind": "system"
+      },
+      "browser": {
+        "width": 900,
+        "height": 674,
+        "nodeCount": 5,
+        "anatomyCount": 0,
+        "truncatedNodeLabels": 0,
+        "topologyCount": 0,
+        "topologyFocusTargets": 0,
+        "topologyConnections": [],
+        "topologyKeyCollidesWithCanonicalConnection": false,
+        "topologyAriaHidden": null,
+        "torusGuideVisible": false,
+        "torusGuideMentionsSharedPortions": false,
+        "core900kCount": 0,
+        "enclosureUnusedBottomPx": 41.066558837890625,
+        "semanticOutlineButtons": 11
+      },
+      "screenshot": {
+        "path": "reports/implementation/phase7-transfer-images/cerebras-root-transfer.png",
+        "sha256": "7f7d60237840a64ec6542e5c74d44b922c90b0f36570b7c4a0e23a4bf555beff",
+        "bytes": 182770
+      },
+      "errors": [],
+      "status": "PASS"
+    },
+    {
+      "sceneId": "cerebras-representative-cs3-transfer",
+      "requiredCues": [
+        "representative-context",
+        "integrated-support-anatomy",
+        "disaggregated-boundary-stubs",
+        "sparse-context-compaction"
+      ],
+      "renderer": {
+        "viewModelMedianMs": 0.2888,
+        "componentSerializeMedianMs": 2.597354,
+        "interactiveNodes": 1,
+        "anatomyDepictions": 4,
+        "canvasConnections": 0,
+        "contextConnections": 6,
+        "boundaryConnections": 4,
+        "summarizedConnections": 2,
+        "width": 1060,
+        "height": 528,
+        "layoutKind": "assembly"
+      },
+      "browser": {
+        "width": 1060,
+        "height": 528,
+        "nodeCount": 1,
+        "anatomyCount": 4,
+        "truncatedNodeLabels": 0,
+        "topologyCount": 0,
+        "topologyFocusTargets": 0,
+        "topologyConnections": [],
+        "topologyKeyCollidesWithCanonicalConnection": false,
+        "topologyAriaHidden": null,
+        "torusGuideVisible": false,
+        "torusGuideMentionsSharedPortions": false,
+        "core900kCount": 0,
+        "enclosureUnusedBottomPx": 0,
+        "semanticOutlineButtons": 7
+      },
+      "screenshot": {
+        "path": "reports/implementation/phase7-transfer-images/cerebras-representative-cs3-transfer.png",
+        "sha256": "0c115dff6f9767e4ef0244924b3b5ac5497709d8bf3a3190988164f4f7624659",
+        "bytes": 224527
+      },
+      "errors": [],
+      "status": "PASS"
+    },
+    {
+      "sceneId": "cerebras-representative-wse3-transfer",
+      "requiredCues": [
+        "symbolic-900000-core-aggregate",
+        "on-chip-sram",
+        "wafer-mesh",
+        "no-literal-core-array"
+      ],
+      "renderer": {
+        "viewModelMedianMs": 0.368206,
+        "componentSerializeMedianMs": 1.294832,
+        "interactiveNodes": 3,
+        "anatomyDepictions": 0,
+        "canvasConnections": 2,
+        "contextConnections": 0,
+        "boundaryConnections": 0,
+        "summarizedConnections": 0,
+        "width": 864,
+        "height": 276,
+        "layoutKind": "internal"
+      },
+      "browser": {
+        "width": 864,
+        "height": 276,
+        "nodeCount": 3,
+        "anatomyCount": 0,
+        "truncatedNodeLabels": 0,
+        "topologyCount": 0,
+        "topologyFocusTargets": 0,
+        "topologyConnections": [],
+        "topologyKeyCollidesWithCanonicalConnection": false,
+        "topologyAriaHidden": null,
+        "torusGuideVisible": false,
+        "torusGuideMentionsSharedPortions": false,
+        "core900kCount": 1,
+        "enclosureUnusedBottomPx": 27.500015258789062,
+        "semanticOutlineButtons": 5
+      },
+      "screenshot": {
+        "path": "reports/implementation/phase7-transfer-images/cerebras-representative-wse3-transfer.png",
+        "sha256": "bc1fadf8712b8ac50bc0668cb3c72bb18d6d978c37e42a25f037a1b75aa96b10",
+        "bytes": 111926
+      },
+      "errors": [],
+      "status": "PASS"
+    }
+  ],
+  "errors": [],
+  "semanticDecision": {
+    "ironwoodTorus": "presentation_only_flattened_3d_torus_with_three_abstract_dimensions_and_paired_wraparound_markers",
+    "canonicalTopologyChanged": false,
+    "topologyActionTargetsCreated": false
+  }
+}

@@ -878,7 +878,7 @@ Framework/library versions should be pinned when implementation begins and updat
 | Application state | Redux Toolkit + React-Redux | **Resolved** | High |
 | Explore rendering | SVG-first; no dense Canvas/WebGL backplane required for current V1 representative scenes | **Resolved for current V1 scenes** | High — re-profile on material density change |
 | Physical layout | Deterministic project layouts | **Resolved** | High |
-| Graph-heavy layout | elkjs adapter / Worker where useful | **Provisionally Resolved** | Medium–High — topology prototype/dependency review |
+| Graph-heavy layout | elkjs adapter / Worker only if a future authored graph requires it; current Ironwood torus uses a deterministic presentation primitive and does not require ELK | **Provisionally Resolved** | Medium–High — revisit only for materially graph-heavy authored scenes |
 | Semantic visibility | Aggregation/relevance first; no universal numeric cutoff | **Resolved policy** | High |
 | Numeric visibility/virtualization limits | No global cutoff; current V1 scenes require no renderer virtualization | **Resolved for current V1 scenes** | High — re-profile on material density change |
 | Runtime content | Versioned generated JSON chunks | **Resolved** | High |
@@ -925,7 +925,9 @@ The benchmark uses a dependency-light JSX adapter and system Chromium so it can 
 
 **Review trigger:** re-profile if semantic or presentation visibility/materialization increases materially, layout behavior changes substantially, or measured interaction performance regresses. Do not change Expansion Mode, identity, Selection, Navigation, or accessibility targets to satisfy renderer budgets.
 
-**Remaining release evidence:** Phase 6 is currently environment-blocked because the supplied repository has no dependency tree, the npm cache is empty, and registry DNS resolution is unavailable. The approved browser-support policy still requires pinned TypeScript/Vitest/Vite plus dependency-backed Chromium/Firefox/WebKit Playwright verification, authoritative curated screenshots, and the final keyboard/screen-reader review of SVG-target versus semantic-outline duplication. Those are release/validation requirements, not unresolved product/rendering decisions. Exact Phase-6 status is recorded in `reports/implementation/phase6-validation.json`.
+**Phase-6 closure evidence:** Phase 6 is completed. The Visual Design container could not execute the pinned dependency/browser matrix, but the project owner subsequently confirmed that the previously blocked TypeScript/Vitest/Vite/Chromium-Firefox-WebKit and associated validation gates passed after the Implementation Continued fixes now present in the repository. This is **user-confirmed external validation, not execution performed by this handoff**. The validated current implementation retains both interactive SVG targets and the semantic outline; revisit only if later Testing identifies a concrete accessibility/action-parity regression. Exact local-history and closure attribution are recorded in `reports/implementation/phase6-validation.json`.
+
+**Phase-7 transfer note:** the approved Ironwood flattened torus is a deterministic presentation-only primitive, not a reason to invoke ELK or generalize Concept occurrences into graph layouts. It teaches the documented 3D-torus wrap principle with abstract A/B/C dimensions and paired continuation markers while creating no canonical topology objects. Sparse Ironwood/Cerebras entered contexts may use the transfer-scoped deterministic compaction rule documented in `docs/VISUAL_DESIGN_PHASE7_TRANSFER.md`.
 
 ### Current rendering acceptance gate
 
