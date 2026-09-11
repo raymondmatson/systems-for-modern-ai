@@ -290,6 +290,22 @@ test('Phase 4 connection syntax, boundary stubs, and contextual key remain seman
   await expect(boundary).toHaveAttribute('aria-pressed', 'true');
 });
 
+test('Phase 5A calibrated boundary labels preserve full pilot destination names without ellipsis', async ({page}) => {
+  await page.goto('./');
+  await enterRepresentativeH100Node(page);
+
+  const boundaryLabels = page.locator('svg .boundary-stub-label');
+  await expect(boundaryLabels).toHaveCount(4);
+  const labelState = await boundaryLabels.evaluateAll((labels) => labels.map((label) => ({
+    text: label.textContent ?? '',
+    lineCount: label.querySelectorAll('tspan').length,
+  })));
+  expect(labelState.every((label) => label.lineCount >= 1 && label.lineCount <= 2)).toBe(true);
+  expect(labelState.every((label) => !label.text.includes('…'))).toBe(true);
+  expect(labelState.some((label) => label.text.includes('Compute-fabric InfiniBand') && label.text.includes('switches'))).toBe(true);
+  expect(labelState.some((label) => label.text.includes('Storage-fabric InfiniBand') && label.text.includes('switches'))).toBe(true);
+});
+
 test('Phase 5 Scenario strip and orthogonal node state overlays coexist without replacing base role cues', async ({page}) => {
   await page.goto('./');
   await page.getByLabel('Scenario').selectOption('checkpoint-storage-pressure');

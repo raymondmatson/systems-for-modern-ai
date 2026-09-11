@@ -110,7 +110,7 @@
 .edge-selection-handle { fill:#fff; stroke:#111827; stroke-width:2; pointer-events:none; vector-effect:non-scaling-stroke; }
 .boundary-edge.decorative { pointer-events:none; }
 .boundary-stub-terminal { fill:#fff; stroke:#475569; stroke-width:2; pointer-events:none; vector-effect:non-scaling-stroke; }
-.boundary-stub-label { fill:#475569; font-size:9px; font-weight:650; pointer-events:none; }
+.boundary-stub-label { fill:#475569; font-size:9.5px; font-weight:650; pointer-events:none; }
 
 .visual-key { border-top:1px solid #e2e8f0; padding:.7rem 1rem .8rem; background:#fbfdff; }
 .visual-key h2 { margin:.1rem 0 .5rem; color:#475569; font-size:.85rem; }

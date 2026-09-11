@@ -1,0 +1,290 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Phase 5A approved pilot-scene states and render variants for Phase 6 curated visual regression.",
+  "scenes": [
+    {
+      "id": "h100-representative-baseline",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-h100-superpod.json",
+      "configurationId": "h100-superpod-4su-reference",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "aggregateId": "dgx-h100-node",
+        "path": [
+          "dgx-h100-node"
+        ]
+      },
+      "requiredCues": [
+        "representative-context",
+        "aggregate-counts",
+        "integrated-anatomy",
+        "boundary-stubs",
+        "connection-key"
+      ]
+    },
+    {
+      "id": "h100-checkpoint-selected-storage-nic",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-h100-superpod.json",
+      "configurationId": "h100-superpod-4su-reference",
+      "scenarioId": "checkpoint-storage-pressure",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "aggregateId": "dgx-h100-node",
+        "path": [
+          "dgx-h100-node"
+        ]
+      },
+      "selection": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "aggregateId": "dgx-h100-node",
+        "path": [
+          "dgx-h100-node",
+          "h100-storage-cx7"
+        ]
+      },
+      "preview": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "aggregateId": "dgx-h100-node",
+        "path": [
+          "dgx-h100-node",
+          "h100-storage-cx7"
+        ]
+      },
+      "requiredCues": [
+        "representative-context",
+        "selection-plus-focus",
+        "active-scenario-strip",
+        "integrated-anatomy",
+        "full-boundary-destination-labels"
+      ]
+    },
+    {
+      "id": "gb300-rack-baseline",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-gb300-nvl72-superpod.json",
+      "configurationId": "gb300-nvl72-superpod-reference",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "entityId": "gb300-nvl72-rack"
+      },
+      "requiredCues": [
+        "rack-enclosure",
+        "compute-population-x18",
+        "switch-population-x9",
+        "integrated-cooling-anatomy",
+        "boundary-stubs"
+      ]
+    },
+    {
+      "id": "gb300-storage-pressure-selected-compute",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-gb300-nvl72-superpod.json",
+      "configurationId": "gb300-nvl72-superpod-reference",
+      "scenarioId": "north-south-storage-pressure",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "entityId": "gb300-nvl72-rack"
+      },
+      "selection": {
+        "kind": "entity",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "entityId": "gb300-compute-trays"
+      },
+      "preview": {
+        "kind": "entity",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "entityId": "gb300-compute-trays"
+      },
+      "requiredCues": [
+        "selection-plus-focus-plus-scenario",
+        "compute-population-x18",
+        "switch-population-x9",
+        "full-boundary-destination-labels",
+        "scenario-does-not-hide-unaffected-structure"
+      ]
+    },
+    {
+      "id": "meta-root-baseline",
+      "systemRuntime": "runtime/generated/systems/meta-h100-roce-24k.json",
+      "configurationId": "meta-24576-h100-roce",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "meta-h100-roce-24k",
+        "configurationId": "meta-24576-h100-roce",
+        "entityId": "meta-h100-roce"
+      },
+      "requiredCues": [
+        "system-domain-enclosure",
+        "compute-network-storage-bands",
+        "physical-vs-data-path-syntax",
+        "zero-image-media-fallback"
+      ]
+    },
+    {
+      "id": "meta-checkpoint-selected-storage-path",
+      "systemRuntime": "runtime/generated/systems/meta-h100-roce-24k.json",
+      "configurationId": "meta-24576-h100-roce",
+      "scenarioId": "checkpoint-storage-burst",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "meta-h100-roce-24k",
+        "configurationId": "meta-24576-h100-roce",
+        "entityId": "meta-h100-roce"
+      },
+      "selection": {
+        "kind": "connection",
+        "systemId": "meta-h100-roce-24k",
+        "configurationId": "meta-24576-h100-roce",
+        "connectionId": "meta-storage-path"
+      },
+      "preview": {
+        "kind": "connection",
+        "systemId": "meta-h100-roce-24k",
+        "configurationId": "meta-24576-h100-roce",
+        "connectionId": "meta-storage-path"
+      },
+      "requiredCues": [
+        "selected-focused-scenario-edge",
+        "data-path-family-remains-readable",
+        "route-avoids-roce-node",
+        "storage-scenario-marker",
+        "physical-structure-unchanged"
+      ]
+    },
+    {
+      "id": "meta-roce-congestion-selected-fabric",
+      "systemRuntime": "runtime/generated/systems/meta-h100-roce-24k.json",
+      "configurationId": "meta-24576-h100-roce",
+      "scenarioId": "roce-congestion",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "meta-h100-roce-24k",
+        "configurationId": "meta-24576-h100-roce",
+        "entityId": "meta-h100-roce"
+      },
+      "selection": {
+        "kind": "entity",
+        "systemId": "meta-h100-roce-24k",
+        "configurationId": "meta-24576-h100-roce",
+        "entityId": "meta-roce-switches"
+      },
+      "preview": {
+        "kind": "entity",
+        "systemId": "meta-h100-roce-24k",
+        "configurationId": "meta-24576-h100-roce",
+        "entityId": "meta-roce-switches"
+      },
+      "requiredCues": [
+        "selected-focused-scenario-node",
+        "network-role-remains-readable",
+        "unaffected-compute-and-storage-remain-visible"
+      ]
+    }
+  ],
+  "renderVariants": [
+    {
+      "id": "h100-baseline-desktop",
+      "sceneId": "h100-representative-baseline",
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "colorMode": "default"
+    },
+    {
+      "id": "h100-stress-desktop",
+      "sceneId": "h100-checkpoint-selected-storage-nic",
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "colorMode": "default"
+    },
+    {
+      "id": "gb300-baseline-desktop",
+      "sceneId": "gb300-rack-baseline",
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "colorMode": "default"
+    },
+    {
+      "id": "gb300-stress-desktop",
+      "sceneId": "gb300-storage-pressure-selected-compute",
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "colorMode": "default"
+    },
+    {
+      "id": "meta-baseline-desktop",
+      "sceneId": "meta-root-baseline",
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "colorMode": "default"
+    },
+    {
+      "id": "meta-checkpoint-desktop",
+      "sceneId": "meta-checkpoint-selected-storage-path",
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "colorMode": "default"
+    },
+    {
+      "id": "meta-roce-desktop",
+      "sceneId": "meta-roce-congestion-selected-fabric",
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "colorMode": "default"
+    },
+    {
+      "id": "h100-stress-narrow",
+      "sceneId": "h100-checkpoint-selected-storage-nic",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "colorMode": "default"
+    },
+    {
+      "id": "h100-stress-grayscale",
+      "sceneId": "h100-checkpoint-selected-storage-nic",
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "colorMode": "grayscale"
+    },
+    {
+      "id": "meta-checkpoint-forced-colors",
+      "sceneId": "meta-checkpoint-selected-storage-path",
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "colorMode": "forced-colors"
+    }
+  ]
+}

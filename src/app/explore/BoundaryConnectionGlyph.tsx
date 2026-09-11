@@ -17,7 +17,8 @@ export function BoundaryConnectionGlyph({
   if (!boundary) return null;
   const interactive = connection.routes.length === 0;
   const externalLabel = boundary.externalEndpointLabels.join(' / ');
-  const label = svgLabelFit(externalLabel || 'External relationship', 28, 1).lines[0] ?? externalLabel;
+  const labelLines = svgLabelFit(externalLabel || 'External relationship', 28, 2).lines;
+  const labelY = boundary.labelPoint.y - Math.max(0, labelLines.length - 1) * 5;
   const content = (
     <>
       {interactive && <ConnectionHitRoutes routes={boundary.routes} />}
@@ -26,10 +27,14 @@ export function BoundaryConnectionGlyph({
       <text
         className="boundary-stub-label"
         x={boundary.labelPoint.x}
-        y={boundary.labelPoint.y}
+        y={labelY}
         textAnchor={boundary.labelAnchor}
       >
-        {label}
+        {labelLines.map((line, index) => (
+          <tspan key={`${line}-${index}`} x={boundary.labelPoint.x} dy={index === 0 ? 0 : 11}>
+            {line}
+          </tspan>
+        ))}
       </text>
       <title>{connection.name}: continues beyond current enclosure to {externalLabel}</title>
     </>
