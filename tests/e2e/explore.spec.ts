@@ -336,7 +336,8 @@ test('reduced-motion preference removes presentation transitions and animations'
   expect(motion.animationDuration).toBe('0s');
 });
 
-test('forced-colors mode retains non-color Selection, focus, and relationship-family cues', async ({page}) => {
+test('Chromium forced-colors mode retains non-color Selection, focus, and relationship-family cues', async ({page, browserName}) => {
+  test.skip(browserName !== 'chromium', 'Playwright forced-colors emulation is Chromium-only; ordinary non-color state/relationship checks still run in every configured browser.');
   await page.emulateMedia({forcedColors: 'active'});
   await page.goto('./');
   await page.getByLabel('Scenario').selectOption('checkpoint-storage-pressure');
