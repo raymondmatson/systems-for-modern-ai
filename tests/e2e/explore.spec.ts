@@ -42,7 +42,7 @@ async function selectH100Gpu(page: Page) {
   await enterRepresentativeH100Node(page);
   const gpu = interactiveEntity(page, 'NVIDIA H100 GPUs');
   await gpu.click();
-  await expect(detailHeading(page, 'NVIDIA H100 GPUs')).toBeVisible();
+  await expect(detailHeading(page, 'Representative GPU')).toBeVisible();
   return gpu;
 }
 
@@ -54,7 +54,7 @@ test('starts in the approved default Explore context', async ({page}) => {
   await expect(contextSelect(page, 'Configuration')).toHaveValue(DEFAULT_CONFIGURATION);
   await expect(contextSelect(page, 'Scenario')).toHaveValue(DEFAULT_SCENARIO);
   await expect(currentLocationHeading(page, 'DGX H100 SuperPOD')).toBeVisible();
-  await expect(page.getByText('Current location')).toBeVisible();
+  await expect(page.getByLabel('Detail').getByText('Current location', {exact: true})).toBeVisible();
   await expect(page.getByRole('button', {name: 'Clear selection'})).toHaveCount(0);
 });
 
@@ -124,7 +124,7 @@ test('Explore-origin Return survives Concept-to-Concept browsing', async ({page}
 
   await returnButton.click();
   await expect(currentLocationHeading(page, /Representative Compute node/)).toBeVisible();
-  await expect(detailHeading(page, 'NVIDIA H100 GPUs')).toBeVisible();
+  await expect(detailHeading(page, 'Representative GPU')).toBeVisible();
 });
 
 test('Architectural Context controls are shared in Concepts and configuration switch preserves the Concept', async ({page}) => {
@@ -212,7 +212,7 @@ test('moving outward by breadcrumb preserves a meaningful deeper Selection and m
   await page.goto('./');
   await selectH100Gpu(page);
   await page.getByRole('button', {name: 'Scalable Unit (representative)'}).click();
-  await expect(detailHeading(page, 'NVIDIA H100 GPUs')).toBeVisible();
+  await expect(detailHeading(page, 'Representative GPU')).toBeVisible();
   await expect(page.getByRole('button', {name: 'Clear selection'})).toBeVisible();
   const aggregate = page.locator('.semantic-outline button').filter({hasText: 'DGX H100 compute node'}).first();
   await expect(aggregate).toContainText('Contains current selection');
@@ -224,9 +224,10 @@ test('Follow retains the physical origin and relationship as traversal context',
   const relationship = page.locator('.connection-cards button').filter({hasText: 'DGX node to compute fabric'}).first();
   await relationship.click();
   await page.getByRole('button', {name: 'Follow to Compute-fabric InfiniBand switches'}).click();
-  await expect(page.getByText('Traversal context')).toBeVisible();
-  await expect(page.getByLabel('Detail').getByText('Representative Compute node')).toBeVisible();
-  await expect(page.getByLabel('Detail').getByText('DGX node to compute fabric')).toBeVisible();
+  const traversal = page.getByLabel('Detail').getByRole('heading', {name: 'Traversal context', level: 3}).locator('..');
+  await expect(traversal).toBeVisible();
+  await expect(traversal.getByText('Representative Compute node', {exact: true})).toBeVisible();
+  await expect(traversal.getByText('DGX node to compute fabric', {exact: true})).toBeVisible();
 });
 
 test('nested representative breadcrumbs retain exemplar terminology', async ({page}) => {
@@ -310,9 +311,10 @@ test('Phase 4 connection syntax, boundary stubs, and contextual key remain seman
   await page.goto('./');
   await enterRepresentativeH100Node(page);
 
-  await expect(page.getByRole('heading', {name: 'Connection key'})).toBeVisible();
-  await expect(page.getByText('Physical connectivity').first()).toBeVisible();
-  await expect(page.getByText('Data / communication path').first()).toBeVisible();
+  const connectionKey = page.locator('.visual-key');
+  await expect(connectionKey.getByRole('heading', {name: 'Connection key'})).toBeVisible();
+  await expect(connectionKey.getByText('Physical connectivity', {exact: true})).toBeVisible();
+  await expect(connectionKey.getByText('Data / communication path', {exact: true})).toBeVisible();
   const boundary = page.locator('svg .boundary-edge[role="button"]').first();
   await expect(boundary).toBeVisible();
   await expect(boundary).toHaveAttribute('data-connection-visibility', 'boundary');
