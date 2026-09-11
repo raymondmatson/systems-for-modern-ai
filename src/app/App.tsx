@@ -204,7 +204,6 @@ function App({boot}: {boot: BootContent}) {
     propertyRegistry: boot.propertyRegistry,
     concepts: boot.concepts,
   });
-  const scenario = configuration.scenarios[state.explore.scenarioId];
   const breadcrumbs = containmentBreadcrumbs(
     configuration,
     state.explore.structuralLocation,
@@ -329,12 +328,13 @@ function App({boot}: {boot: BootContent}) {
               <div className="canvas-heading">
                 <div>
                   <h1>{locationHeading(configuration, state.explore.structuralLocation)}</h1>
-                  <ScenarioStrip description={scenario?.description} />
                 </div>
                 <button onClick={() => apply(toggleDetail(state))}>
                   {state.explore.detailVisible ? 'Hide details' : 'Show details'}
                 </button>
               </div>
+
+              <ScenarioStrip scenario={scene.scenario} />
 
               {preview && (
                 <div className="preview-card" aria-label="Inspect preview">

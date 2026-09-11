@@ -1,6 +1,33 @@
-import type {buildExploreScene} from '../../view-model/explore';
-import {entityTypeLabel, relationshipTypeLabel} from '../../view-model/labels';
+import type {buildExploreScene, SceneConnection} from '../../view-model/explore';
+import {entityTypeLabel, formatMetadataValue} from '../../view-model/labels';
 import type {PreviewHandlers, SelectTarget} from './types';
+
+function ConnectionCards({
+  connections,
+  selectTarget,
+  previewHandlers,
+}: {
+  connections: SceneConnection[];
+  selectTarget: SelectTarget;
+  previewHandlers: PreviewHandlers;
+}) {
+  return (
+    <div className="connection-cards">
+      {connections.map((connection) => (
+        <button
+          key={connection.id}
+          aria-pressed={connection.selected}
+          onClick={() => selectTarget(connection.locator)}
+          {...previewHandlers(connection.locator)}
+        >
+          <strong>{connection.name}</strong>
+          <span>{connection.visual.label} · {formatMetadataValue(connection.directionality)}</span>
+          <small>{connection.endpointLabels.join(' ↔ ')}</small>
+        </button>
+      ))}
+    </div>
+  );
+}
 
 export function ContextConnections({
   scene,
@@ -11,24 +38,34 @@ export function ContextConnections({
   selectTarget: SelectTarget;
   previewHandlers: PreviewHandlers;
 }) {
-  if (scene.contextConnections.length === 0) return null;
+  const allConnections = [...scene.connections, ...scene.contextConnections];
+  const boundaryConnections = allConnections.filter((connection) => connection.boundary);
+  const summarizedConnections = scene.contextConnections.filter(
+    (connection) => connection.visibility === 'summarized',
+  );
+  if (boundaryConnections.length === 0 && summarizedConnections.length === 0) return null;
   return (
-    <section className="context-connections" aria-labelledby="cross-connections-title">
-      <h2 id="cross-connections-title">Cross-connections beyond this visual grouping</h2>
-      <div className="connection-cards">
-        {scene.contextConnections.map((connection) => (
-          <button
-            key={connection.id}
-            aria-pressed={connection.selected}
-            onClick={() => selectTarget(connection.locator)}
-            {...previewHandlers(connection.locator)}
-          >
-            <strong>{connection.name}</strong>
-            <span>{relationshipTypeLabel(connection.relationshipType)}</span>
-            <small>{connection.endpointLabels.join(' ↔ ')}</small>
-          </button>
-        ))}
-      </div>
+    <section className="context-connections" aria-label="Connections outside or summarized within the current visual grouping">
+      {boundaryConnections.length > 0 && (
+        <section aria-labelledby="cross-connections-title">
+          <h2 id="cross-connections-title">Cross-connections beyond this enclosure</h2>
+          <ConnectionCards
+            connections={boundaryConnections}
+            selectTarget={selectTarget}
+            previewHandlers={previewHandlers}
+          />
+        </section>
+      )}
+      {summarizedConnections.length > 0 && (
+        <section aria-labelledby="summarized-connections-title">
+          <h2 id="summarized-connections-title">Connections summarized inside visible aggregates</h2>
+          <ConnectionCards
+            connections={summarizedConnections}
+            selectTarget={selectTarget}
+            previewHandlers={previewHandlers}
+          />
+        </section>
+      )}
     </section>
   );
 }
@@ -80,7 +117,7 @@ export function SemanticExploreOutline({
             {...previewHandlers(connection.locator)}
           >
             <strong>{connection.name}</strong>
-            <span>{relationshipTypeLabel(connection.relationshipType)}</span>
+            <span>{connection.visual.label} · {formatMetadataValue(connection.directionality)}</span>
             <small>{connection.endpointLabels.join(' ↔ ')}</small>
           </button>
         ))}

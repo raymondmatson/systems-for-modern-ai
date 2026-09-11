@@ -172,7 +172,7 @@ test('Phase 2 enclosure and component shell cues remain presentation-only and ke
 test('cross-tier relationships remain discoverable and semantic outline mirrors visual targets', async ({page}) => {
   await page.goto('./');
   await expect(page.getByRole('region', {name: 'Explore semantic structure'})).toBeVisible();
-  await expect(page.getByText('Cross-connections beyond this visual grouping')).toBeVisible();
+  await expect(page.getByText('Cross-connections beyond this enclosure')).toBeVisible();
   await expect(page.getByText('Intra-node NVLink/NVSwitch fabric').first()).toBeVisible();
 });
 
@@ -273,3 +273,37 @@ test('relationship-enterable switch interiors expose physical anatomy instead of
   await expect(page.locator('svg .anatomy-depiction').first()).toHaveAttribute('data-evidence-status', 'documented');
   await expect(page.locator('svg .empty-scene')).toHaveCount(0);
 });
+
+test('Phase 4 connection syntax, boundary stubs, and contextual key remain semantic and keyboard reachable', async ({page}) => {
+  await page.goto('./');
+  await enterRepresentativeH100Node(page);
+
+  await expect(page.getByRole('heading', {name: 'Connection key'})).toBeVisible();
+  await expect(page.getByText('Physical connectivity').first()).toBeVisible();
+  await expect(page.getByText('Data / communication path').first()).toBeVisible();
+  const boundary = page.locator('svg .boundary-edge[role="button"]').first();
+  await expect(boundary).toBeVisible();
+  await expect(boundary).toHaveAttribute('data-connection-visibility', 'boundary');
+  await boundary.focus();
+  await expect(page.getByLabel('Inspect preview')).toBeVisible();
+  await page.keyboard.press('Enter');
+  await expect(boundary).toHaveAttribute('aria-pressed', 'true');
+});
+
+test('Phase 5 Scenario strip and orthogonal node state overlays coexist without replacing base role cues', async ({page}) => {
+  await page.goto('./');
+  await page.getByLabel('Scenario').selectOption('checkpoint-storage-pressure');
+  const strip = page.getByRole('region', {name: 'Scenario context'});
+  await expect(strip).toContainText('Checkpoint / storage pressure');
+  await expect(strip).toContainText('Physical structure unchanged');
+  await expect(strip).toContainText('Affected:');
+
+  await enterRepresentativeH100Node(page);
+  const storageNic = page.locator('svg [role="button"][aria-label*="ConnectX-7 storage / in-band Ethernet cards"]').first();
+  await storageNic.focus();
+  await expect(page.locator('svg .node-focus-brackets')).toHaveCount(1);
+  await page.keyboard.press('Enter');
+  await expect(page.locator('svg .node-selection-ring')).toHaveCount(1);
+  await expect(storageNic).toHaveAttribute('data-visual-role', 'io_interconnect');
+});
+

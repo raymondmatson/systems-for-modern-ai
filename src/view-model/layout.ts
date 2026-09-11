@@ -42,6 +42,10 @@ export interface LayoutEnclosure extends LayoutRect {
   arrangementNotice?: string;
 }
 
+export interface LayoutOptions {
+  boundaryGutter?: number;
+}
+
 export interface LayoutResult {
   nodes: LayoutNode[];
   anatomy: LayoutAnatomy[];
@@ -430,7 +434,27 @@ function fabricLayout(entities: Entity[]): BaseLayoutResult {
   return {nodes, regions, width, height: Math.max(320, y + 14), kind: 'fabric'};
 }
 
-export function layoutForContext(current: Entity, entities: Entity[]): LayoutResult {
+function withBoundaryGutter(layout: LayoutResult, gutter: number): LayoutResult {
+  if (gutter <= 0) return layout;
+  const shiftRect = <T extends LayoutRect>(item: T): T => ({...item, x: item.x + gutter});
+  return {
+    ...layout,
+    width: layout.width + gutter * 2,
+    nodes: layout.nodes.map(shiftRect),
+    anatomy: layout.anatomy.map(shiftRect),
+    regions: layout.regions.map(shiftRect),
+    enclosure: {
+      ...shiftRect(layout.enclosure),
+      interior: shiftRect(layout.enclosure.interior),
+    },
+  };
+}
+
+export function layoutForContext(
+  current: Entity,
+  entities: Entity[],
+  options: LayoutOptions = {},
+): LayoutResult {
   let layout: BaseLayoutResult;
 
   if (entities.length === 0) {
@@ -461,5 +485,7 @@ export function layoutForContext(current: Entity, entities: Entity[]): LayoutRes
     layout = gridLayout(entities, Math.min(3, Math.max(1, entities.length)), 'generic');
   }
 
-  return withEnclosure(layout, current.anatomyDepictions ?? []);
+  const enclosed = withEnclosure(layout, current.anatomyDepictions ?? []);
+  return withBoundaryGutter(enclosed, options.boundaryGutter ?? 0);
 }
+

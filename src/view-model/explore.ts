@@ -25,6 +25,14 @@ import {
   representativeEntityLabel,
   svgLabelFit,
 } from './labels';
+import {
+  buildBoundaryRoute,
+  buildConnectionRoutes,
+  connectionVisualFor,
+  type BoundaryRoutePresentation,
+  type ConnectionRoute,
+  type ConnectionVisualSpec,
+} from './connectionVisuals';
 
 export interface ScenePopulationPresentation {
   countLabel: string;
@@ -49,6 +57,10 @@ export interface SceneEnclosure {
   representative: boolean;
   contextLabel: string;
   population?: ScenePopulationPresentation;
+  selected: boolean;
+  previewed: boolean;
+  containsSelection: boolean;
+  scenarioEmphasized: boolean;
 }
 
 export interface SceneNode {
@@ -78,8 +90,13 @@ export interface SceneConnection {
   id: string;
   name: string;
   relationshipType: string;
+  directionality: string;
+  visual: ConnectionVisualSpec;
   endpointNodeIds: string[];
   endpointLabels: string[];
+  routes: ConnectionRoute[];
+  boundary?: BoundaryRoutePresentation;
+  visibility: 'canvas' | 'boundary' | 'summarized';
   locator: ContextLocator;
   selected: boolean;
   previewed: boolean;
@@ -107,6 +124,16 @@ export interface PreviewVM {
   subtitle: string;
   summary: string;
   scenarioState?: string;
+}
+
+export interface SceneScenarioPresentation {
+  id: string;
+  name: string;
+  description: string;
+  isDefault: boolean;
+  affectedTargetLabels: string[];
+  structureNotice: string;
+  representativeCaveat?: string;
 }
 
 function sameLocator(a: ContextLocator | undefined, b: ContextLocator) {
@@ -174,6 +201,17 @@ function buildSceneEnclosure(
   const populationSuffix = representative && aggregatePopulation
     ? ` · exemplar from population ${aggregatePopulation.countLabel}`
     : '';
+  const scenario = configuration.scenarios[state.explore.scenarioId];
+  const representativeIds = structuralLocation.kind === 'representative_member'
+    ? new Set([structuralLocation.aggregateId, ...structuralLocation.path])
+    : undefined;
+  const scenarioEmphasized = scenario?.effects.some(
+    (effect) => effect.target.type === 'entity' && (
+      representativeIds
+        ? representativeIds.has(effect.target.id)
+        : effect.target.id === current.id
+    ),
+  ) ?? false;
   return {
     entity: current,
     title,
@@ -185,6 +223,10 @@ function buildSceneEnclosure(
       ? `Representative context${populationSuffix}`
       : 'Current structural location',
     population: aggregatePopulation,
+    selected: sameLocator(state.explore.selection, structuralLocation),
+    previewed: sameLocator(state.explore.preview, structuralLocation),
+    containsSelection: Boolean(state.explore.selection) && !sameLocator(state.explore.selection, structuralLocation),
+    scenarioEmphasized,
   };
 }
 
@@ -382,6 +424,40 @@ export function buildPreviewVM(
   return undefined;
 }
 
+function buildScenarioPresentation(
+  state: AppState,
+  configuration: Configuration,
+): SceneScenarioPresentation | undefined {
+  const scenario = configuration.scenarios[state.explore.scenarioId];
+  if (!scenario) return undefined;
+  const affectedTargetLabels = scenario.effects.map((effect) => {
+    if (effect.target.type === 'entity') {
+      return configuration.entities[effect.target.id]?.name ?? effect.target.id;
+    }
+    if (effect.target.type === 'connection') {
+      return configuration.connections[effect.target.id]?.name ?? effect.target.id;
+    }
+    return configuration.name;
+  });
+  const location = state.explore.structuralLocation;
+  const representativeCaveat = location.kind === 'representative_member' && scenario.effects.some(
+    (effect) => effect.target.type === 'entity' && (
+      effect.target.id === location.aggregateId || location.path.includes(effect.target.id)
+    ),
+  )
+    ? 'Parent aggregate/context is Scenario-affected; individual representative-member state is not specified.'
+    : undefined;
+  return {
+    id: scenario.id,
+    name: scenario.name,
+    description: scenario.description,
+    isDefault: scenario.isDefault,
+    affectedTargetLabels,
+    structureNotice: 'Physical structure unchanged',
+    representativeCaveat,
+  };
+}
+
 export function buildExploreScene(state: AppState, configuration: Configuration) {
   const current = entityForLocation(configuration, state.explore.structuralLocation);
   if (!current) {
@@ -393,6 +469,7 @@ export function buildExploreScene(state: AppState, configuration: Configuration)
       contextConnections: [] as SceneConnection[],
       compositionRegions: [] as SceneCompositionRegion[],
       anatomyDepictions: [] as SceneAnatomyDepiction[],
+      scenario: buildScenarioPresentation(state, configuration),
       width: 760,
       height: 360,
       layoutKind: 'generic' as const,
@@ -402,7 +479,20 @@ export function buildExploreScene(state: AppState, configuration: Configuration)
   const visibleEntities = current.childIds
     .map((id) => configuration.entities[id])
     .filter((entity): entity is Entity => Boolean(entity));
-  const layout = layoutForContext(current, visibleEntities);
+  const hasBoundaryCrossing = Object.values(configuration.connections).some((connection) => {
+    const inside = connection.endpointIds.some((endpointId) =>
+      isDescendantOrSelf(configuration, endpointId, current.id),
+    );
+    const outside = connection.endpointIds.some((endpointId) =>
+      !isDescendantOrSelf(configuration, endpointId, current.id),
+    );
+    return inside && outside;
+  });
+  const layout = layoutForContext(
+    current,
+    visibleEntities,
+    {boundaryGutter: hasBoundaryCrossing ? 150 : 0},
+  );
   const enclosure = buildSceneEnclosure(state, configuration, current, layout);
   const positions = new Map(layout.nodes.map((node) => [node.id, node]));
   const visible = new Set(visibleEntities.map((entity) => entity.id));
@@ -479,34 +569,67 @@ export function buildExploreScene(state: AppState, configuration: Configuration)
 
   const connections: SceneConnection[] = [];
   const contextConnections: SceneConnection[] = [];
+  const boundaryCandidates: Array<{
+    sceneConnection: SceneConnection;
+    visibleNodeId?: string;
+    externalEndpointLabels: string[];
+    visibleEndpointIsSource: boolean;
+    visibleEndpointIsTarget: boolean;
+  }> = [];
+  const routingNodes = nodes.map((node) => ({
+    id: node.entity.id,
+    x: node.x,
+    y: node.y,
+    width: node.width,
+    height: node.height,
+  }));
 
   for (const connection of Object.values(configuration.connections)) {
     if (connection.endpointIds.length < 2) continue;
-    const relevant = connection.endpointIds.some((endpointId) =>
+    const insideEndpointIds = connection.endpointIds.filter((endpointId) =>
       isDescendantOrSelf(configuration, endpointId, current.id),
     );
-    if (!relevant) continue;
+    if (insideEndpointIds.length === 0) continue;
+    const outsideEndpointIds = connection.endpointIds.filter((endpointId) =>
+      !isDescendantOrSelf(configuration, endpointId, current.id),
+    );
 
-    const projected = connection.endpointIds
-      .map((endpointId) =>
-        projectEndpointToVisible(configuration, endpointId, visible, current.id),
-      )
-      .filter((id): id is string => Boolean(id));
-    const endpointNodeIds = [...new Set(projected)];
+    const projectedByEndpoint = connection.endpointIds.map((endpointId) => ({
+      endpointId,
+      projectedId: projectEndpointToVisible(configuration, endpointId, visible, current.id),
+    }));
+    const endpointNodeIds = [
+      ...new Set(
+        projectedByEndpoint
+          .map((item) => item.projectedId)
+          .filter((id): id is string => Boolean(id)),
+      ),
+    ];
     const locator: ContextLocator = {
       kind: 'connection',
       systemId: state.explore.systemId,
       configurationId: configuration.id,
       connectionId: connection.id,
     };
+    const crossesStructuralBoundary = outsideEndpointIds.length > 0;
     const sceneConnection: SceneConnection = {
       id: connection.id,
       name: connection.name,
       relationshipType: connection.relationshipType,
+      directionality: connection.directionality,
+      visual: connectionVisualFor(connection.relationshipType),
       endpointNodeIds,
       endpointLabels: connection.endpointIds.map(
         (id) => configuration.entities[id]?.name ?? id,
       ),
+      routes: endpointNodeIds.length >= 2
+        ? buildConnectionRoutes(routingNodes, endpointNodeIds, connection.directionality)
+        : [],
+      visibility: endpointNodeIds.length >= 2
+        ? 'canvas'
+        : crossesStructuralBoundary
+          ? 'boundary'
+          : 'summarized',
       locator,
       selected: sameLocator(state.explore.selection, locator),
       previewed: sameLocator(state.explore.preview, locator),
@@ -516,8 +639,52 @@ export function buildExploreScene(state: AppState, configuration: Configuration)
         connection.endpointIds.some((id) => !visible.has(id)),
     };
 
+    if (crossesStructuralBoundary) {
+      const visibleNodeId = endpointNodeIds.length === 1 ? endpointNodeIds[0] : undefined;
+      const sourceId = connection.endpointIds[0];
+      const sourceProjection = sourceId
+        ? projectEndpointToVisible(configuration, sourceId, visible, current.id)
+        : undefined;
+      const visibleEndpointIsSource = connection.directionality === 'source_to_target' && (
+        visibleNodeId
+          ? sourceProjection === visibleNodeId
+          : sourceId === current.id
+      );
+      const visibleEndpointIsTarget = connection.directionality === 'source_to_target' && (
+        visibleNodeId
+          ? projectedByEndpoint.slice(1).some((item) => item.projectedId === visibleNodeId)
+          : connection.endpointIds.slice(1).includes(current.id)
+      );
+      boundaryCandidates.push({
+        sceneConnection,
+        visibleNodeId,
+        externalEndpointLabels: outsideEndpointIds.map(
+          (id) => configuration.entities[id]?.name ?? id,
+        ),
+        visibleEndpointIsSource,
+        visibleEndpointIsTarget,
+      });
+    }
+
     if (endpointNodeIds.length >= 2) connections.push(sceneConnection);
     else contextConnections.push(sceneConnection);
+  }
+
+  if (enclosure) {
+    boundaryCandidates.forEach((candidate, index) => {
+      candidate.sceneConnection.boundary = buildBoundaryRoute({
+        connectionId: candidate.sceneConnection.id,
+        allNodes: routingNodes,
+        visibleNodeId: candidate.visibleNodeId,
+        directionality: candidate.sceneConnection.directionality,
+        visibleEndpointIsSource: candidate.visibleEndpointIsSource,
+        visibleEndpointIsTarget: candidate.visibleEndpointIsTarget,
+        enclosure,
+        slotIndex: index,
+        slotCount: boundaryCandidates.length,
+        externalEndpointLabels: candidate.externalEndpointLabels,
+      });
+    });
   }
 
   return {
@@ -528,6 +695,7 @@ export function buildExploreScene(state: AppState, configuration: Configuration)
     contextConnections,
     compositionRegions: layout.regions,
     anatomyDepictions,
+    scenario: buildScenarioPresentation(state, configuration),
     width: layout.width,
     height: layout.height,
     layoutKind: layout.kind,
