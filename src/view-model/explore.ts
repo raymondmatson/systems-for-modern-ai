@@ -558,7 +558,7 @@ export function buildExploreScene(state: AppState, configuration: Configuration)
       evidenceLabel: anatomyEvidenceLabel(depiction),
       placementLabel: depiction.placementBasis === 'schematic'
         ? 'schematic placement'
-        : 'documented placement',
+        : 'Documented placement',
       showPlacementBadge: placementBases.size > 1 || depiction.placementBasis === 'documented',
       visualRole,
       visualRoleLabel: visualRoleLabel(visualRole),

@@ -1,5 +1,14 @@
 # Implementation Changelog
 
+## 2026-09-10 — Phase 3/4 npm-test regression correction
+
+- **Change or issue addressed:** The dependency-backed GitHub `npm test` gate reported two assertion failures: the synthetic documented-placement fixture expected the Phase-3 display cue `Documented placement` while the Explore view model emitted lowercase `documented placement`; and the Phase-4 GB300 boundary test hard-coded the obsolete pre-expansion cooling display name `Data-center / facility liquid-cooling infrastructure` even though the current canonical entity is `Rack-scale liquid-cooling infrastructure`.
+- **Reason for the change:** The Phase-3 implementation contract explicitly defines the visible documented-placement treatment as `Documented placement`, while Phase-4 boundary presentation should derive external labels from the authoritative endpoint entity rather than freeze incidental display copy. The boundary classification and GB300 cooling relationship themselves were already correct.
+- **Files added or modified:** `src/view-model/explore.ts`, `tests/unit/visual-design-phase4-connections.test.ts`, `IMPLEMENTATION_CHANGELOG.md`.
+- **Summary of the implementation:** Restored the documented-placement canvas cue to the documented title-cased presentation string without changing schematic-placement or Detail prose behavior. Replaced the stale Phase-4 cooling-name literal with an assertion that the boundary continuation exactly exposes the current `gb300-cooling` endpoint name and remains a `cooling_system`. No canonical content, generated runtime, routing, containment, Scenario, or connection semantics changed.
+- **Validation or testing performed:** Reproduced both GitHub assertion mismatches from the current runtime/view-model state. After correction, a dependency-light strict TypeScript compile of the affected source/tests passes; direct executable assertions against the real generated GB300 runtime and synthetic documented-placement scene pass; full canonical/runtime Python validation remains green. Exact pinned Vitest execution remains unavailable in this container because the supplied repository has no `node_modules`; GitHub remains the authoritative dependency-backed run.
+- **Result and remaining limitations:** The correction preserves the prior Phase-0 strict-TypeScript fix and strengthens the Phase-4 test against future presentation-copy drift without weakening its semantic endpoint check. No additional GitHub logs are currently required.
+
 ## 2026-09-10 — Phase 0 fixture strict-TypeScript correction
 
 - **Change or issue addressed:** The dependency-backed GitHub `npm run typecheck` gate reported eight `TS7006` diagnostics in `tests/unit/visual-design-phase0-fixtures.test.ts` because callback parameter `item` was implicitly `any`.

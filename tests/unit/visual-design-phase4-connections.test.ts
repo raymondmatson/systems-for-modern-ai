@@ -106,9 +106,11 @@ describe('Phase 4 typed Cross-Connection presentation', () => {
     expect(hostMemory?.visibility).toBe('summarized');
     expect(hostMemory?.boundary).toBeUndefined();
     const cooling = scene.contextConnections.find((connection) => connection.id === 'gb300-cooling-dependency');
+    const coolingEndpoint = configuration.entities['gb300-cooling'];
+    expect(coolingEndpoint?.entityType).toBe('cooling_system');
     expect(cooling?.visibility).toBe('boundary');
     expect(cooling?.boundary?.visibleNodeId).toBeUndefined();
-    expect(cooling?.boundary?.externalEndpointLabels).toContain('Data-center / facility liquid-cooling infrastructure');
+    expect(cooling?.boundary?.externalEndpointLabels).toEqual([coolingEndpoint!.name]);
   });
 
   it('keeps Meta physical and data-path relations distinct while preserving bidirectional authored arrows', () => {
