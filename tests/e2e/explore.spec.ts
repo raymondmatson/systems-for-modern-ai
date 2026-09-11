@@ -323,3 +323,68 @@ test('Phase 5 Scenario strip and orthogonal node state overlays coexist without 
   await expect(storageNic).toHaveAttribute('data-visual-role', 'io_interconnect');
 });
 
+
+test('reduced-motion preference removes presentation transitions and animations', async ({page}) => {
+  await page.emulateMedia({reducedMotion: 'reduce'});
+  await page.goto('./');
+  const node = page.locator('svg .node[role="button"]').first();
+  const motion = await node.evaluate((element) => {
+    const style = getComputedStyle(element);
+    return {transitionDuration: style.transitionDuration, animationDuration: style.animationDuration};
+  });
+  expect(motion.transitionDuration).toBe('0s');
+  expect(motion.animationDuration).toBe('0s');
+});
+
+test('forced-colors mode retains non-color Selection, focus, and relationship-family cues', async ({page}) => {
+  await page.emulateMedia({forcedColors: 'active'});
+  await page.goto('./');
+  await page.getByLabel('Scenario').selectOption('checkpoint-storage-pressure');
+  await enterRepresentativeH100Node(page);
+
+  const storageNic = page.locator('svg [role="button"][aria-label*="ConnectX-7 storage / in-band Ethernet cards"]').first();
+  await storageNic.focus();
+  await expect(page.locator('svg .node-focus-brackets')).toHaveCount(1);
+  await page.keyboard.press('Enter');
+  await expect(page.locator('svg .node-selection-ring')).toHaveCount(1);
+
+  const physical = page.locator('svg .edge[data-relationship-type="physical_connectivity"]').first();
+  const dataPath = page.locator('svg .edge[data-relationship-type="data_communication_path"]').first();
+  await expect(physical).toBeVisible();
+  await expect(dataPath).toBeVisible();
+  expect(await physical.locator('.edge-endpoint-marker').count()).toBeGreaterThan(0);
+  expect(await dataPath.locator('.edge-endpoint-marker').count()).toBeGreaterThan(0);
+});
+
+test('semantic outline and SVG target remain state-parallel for the same entity', async ({page}) => {
+  await page.goto('./');
+  await enterRepresentativeH100Node(page);
+
+  const visual = page.locator('svg [role="button"][aria-label*="NVIDIA H100 GPUs"]').first();
+  const semantic = page
+    .getByRole('region', {name: 'Explore semantic structure'})
+    .locator('button')
+    .filter({hasText: 'NVIDIA H100 GPUs'})
+    .first();
+
+  await semantic.click();
+  await expect(semantic).toHaveAttribute('aria-pressed', 'true');
+  await expect(visual).toHaveAttribute('aria-pressed', 'true');
+  await visual.focus();
+  await expect(page.locator('svg .node-focus-brackets')).toHaveCount(1);
+});
+
+test('boundary relationship remains selectable and Follow preserves traversal context', async ({page}) => {
+  await page.goto('./');
+  await enterRepresentativeH100Node(page);
+
+  const boundary = page.locator('svg .boundary-edge[role="button"]').first();
+  await boundary.focus();
+  await page.keyboard.press('Enter');
+  await expect(boundary).toHaveAttribute('aria-pressed', 'true');
+  const follow = page.getByRole('button', {name: /^Follow to /}).first();
+  await expect(follow).toBeVisible();
+  await follow.click();
+  await expect(page.getByText('Traversal context')).toBeVisible();
+  await expect(page.getByText('Via relationship')).toBeVisible();
+});

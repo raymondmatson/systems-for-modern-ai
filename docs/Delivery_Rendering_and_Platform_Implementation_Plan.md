@@ -26,7 +26,7 @@ It does **not** create a second product specification. It provides implementatio
 - the Source of Truth now requires a **Physical Orientation Baseline** for every enterable context and permits canonical noninteractive **Anatomy Depictions** when visible physical presence matters but independent entity semantics do not; and
 - reusable real product/model facts move toward a lightweight directory-backed **Product Catalog**, while configuration-local physical realizations remain in RSCs and automatic reusable-subtree instantiation remains deferred.
 
-Most Version-1 implementation choices are now resolved below. The post-anatomy Chromium benchmark closes the former renderer fallback/virtualization questions for current Version-1 representative scenes; cross-browser Playwright verification remains release evidence rather than an open rendering decision.
+Most Version-1 implementation choices are now resolved below. The current-renderer Chromium benchmark (version 3) keeps the former renderer fallback/virtualization questions closed for current Version-1 scenes; cross-browser Playwright verification remains release evidence rather than an open rendering decision.
 
 ## Table of contents
 
@@ -350,7 +350,7 @@ Use **Vite** with the current stable release compatible with the selected React/
 **Confidence: High for current authored density**  
 **Review trigger:** semantic visibility/materialization increases materially, layout behavior changes substantially, or measured interaction performance regresses.
 
-Explore remains **SVG-first**, with ordinary HTML/React for surrounding Detail, Concepts, controls, and document UI. The post-anatomy Chromium benchmark confirms that current initial-five scenes do not require a Canvas/WebGL dense-layer backplane or renderer virtualization.
+Explore remains **SVG-first**, with ordinary HTML/React for surrounding Detail, Concepts, controls, and document UI. Current-renderer benchmark version 3 confirms that the initial-five scenes do not require a Canvas/WebGL dense-layer backplane or renderer virtualization; the benchmark executes the real Explore view-model/component tree and keeps synthetic density cases separate as headroom evidence.
 
 Do not build a generalized multi-renderer framework. If future profiling shows a genuine dense-layer bottleneck, add a Canvas/WebGL presentation backplane only for the affected nonsemantic/dense layers while keeping semantic actions, focusable targets, Selection, and identity outside that drawing technology.
 
@@ -914,16 +914,18 @@ Framework/library versions should be pinned when implementation begins and updat
 
 ### 5.13 Renderer benchmark outcome and remaining verification
 
-The two former performance-derived open questions are **resolved for the current Version-1 representative scenes** by the post-anatomy Chromium benchmark in `reports/implementation/render-benchmark.json`:
+The two former performance-derived open questions remain **resolved for the current Version-1 scenes** by Phase-6 benchmark version 3 in `reports/implementation/render-benchmark.json`:
 
 - **Dense-renderer fallback:** not required for current V1 scenes; remain SVG-first.
 - **Renderer virtualization:** not required for current V1 scenes.
 
-The densest audited initial-five context is the DGX H100 node with 9 interactive entities + 4 Anatomy Depictions; the benchmark also confirms Anatomy Depictions create no focus targets. Synthetic density cases are retained as headroom evidence, not as a semantic object-count policy.
+Benchmark version 3 replaces the old synthetic representative case with the **real current Explore view-model and exact `src/app/explore` component tree**. The DGX H100 Representative baseline currently materializes 342 SVG descendants and 16 SVG focus targets; the stressed checkpoint/Selection state materializes 350 descendants. All seven frozen pilot states create zero Anatomy focus targets and pass the benchmark's deterministic enclosure/anatomy/boundary-label geometry checks. Synthetic density cases are retained only as a separate headroom series and are not a semantic object-count policy.
 
-**Review trigger:** re-profile if semantic visibility/materialization increases materially, layout behavior changes substantially, or measured interaction performance regresses. Do not change Expansion Mode, identity, Selection, Navigation, or accessibility to satisfy renderer budgets.
+The benchmark uses a dependency-light JSX adapter and system Chromium so it can execute without `node_modules`; it therefore bypasses React reconciliation and does **not** stand in for the pinned Vite/React/Playwright matrix. Its current conclusion is limited to renderer materialization/performance evidence for the authored initial-five scenes.
 
-**Remaining release evidence:** the benchmark was executed with a system Chromium build. The approved browser-support policy still requires dependency-backed Chromium/Firefox/WebKit Playwright verification in an environment with the project dependencies and browsers installed. That is a release-verification item, not an unresolved product/rendering decision.
+**Review trigger:** re-profile if semantic or presentation visibility/materialization increases materially, layout behavior changes substantially, or measured interaction performance regresses. Do not change Expansion Mode, identity, Selection, Navigation, or accessibility targets to satisfy renderer budgets.
+
+**Remaining release evidence:** Phase 6 is currently environment-blocked because the supplied repository has no dependency tree, the npm cache is empty, and registry DNS resolution is unavailable. The approved browser-support policy still requires pinned TypeScript/Vitest/Vite plus dependency-backed Chromium/Firefox/WebKit Playwright verification, authoritative curated screenshots, and the final keyboard/screen-reader review of SVG-target versus semantic-outline duplication. Those are release/validation requirements, not unresolved product/rendering decisions. Exact Phase-6 status is recorded in `reports/implementation/phase6-validation.json`.
 
 ### Current rendering acceptance gate
 

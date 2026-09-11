@@ -1,108 +1,261 @@
 {
-  "benchmarkVersion": 2,
-  "basis": "Generated initial-five runtime after Product Catalog / Anatomy Depiction migration",
-  "representativeCase": {
-    "entityId": "dgx-h100-node",
-    "label": "DGX H100 compute node",
-    "interactiveNodes": 9,
-    "anatomyDepictions": 4,
-    "visibleGlyphs": 13,
-    "graphicalConnections": 3,
-    "contextConnections": 4,
-    "systemId": "nvidia-dgx-h100-superpod",
-    "configurationId": "h100-superpod-4su-reference"
+  "benchmarkVersion": 3,
+  "basis": "Current Explore view-model plus exact src/app/explore components rendered through the benchmark JSX adapter; DOM/materialization measured in system Chromium. React reconciliation and the pinned Vite/Playwright browser matrix are separate Phase-6 gates.",
+  "compiler": {
+    "path": "/opt/nvm/versions/node/v22.16.0/bin/tsc",
+    "version": "Version 5.8.3"
   },
-  "real": {
-    "interactiveNodes": 9,
-    "anatomyDepictions": 4,
-    "visibleGlyphs": 13,
-    "connections": 3,
-    "createMedianMs": 0.19999999995343387,
-    "updateMedianMs": 0,
-    "hitTestMs": 4.2999999998137355,
-    "domElements": 42,
-    "focusTargets": 9,
-    "anatomyFocusTargets": 0,
-    "hits": 55
+  "realRendererCases": [
+    {
+      "sceneId": "h100-representative-baseline",
+      "renderer": {
+        "viewModelMedianMs": 0.399439,
+        "componentSerializeMedianMs": 2.141704,
+        "interactiveNodes": 9,
+        "anatomyDepictions": 4,
+        "canvasConnections": 3,
+        "contextConnections": 4,
+        "boundaryConnections": 4,
+        "summarizedConnections": 0,
+        "width": 1164,
+        "height": 748,
+        "layoutKind": "assembly"
+      },
+      "browser": {
+        "domInstallMedianMs": 7.799999998882413,
+        "hitTestMs": 9.699999999254942,
+        "hitIterations": 600,
+        "semanticCenterHits": 486,
+        "totalDomElements": 461,
+        "svgDescendants": 342,
+        "svgFocusTargets": 16,
+        "nodeFocusTargets": 9,
+        "connectionFocusTargets": 7,
+        "anatomyFocusTargets": 0,
+        "semanticOutlineFocusTargets": 16,
+        "contextConnectionFocusTargets": 4,
+        "totalFocusTargets": 36,
+        "truncatedNodeLabels": 0,
+        "anatomyInsideEnclosure": true,
+        "boundaryLabelsInsideSvg": true,
+        "boundaryNodeCollisions": 0,
+        "boundaryLabelCollisions": 0
+      }
+    },
+    {
+      "sceneId": "h100-checkpoint-selected-storage-nic",
+      "renderer": {
+        "viewModelMedianMs": 0.358912,
+        "componentSerializeMedianMs": 2.06592,
+        "interactiveNodes": 9,
+        "anatomyDepictions": 4,
+        "canvasConnections": 3,
+        "contextConnections": 4,
+        "boundaryConnections": 4,
+        "summarizedConnections": 0,
+        "width": 1164,
+        "height": 748,
+        "layoutKind": "assembly"
+      },
+      "browser": {
+        "domInstallMedianMs": 7.700000001117587,
+        "hitTestMs": 8.599999999627471,
+        "hitIterations": 600,
+        "semanticCenterHits": 486,
+        "totalDomElements": 470,
+        "svgDescendants": 350,
+        "svgFocusTargets": 16,
+        "nodeFocusTargets": 9,
+        "connectionFocusTargets": 7,
+        "anatomyFocusTargets": 0,
+        "semanticOutlineFocusTargets": 16,
+        "contextConnectionFocusTargets": 4,
+        "totalFocusTargets": 36,
+        "truncatedNodeLabels": 0,
+        "anatomyInsideEnclosure": true,
+        "boundaryLabelsInsideSvg": true,
+        "boundaryNodeCollisions": 0,
+        "boundaryLabelCollisions": 0
+      }
+    }
+  ],
+  "stateSwap": {
+    "stateSwapMedianMs": 13.850000000558794
   },
-  "synthetic": [
+  "pilotGeometry": {
+    "status": "PASS",
+    "cases": [
+      {
+        "sceneId": "h100-representative-baseline",
+        "anatomyInsideEnclosure": true,
+        "anatomyFocusTargets": 0,
+        "boundaryLabelsInsideSvg": true,
+        "boundaryNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0
+      },
+      {
+        "sceneId": "h100-checkpoint-selected-storage-nic",
+        "anatomyInsideEnclosure": true,
+        "anatomyFocusTargets": 0,
+        "boundaryLabelsInsideSvg": true,
+        "boundaryNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0
+      },
+      {
+        "sceneId": "gb300-rack-baseline",
+        "anatomyInsideEnclosure": true,
+        "anatomyFocusTargets": 0,
+        "boundaryLabelsInsideSvg": true,
+        "boundaryNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0
+      },
+      {
+        "sceneId": "gb300-storage-pressure-selected-compute",
+        "anatomyInsideEnclosure": true,
+        "anatomyFocusTargets": 0,
+        "boundaryLabelsInsideSvg": true,
+        "boundaryNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0
+      },
+      {
+        "sceneId": "meta-root-baseline",
+        "anatomyInsideEnclosure": true,
+        "anatomyFocusTargets": 0,
+        "boundaryLabelsInsideSvg": true,
+        "boundaryNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0
+      },
+      {
+        "sceneId": "meta-checkpoint-selected-storage-path",
+        "anatomyInsideEnclosure": true,
+        "anatomyFocusTargets": 0,
+        "boundaryLabelsInsideSvg": true,
+        "boundaryNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0
+      },
+      {
+        "sceneId": "meta-roce-congestion-selected-fabric",
+        "anatomyInsideEnclosure": true,
+        "anatomyFocusTargets": 0,
+        "boundaryLabelsInsideSvg": true,
+        "boundaryNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0
+      }
+    ]
+  },
+  "accessibilityProbe": {
+    "buttonCount": 36,
+    "buttonNameSample": [
+      "Host PCIe / network I/O relationship, Physical connectivity, Undirected, Intel Xeon 8480C CPUs to ConnectX-7 compute HCAs to ConnectX-7 storage / in-band Ethernet cards to Data-cache NVMe SSDs to OS NVMe SSDs",
+      "CPU to host-memory path, Data / communication path, Undirected, Intel Xeon 8480C CPUs to 2 TB host system memory",
+      "Intra-node NVLink/NVSwitch fabric, Physical connectivity, Undirected, NVIDIA H100 GPUs to NVSwitch devices",
+      "Storage / in-band interfaces to in-band management fabric, Physical connectivity, Undirected, ConnectX-7 storage / in-band Ethernet cards to In-band management Ethernet switches, summarized at this scale, crosses current structural boundary to In-band management Ethernet switches; boundary position is schematic",
+      "BMC to out-of-band management fabric, Control / management, Undirected, Baseboard management controller to Out-of-band management network, summarized at this scale, crosses current structural boundary to Out-of-band management network; boundary position is schematic",
+      "DGX node to compute fabric, Physical connectivity, Undirected, ConnectX-7 compute HCAs to Compute-fabric InfiniBand switches, summarized at this scale, crosses current structural boundary to Compute-fabric InfiniBand switches; boundary position is schematic",
+      "Storage interfaces to storage fabric, Physical connectivity, Undirected, ConnectX-7 storage / in-band Ethernet cards to Storage-fabric InfiniBand switches, summarized at this scale, crosses current structural boundary to Storage-fabric InfiniBand switches; boundary position is schematic",
+      "NVIDIA H100 GPUs, GPU, Compute role, population 8, count basis documented fixed, representative member, representative context",
+      "Intel Xeon 8480C CPUs, CPU, Compute role, population 2, count basis documented fixed, aggregate only, representative context",
+      "NVSwitch devices, Scale up switch, Network role, population 4, count basis documented fixed, aggregate only, representative context",
+      "ConnectX-7 compute HCAs, Nic, I/O / interconnect role, population 8, count basis documented fixed, aggregate only, representative context",
+      "ConnectX-7 storage / in-band Ethernet cards, Nic, I/O / interconnect role, population 2, count basis documented fixed, aggregate only, representative context",
+      "OS NVMe SSDs, Local storage, Storage role, population 2, count basis documented fixed, aggregate only, representative context",
+      "Data-cache NVMe SSDs, Local storage, Storage role, population 8, count basis documented fixed, aggregate only, representative context",
+      "2 TB host system memory, System memory, Memory role, population 32, count basis documented fixed, aggregate only, representative context",
+      "Baseboard management controller, Management node, Management role, representative context",
+      "Storage / in-band interfaces to in-band management fabric Physical connectivity \u00b7 Undirected ConnectX-7 storage / in-band Ethernet cards \u2194 In-band management Ethernet switches",
+      "BMC to out-of-band management fabric Control / management \u00b7 Undirected Baseboard management controller \u2194 Out-of-band management network",
+      "DGX node to compute fabric Physical connectivity \u00b7 Undirected ConnectX-7 compute HCAs \u2194 Compute-fabric InfiniBand switches",
+      "Storage interfaces to storage fabric Physical connectivity \u00b7 Undirected ConnectX-7 storage / in-band Ethernet cards \u2194 Storage-fabric InfiniBand switches"
+    ],
+    "note": "Chromium accessibility-tree evidence only; not a screen-reader or cross-engine result."
+  },
+  "mediaQueries": {
+    "reducedMotion": {
+      "transitionDuration": "0s",
+      "animationDuration": "0s"
+    },
+    "forcedColors": {
+      "selectionRings": 1,
+      "focusBrackets": 1,
+      "scenarioMarkers": 0,
+      "relationshipTypes": [
+        "physical_connectivity",
+        "data_communication_path",
+        "physical_connectivity",
+        "physical_connectivity",
+        "control_management",
+        "physical_connectivity",
+        "physical_connectivity"
+      ]
+    }
+  },
+  "syntheticHeadroom": [
     {
       "interactiveNodes": 40,
       "anatomyDepictions": 10,
       "visibleGlyphs": 50,
       "connections": 60,
-      "createMedianMs": 0.6000000000931323,
-      "updateMedianMs": 0,
-      "hitTestMs": 8.5,
-      "domElements": 210,
+      "domInstallMedianMs": 4.200000001117587,
+      "domElements": 200,
       "focusTargets": 40,
-      "anatomyFocusTargets": 0,
-      "hits": 183
+      "anatomyFocusTargets": 0
     },
     {
       "interactiveNodes": 80,
       "anatomyDepictions": 20,
       "visibleGlyphs": 100,
       "connections": 120,
-      "createMedianMs": 1.0999999998603016,
-      "updateMedianMs": 0,
-      "hitTestMs": 11.599999999860302,
-      "domElements": 420,
+      "domInstallMedianMs": 8.400000001303852,
+      "domElements": 400,
       "focusTargets": 80,
-      "anatomyFocusTargets": 0,
-      "hits": 253
+      "anatomyFocusTargets": 0
     },
     {
       "interactiveNodes": 200,
       "anatomyDepictions": 50,
       "visibleGlyphs": 250,
       "connections": 300,
-      "createMedianMs": 3.9000000001396984,
-      "updateMedianMs": 0,
-      "hitTestMs": 33.10000000009313,
-      "domElements": 1050,
+      "domInstallMedianMs": 20.84999999962747,
+      "domElements": 1000,
       "focusTargets": 200,
-      "anatomyFocusTargets": 0,
-      "hits": 266
+      "anatomyFocusTargets": 0
     },
     {
       "interactiveNodes": 400,
       "anatomyDepictions": 100,
       "visibleGlyphs": 500,
       "connections": 600,
-      "createMedianMs": 14.5,
-      "updateMedianMs": 0.09999999986030161,
-      "hitTestMs": 77.60000000009313,
-      "domElements": 2100,
+      "domInstallMedianMs": 40.200000000186265,
+      "domElements": 2000,
       "focusTargets": 400,
-      "anatomyFocusTargets": 0,
-      "hits": 267
+      "anatomyFocusTargets": 0
     },
     {
       "interactiveNodes": 800,
       "anatomyDepictions": 200,
       "visibleGlyphs": 1000,
       "connections": 1200,
-      "createMedianMs": 26.200000000186265,
-      "updateMedianMs": 0.19999999995343387,
-      "hitTestMs": 156.69999999995343,
-      "domElements": 4200,
+      "domInstallMedianMs": 48.95000000111759,
+      "domElements": 4000,
       "focusTargets": 800,
-      "anatomyFocusTargets": 0,
-      "hits": 266
+      "anatomyFocusTargets": 0
     },
     {
       "interactiveNodes": 1600,
       "anatomyDepictions": 400,
       "visibleGlyphs": 2000,
       "connections": 2400,
-      "createMedianMs": 51.799999999813735,
-      "updateMedianMs": 0.30000000004656613,
-      "hitTestMs": 305,
-      "domElements": 8400,
+      "domInstallMedianMs": 69.45000000018626,
+      "domElements": 8000,
       "focusTargets": 1600,
-      "anatomyFocusTargets": 0,
-      "hits": 266
+      "anatomyFocusTargets": 0
     }
   ],
   "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/144.0.0.0 Safari/537.36",
@@ -110,9 +263,16 @@
     "chromium-system"
   ],
   "decision": {
-    "denseBackplane": "not_required_for_v1_representative_scenes",
-    "virtualization": "not_required_for_v1_representative_scenes",
-    "accessibility": "anatomy_depictions_create_no_focus_targets",
-    "reviewRule": "Re-profile if semantic visibility materially increases; do not alter semantic Expansion Mode, identity, Selection, Navigation, or accessibility to meet renderer budgets."
-  }
+    "denseBackplane": "not_required_for_current_initial_five",
+    "virtualization": "not_required_for_current_initial_five",
+    "accessibility": "anatomy_depictions_create_no_focus_targets_in_all_phase5a_pilot_states",
+    "semanticOutlinePolicy": "provisional_keep_until_pinned_accessibility_matrix; current Chromium probe confirms both SVG targets and semantic-outline buttons are exposed, so duplicate navigation cost must be evaluated in the pinned keyboard/screen-reader gate before consolidation",
+    "reviewRule": "Re-profile if semantic/presentation visibility materially increases; performance tuning must not alter semantic Expansion Mode, identity, Selection, Navigation, or accessibility targets."
+  },
+  "limitations": [
+    "Benchmark JSX adapter executes the exact Explore components but bypasses React reconciliation.",
+    "System Chromium is implementation evidence, not the pinned three-engine Playwright matrix.",
+    "Accessibility.getFullAXTree is Chromium accessibility-tree evidence, not a screen-reader study.",
+    "Synthetic headroom is a separate stress series and is not used as a proxy for real scene density."
+  ]
 }
