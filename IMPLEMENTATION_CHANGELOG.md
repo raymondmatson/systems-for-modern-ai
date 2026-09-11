@@ -1,5 +1,15 @@
 # Implementation Changelog
 
+## 2026-09-10 — Phase 0 fixture strict-TypeScript correction
+
+- **Change or issue addressed:** The dependency-backed GitHub `npm run typecheck` gate reported eight `TS7006` diagnostics in `tests/unit/visual-design-phase0-fixtures.test.ts` because callback parameter `item` was implicitly `any`.
+- **Reason for the change:** The Phase-0 fixture is intended to be deterministic typed validation evidence. Its broad `fixtureJson as any` cast erased TypeScript's contextual typing for every fixture collection and also hid incomplete Structural-Location shape checks; adding more `any` annotations would weaken the contract rather than fix the cause.
+- **Files modified:** `tests/unit/visual-design-phase0-fixtures.test.ts` and this changelog.
+- **Summary of the fix:** Removed the fixture-wide `any` cast so imported JSON supplies callback types, removed an unnecessary per-item `any`, and made the pilot-locator check explicitly accept only the two Phase-0 locator forms (`entity` and `representative_member`) with their required IDs/path present. Unexpected/malformed fixture locator data now fails the test explicitly. No fixture data, production content, runtime artifact, visual-design decision, renderer behavior, or state semantics changed.
+- **Validation or testing performed:** Reproduced the original eight `TS7006` diagnostics with strict TypeScript compilation, then recompiled the corrected fixture test with strict/no-implicit-any checking and a temporary Vitest declaration shim: PASS with zero diagnostics. Full canonical/runtime Python validation also passes (16 systems / 18 YAML documents, 54 deterministic runtime artifacts, 75/75 branches, 65 entered physical-orientation contexts / 0 errors, and 5/5 Property fixtures). The local container still cannot install the pinned npm dependency tree because `registry.npmjs.org` DNS resolution is unavailable, so the exact repository `npm run typecheck`/Vitest invocation remains to be confirmed by the dependency-capable GitHub runner.
+- **Result and remaining limitations:** The screenshot's typecheck root cause is corrected without weakening assertions. The separate GitHub Actions Node-runtime deprecation warning is nonblocking and was not changed in this fix.
+- **Deployment status:** Not deployed; user will apply the changed-files patch and refresh shared sources.
+
 ## 2026-09-10 — Visual Design Phase 6 partial validation and current-renderer benchmark
 
 - **Change or issue addressed:** Phase 6 requires dependency-backed software/accessibility validation plus a benchmark that measures the post-Phase-5A renderer rather than the obsolete synthetic representative SVG.

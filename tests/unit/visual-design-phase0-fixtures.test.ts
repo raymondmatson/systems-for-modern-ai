@@ -7,7 +7,7 @@ import gb300 from '../../runtime/generated/systems/nvidia-dgx-gb300-nvl72-superp
 import meta from '../../runtime/generated/systems/meta-h100-roce-24k.json';
 import fixtureJson from '../fixtures/visual-design-phase0.json';
 
-const fixture = fixtureJson as any;
+const fixture = fixtureJson;
 
 const systems: Record<string, any> = {
   'nvidia-dgx-h100-superpod': h100,
@@ -26,13 +26,15 @@ describe('Phase 0 visual-design fixtures', () => {
       expect(configuration, `configuration ${pilot.configurationId}`).toBeDefined();
 
       const location = pilot.structuralLocation;
-      if (location.kind === 'entity') {
+      if (location.kind === 'entity' && location.entityId) {
         expect(configuration.entities[location.entityId], `entity ${location.entityId}`).toBeDefined();
-      } else {
+      } else if (location.kind === 'representative_member' && location.aggregateId && location.path) {
         const aggregate = configuration.entities[location.aggregateId];
         expect(aggregate, `aggregate ${location.aggregateId}`).toBeDefined();
         expect(aggregate.population?.expansionMode).toBe('representative_member');
         expect(location.path[0]).toBe(location.aggregateId);
+      } else {
+        throw new Error(`Unsupported Phase 0 pilot Structural Location: ${JSON.stringify(location)}`);
       }
 
       for (const scenarioId of pilot.validationScenarios) {
@@ -74,7 +76,7 @@ describe('Phase 0 visual-design fixtures', () => {
     const depictions = fixture.anatomyCases.map((item) => item.depiction);
     expect(depictions.some((item) => item.evidence.status === 'documented')).toBe(true);
     expect(depictions.some((item) => item.evidence.status === 'simplified')).toBe(true);
-    expect(sorted([...new Set<string>(depictions.map((item: any) => item.placementBasis as string))])).toEqual(
+    expect(sorted([...new Set<string>(depictions.map((item) => item.placementBasis))])).toEqual(
       sorted(placementBases),
     );
 
