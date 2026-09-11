@@ -456,9 +456,9 @@ def main() -> int:
             "virtualization": "not_required_for_current_initial_five",
             "accessibility": "anatomy_depictions_create_no_focus_targets_in_all_phase5a_pilot_states",
             "semanticOutlinePolicy": (
-                "provisional_keep_until_pinned_accessibility_matrix; current Chromium probe confirms both "
-                "SVG targets and semantic-outline buttons are exposed, so duplicate navigation cost must "
-                "be evaluated in the pinned keyboard/screen-reader gate before consolidation"
+                "accepted_current_dual_surfaces; retain interactive SVG targets plus semantic-outline companion "
+                "controls under the project-owner user-confirmed Phase-6 browser/accessibility validation. "
+                "Revisit only if later Testing produces contrary evidence."
             ),
             "reviewRule": (
                 "Re-profile if semantic/presentation visibility materially increases; performance tuning "

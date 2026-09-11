@@ -1,5 +1,16 @@
 # Implementation Changelog
 
+## 2026-09-11 — Visual Design Phase 8 all-context coverage audit and calibration
+
+- **Scope:** Audited the generic visual renderer across every currently enterable context in the five initial systems and deterministic stress variants. This is Phase-8 presentation calibration only; no canonical content/schema, domain/state semantics, package metadata, or Phase-9 imagery contract changed.
+- **Corrections:** Tightened generic/system/rack derived minimum heights; compacted terminal Anatomy-only scenes; moved exactly 30-character labels to compact no-image fallback; improved blocked binary routing, multi-row n-ary side/row buses, visible-child boundary detours, and current-enclosure gutter-only stubs. All routing remains presentation-only and creates no semantic waypoint.
+- **Coverage evidence:** `scripts/validation/phase8_visual_coverage.py` enumerates the same 65 enterable contexts used by the physical-orientation audit, renders 65 baseline + 65 stress states through the exact current Explore view-model/component adapter, and records zero errors/warnings and zero rendered node-label truncation contexts in `reports/implementation/visual-coverage-initial-five.json`. A bounded 12-scene image sample is under `reports/implementation/phase8-coverage-images/`.
+- **Regression evidence run here:** Phase-7 Ironwood/Cerebras transfer validation PASS; canonical/runtime validation PASS (16 systems / 18 YAML documents, 54 deterministic runtime artifacts, 75/75 branches, 65 entered physical-orientation contexts / 0 errors, 5/5 property fixtures); current-renderer benchmark v3 PASS with H100 baseline/stress at 348/356 SVG descendants, 16 SVG focus targets, and zero Anatomy focus targets. Dependency-light TypeScript checks cover the modified source/regression specs; this is not the pinned project typecheck/Vitest matrix.
+- **User-confirmed validation carried forward:** The project owner confirmed all checks passed on the refreshed pre-Phase-8 baseline, including the corrected Phase-7 Ironwood E2E tests. Those tests were not run by this Visual Design handoff.
+- **E2E regression lesson:** Use the shared `enterAction(page)` helper or `getByRole('button', {name: 'Enter', exact: true})`. Loose short accessible-name locators can substring-match entity/relationship labels such as `Data-center network`; the Phase-7 application/topology implementation itself was correct.
+- **Phase status:** Phase-8 implementation/audit is complete, but Phase 8 remains **open** pending a fresh pinned post-change TypeScript/Vitest/Vite/Chromium-Firefox-WebKit/accessibility regression run because shared `layout.ts` and `connectionVisuals.ts` changed after the last user-confirmed pinned run. Phase 9 must not begin until that gate passes.
+- **Deployment status:** Not deployed by this task; user will apply the changed-files patch and refresh shared sources.
+
 ## 2026-09-10 — Phase 7 Ironwood exact-Enter E2E locator correction
 
 - **Issue:** GitHub `npm run test:e2e` passed 76 tests and failed only the Phase-7 Ironwood torus test in Chromium, Firefox, and WebKit. The failure was a Playwright strict-mode collision: `getByRole('button', {name: 'Enter'})` also matched several Ironwood targets whose accessible names contain `Data-center`, because Playwright role-name matching is substring-based unless `exact: true` is requested.

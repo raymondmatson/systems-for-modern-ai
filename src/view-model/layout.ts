@@ -84,7 +84,7 @@ function longestTokenLength(value: string): number {
 }
 
 function nodeFit(entity: Entity, density: number): Pick<LayoutNode, 'mediaMode' | 'labelMaxCharacters' | 'labelMaxLines'> {
-  const compact = density >= 7 || entity.name.length > 30 || longestTokenLength(entity.name) > 18;
+  const compact = density >= 7 || entity.name.length >= 30 || longestTokenLength(entity.name) > 18;
   return compact
     ? {mediaMode: 'compact', labelMaxCharacters: 27, labelMaxLines: 3}
     : {mediaMode: 'full', labelMaxCharacters: 20, labelMaxLines: 2};
@@ -190,8 +190,18 @@ function withEnclosure(
 ): LayoutResult {
   const notice = anatomyArrangementNotice(layout.kind, anatomy);
   const headerHeight = notice ? enclosureNoticeHeaderHeight : enclosureHeaderHeight;
+  // Anatomy-only terminal contexts should not reserve an otherwise empty
+  // semantic field above their physical-context region. This is a derived
+  // presentation compaction only: it does not add placement or containment
+  // semantics. Empty/relationship-only contexts keep the normal layout height.
+  const semanticBase =
+    layout.nodes.length === 0 &&
+    layout.regions.length === 0 &&
+    anatomy.length > 0
+      ? 24
+      : layout.height;
   const semanticBottom = Math.max(
-    layout.height,
+    semanticBase,
     ...layout.nodes.map((node) => node.y + node.height + 24),
     ...layout.regions.map((region) => region.y + region.height + 18),
   );
@@ -291,7 +301,7 @@ function gridLayout(
     nodes,
     regions: region ? [region] : [],
     width,
-    height: Math.max(320, top * 2 + rows * nodeHeight + (rows - 1) * (rowGap - nodeHeight)),
+    height: Math.max(230, top * 2 + rows * nodeHeight + (rows - 1) * (rowGap - nodeHeight)),
     kind,
   };
 }
@@ -367,7 +377,7 @@ function systemLayout(entities: Entity[]): BaseLayoutResult {
     nodes,
     regions,
     width,
-    height: Math.max(320, y + 10),
+    height: Math.max(240, y + 10),
     kind: 'system',
   };
 }
@@ -421,7 +431,7 @@ function rackLayout(entities: Entity[]): BaseLayoutResult {
     nodes,
     regions,
     width,
-    height: Math.max(300, y + 12),
+    height: Math.max(240, y + 12),
     kind: 'rack',
   };
 }

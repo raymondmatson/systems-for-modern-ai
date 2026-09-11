@@ -9,8 +9,8 @@
     {
       "sceneId": "h100-representative-baseline",
       "renderer": {
-        "viewModelMedianMs": 0.399439,
-        "componentSerializeMedianMs": 2.141704,
+        "viewModelMedianMs": 0.300413,
+        "componentSerializeMedianMs": 1.59897,
         "interactiveNodes": 9,
         "anatomyDepictions": 4,
         "canvasConnections": 3,
@@ -22,12 +22,12 @@
         "layoutKind": "assembly"
       },
       "browser": {
-        "domInstallMedianMs": 7.799999998882413,
-        "hitTestMs": 9.699999999254942,
+        "domInstallMedianMs": 5.900000000023283,
+        "hitTestMs": 9.300000000046566,
         "hitIterations": 600,
         "semanticCenterHits": 486,
-        "totalDomElements": 461,
-        "svgDescendants": 342,
+        "totalDomElements": 467,
+        "svgDescendants": 348,
         "svgFocusTargets": 16,
         "nodeFocusTargets": 9,
         "connectionFocusTargets": 7,
@@ -45,8 +45,8 @@
     {
       "sceneId": "h100-checkpoint-selected-storage-nic",
       "renderer": {
-        "viewModelMedianMs": 0.358912,
-        "componentSerializeMedianMs": 2.06592,
+        "viewModelMedianMs": 0.336577,
+        "componentSerializeMedianMs": 1.508454,
         "interactiveNodes": 9,
         "anatomyDepictions": 4,
         "canvasConnections": 3,
@@ -58,12 +58,12 @@
         "layoutKind": "assembly"
       },
       "browser": {
-        "domInstallMedianMs": 7.700000001117587,
-        "hitTestMs": 8.599999999627471,
+        "domInstallMedianMs": 6,
+        "hitTestMs": 8.099999999976717,
         "hitIterations": 600,
         "semanticCenterHits": 486,
-        "totalDomElements": 470,
-        "svgDescendants": 350,
+        "totalDomElements": 476,
+        "svgDescendants": 356,
         "svgFocusTargets": 16,
         "nodeFocusTargets": 9,
         "connectionFocusTargets": 7,
@@ -80,7 +80,7 @@
     }
   ],
   "stateSwap": {
-    "stateSwapMedianMs": 13.850000000558794
+    "stateSwapMedianMs": 6.249999999941792
   },
   "pilotGeometry": {
     "status": "PASS",
@@ -202,7 +202,7 @@
       "anatomyDepictions": 10,
       "visibleGlyphs": 50,
       "connections": 60,
-      "domInstallMedianMs": 4.200000001117587,
+      "domInstallMedianMs": 1.7999999999883585,
       "domElements": 200,
       "focusTargets": 40,
       "anatomyFocusTargets": 0
@@ -212,7 +212,7 @@
       "anatomyDepictions": 20,
       "visibleGlyphs": 100,
       "connections": 120,
-      "domInstallMedianMs": 8.400000001303852,
+      "domInstallMedianMs": 2.9500000000116415,
       "domElements": 400,
       "focusTargets": 80,
       "anatomyFocusTargets": 0
@@ -222,7 +222,7 @@
       "anatomyDepictions": 50,
       "visibleGlyphs": 250,
       "connections": 300,
-      "domInstallMedianMs": 20.84999999962747,
+      "domInstallMedianMs": 7.5,
       "domElements": 1000,
       "focusTargets": 200,
       "anatomyFocusTargets": 0
@@ -232,7 +232,7 @@
       "anatomyDepictions": 100,
       "visibleGlyphs": 500,
       "connections": 600,
-      "domInstallMedianMs": 40.200000000186265,
+      "domInstallMedianMs": 15.450000000011642,
       "domElements": 2000,
       "focusTargets": 400,
       "anatomyFocusTargets": 0
@@ -242,7 +242,7 @@
       "anatomyDepictions": 200,
       "visibleGlyphs": 1000,
       "connections": 1200,
-      "domInstallMedianMs": 48.95000000111759,
+      "domInstallMedianMs": 32.79999999998836,
       "domElements": 4000,
       "focusTargets": 800,
       "anatomyFocusTargets": 0
@@ -252,7 +252,7 @@
       "anatomyDepictions": 400,
       "visibleGlyphs": 2000,
       "connections": 2400,
-      "domInstallMedianMs": 69.45000000018626,
+      "domInstallMedianMs": 67.40000000002328,
       "domElements": 8000,
       "focusTargets": 1600,
       "anatomyFocusTargets": 0
@@ -266,14 +266,13 @@
     "denseBackplane": "not_required_for_current_initial_five",
     "virtualization": "not_required_for_current_initial_five",
     "accessibility": "anatomy_depictions_create_no_focus_targets_in_all_phase5a_pilot_states",
-    "semanticOutlinePolicy": "retain_current_svg_targets_and_semantic_outline_after_user_confirmed_phase6_accessibility_validation; revisit only if later Testing finds a concrete keyboard/screen-reader/action-parity regression",
+    "semanticOutlinePolicy": "accepted_current_dual_surfaces; retain interactive SVG targets plus semantic-outline companion controls under the project-owner user-confirmed Phase-6 browser/accessibility validation. Revisit only if later Testing produces contrary evidence.",
     "reviewRule": "Re-profile if semantic/presentation visibility materially increases; performance tuning must not alter semantic Expansion Mode, identity, Selection, Navigation, or accessibility targets."
   },
   "limitations": [
     "Benchmark JSX adapter executes the exact Explore components but bypasses React reconciliation.",
     "System Chromium is implementation evidence, not the pinned three-engine Playwright matrix.",
     "Accessibility.getFullAXTree is Chromium accessibility-tree evidence, not a screen-reader study.",
-    "Synthetic headroom is a separate stress series and is not used as a proxy for real scene density.",
-    "Phase-6 retain/consolidate closure is based on user-confirmed external validation after Implementation Continued fixes; the benchmark itself did not perform that screen-reader/browser-matrix validation."
+    "Synthetic headroom is a separate stress series and is not used as a proxy for real scene density."
   ]
 }

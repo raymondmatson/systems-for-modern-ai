@@ -3,6 +3,7 @@ import {describe, expect, it} from 'vitest';
 import type {AppState, Configuration, ContextLocator} from '../../src/domain/types';
 import {
   CANONICAL_RELATIONSHIP_FAMILIES,
+  buildBoundaryRoute,
   buildConnectionRoutes,
   connectionVisualFor,
   directionalityVisual,
@@ -74,6 +75,97 @@ describe('Phase 4 typed Cross-Connection presentation', () => {
     expect(routes.filter((route) => !route.trunk)).toHaveLength(3);
     expect(routes.some((route) => route.id.includes('hub'))).toBe(false);
     expect(routes.filter((route) => route.arrowAtStart)).toHaveLength(2);
+  });
+
+  it('detours blocked binary relationships around unrelated component interiors', () => {
+    const nodes = [
+      {id: 'source', x: 20, y: 80, width: 100, height: 60},
+      {id: 'blocker', x: 180, y: 80, width: 100, height: 60},
+      {id: 'target', x: 340, y: 80, width: 100, height: 60},
+    ];
+    const route = buildConnectionRoutes(nodes, ['source', 'target'], 'undirected')[0]!;
+    const blocker = nodes[1]!;
+    const crosses = route.points.slice(1).some((point, index) => {
+      const previous = route.points[index]!;
+      if (previous.x === point.x) {
+        return previous.x > blocker.x && previous.x < blocker.x + blocker.width
+          && Math.max(previous.y, point.y) > blocker.y
+          && Math.min(previous.y, point.y) < blocker.y + blocker.height;
+      }
+      if (previous.y === point.y) {
+        return previous.y > blocker.y && previous.y < blocker.y + blocker.height
+          && Math.max(previous.x, point.x) > blocker.x
+          && Math.min(previous.x, point.x) < blocker.x + blocker.width;
+      }
+      return false;
+    });
+    expect(crosses).toBe(false);
+  });
+
+  it('uses side and row buses for multi-row n-ary relationships', () => {
+    const nodes = [
+      {id: 'a', x: 20, y: 80, width: 100, height: 60},
+      {id: 'b', x: 180, y: 80, width: 100, height: 60},
+      {id: 'c', x: 20, y: 220, width: 100, height: 60},
+      {id: 'd', x: 180, y: 220, width: 100, height: 60},
+    ];
+    const routes = buildConnectionRoutes(nodes, ['a', 'b', 'c', 'd'], 'bidirectional');
+    expect(routes.some((route) => route.id === 'side-trunk')).toBe(true);
+    expect(routes.filter((route) => route.id.startsWith('row-trunk-'))).toHaveLength(2);
+    expect(routes.filter((route) => route.id.startsWith('branch-'))).toHaveLength(4);
+  });
+
+  it('keeps enclosure-level boundary stubs in the gutter when no visible child endpoint exists', () => {
+    const boundary = buildBoundaryRoute({
+      connectionId: 'context-boundary',
+      allNodes: [{id: 'child', x: 80, y: 100, width: 236, height: 112}],
+      directionality: 'undirected',
+      visibleEndpointIsSource: false,
+      visibleEndpointIsTarget: false,
+      enclosure: {x: 40, y: 20, width: 500, height: 340, headerHeight: 64},
+      slotIndex: 0,
+      slotCount: 1,
+      externalEndpointLabels: ['External system'],
+    });
+    expect(boundary.visibleNodeId).toBeUndefined();
+    expect(boundary.routes[0]!.points).toHaveLength(2);
+    expect(Math.abs(boundary.boundaryPoint.x - boundary.routes[0]!.points[0]!.x)).toBe(14);
+  });
+
+  it('routes visible-child boundary continuations around unrelated sibling cards', () => {
+    const nodes = [
+      {id: 'source', x: 60, y: 100, width: 100, height: 60},
+      {id: 'blocker', x: 190, y: 100, width: 100, height: 60},
+    ];
+    const boundary = buildBoundaryRoute({
+      connectionId: 'visible-boundary',
+      allNodes: nodes,
+      visibleNodeId: 'source',
+      directionality: 'source_to_target',
+      visibleEndpointIsSource: true,
+      visibleEndpointIsTarget: false,
+      enclosure: {x: 40, y: 20, width: 520, height: 340, headerHeight: 64},
+      slotIndex: 0,
+      slotCount: 1,
+      externalEndpointLabels: ['External system'],
+    });
+    const route = boundary.routes[0]!;
+    const blocker = nodes[1]!;
+    const crosses = route.points.slice(1).some((point, index) => {
+      const previous = route.points[index]!;
+      if (previous.x === point.x) {
+        return previous.x > blocker.x && previous.x < blocker.x + blocker.width
+          && Math.max(previous.y, point.y) > blocker.y
+          && Math.min(previous.y, point.y) < blocker.y + blocker.height;
+      }
+      if (previous.y === point.y) {
+        return previous.y > blocker.y && previous.y < blocker.y + blocker.height
+          && Math.max(previous.x, point.x) > blocker.x
+          && Math.min(previous.x, point.x) < blocker.x + blocker.width;
+      }
+      return false;
+    });
+    expect(crosses).toBe(false);
   });
 
   it('shows H100 true external relationships as boundary stubs while retaining local connection syntax', () => {

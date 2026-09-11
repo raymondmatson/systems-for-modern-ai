@@ -1,6 +1,6 @@
 {
   "phase": "7A",
-  "status": "AWAITING_MODERATED_HUMAN_SESSIONS",
+  "status": "HISTORICAL_EMPTY_TEMPLATE_PHASE_CLOSED_USER_CONFIRMED",
   "datePrepared": "2026-09-10",
   "protocol": "reports/testing/phase7a-comprehension-protocol.md",
   "thresholds": {
@@ -16,10 +16,11 @@
     "coreTaskAccuracy": null,
     "relationshipFamilyFirstPassAccuracy": null,
     "criticalSemanticMisconceptions": [],
-    "gateResult": "NOT_EVALUATED"
+    "gateResult": "NOT_EVALUATED_IN_THIS_TEMPLATE"
   },
   "notes": [
-    "This file is a results template only. No moderated human-comprehension result was produced in the Phase-7/7A implementation handoff.",
-    "Do not replace null/not-evaluated fields with automated or assistant-review results."
+    "Historical results template retained unpopulated because no raw moderated participant/session dataset was supplied to this handoff.",
+    "Phase 7A is closed separately by project-owner user-confirmed external validation recorded in reports/testing/phase7a-user-confirmed-validation.json.",
+    "Do not backfill null fields with automated or assistant-review results."
   ]
 }

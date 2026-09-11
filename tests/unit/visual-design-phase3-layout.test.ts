@@ -126,6 +126,35 @@ describe('Phase 3 deterministic composition, density fit, and integrated anatomy
     expect(scenes[2]!.nodes.find((node) => node.entity.name.startsWith('MemoryX'))?.mediaMode).toBe('compact');
   });
 
+  it('compacts terminal Anatomy-only contexts without inventing physical placement', () => {
+    const current: Entity = {
+      id: 'terminal-anatomy-device',
+      name: 'Terminal anatomy device',
+      entityType: 'nic',
+      exploreTier: 3,
+      representation: 'explicit',
+      evidence: {status: 'documented', sourceIds: ['fixture']},
+      inventory: {category: 'fixture', item: 'fixture'},
+      properties: {},
+      childIds: [],
+      anatomyDepictions: [{
+        id: 'terminal-port-bank',
+        label: 'Port bank',
+        inventory: {category: 'fixture', item: 'port bank'},
+        evidence: {status: 'documented', sourceIds: ['fixture']},
+        depictionKind: 'io',
+        placementBasis: 'schematic',
+      }],
+    };
+    const layout = layoutForContext(current, []);
+    expect(layout.nodes).toHaveLength(0);
+    expect(layout.regions.filter((region) => region.kind === 'semantic-content')).toHaveLength(0);
+    expect(layout.anatomy).toHaveLength(1);
+    expect(layout.enclosure.arrangementNotice).toContain('positions are not literal');
+    expect(layout.anatomy[0]!.y - layout.enclosure.interior.y).toBeLessThan(90);
+    expect(layout.height).toBeLessThan(360);
+  });
+
   it('keeps documented placement distinct and synthetic without adding canonical coordinates', () => {
     const current: Entity = {
       id: 'fixture-device',

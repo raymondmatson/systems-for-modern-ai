@@ -919,7 +919,7 @@ The two former performance-derived open questions remain **resolved for the curr
 - **Dense-renderer fallback:** not required for current V1 scenes; remain SVG-first.
 - **Renderer virtualization:** not required for current V1 scenes.
 
-Benchmark version 3 replaces the old synthetic representative case with the **real current Explore view-model and exact `src/app/explore` component tree**. The DGX H100 Representative baseline currently materializes 342 SVG descendants and 16 SVG focus targets; the stressed checkpoint/Selection state materializes 350 descendants. All seven frozen pilot states create zero Anatomy focus targets and pass the benchmark's deterministic enclosure/anatomy/boundary-label geometry checks. Synthetic density cases are retained only as a separate headroom series and are not a semantic object-count policy.
+Benchmark version 3 replaces the old synthetic representative case with the **real current Explore view-model and exact `src/app/explore` component tree**. The DGX H100 Representative baseline currently materializes 348 SVG descendants and 16 SVG focus targets; the stressed checkpoint/Selection state materializes 356 descendants. All seven frozen pilot states create zero Anatomy focus targets and pass the benchmark's deterministic enclosure/anatomy/boundary-label geometry checks. Synthetic density cases are retained only as a separate headroom series and are not a semantic object-count policy.
 
 The benchmark uses a dependency-light JSX adapter and system Chromium so it can execute without `node_modules`; it therefore bypasses React reconciliation and does **not** stand in for the pinned Vite/React/Playwright matrix. Its current conclusion is limited to renderer materialization/performance evidence for the authored initial-five scenes.
 
@@ -1118,3 +1118,10 @@ Before the browser implementation architecture is considered stable, verify:
 ## 12. Summary
 
 > **Implement Version 1 as a browser-first layered 2D application using the current TypeScript/React/Redux/Vite browser stack, generated language-neutral runtime content, Python source validation, and an SVG-first Explore renderer that is sufficient for the current Version-1 representative scenes; re-profile only when semantic density materially changes. The richer physical-first content model now includes authored noninteractive Anatomy Depictions for orientation-only hardware and a revisioned Product Catalog for reusable product/model facts, while all deployed physical identity/Containment/Scenario state remains configuration-local in RSCs. Preserve portability through stable semantic contracts, pure state transitions, explicit data/schema migrations, conformance fixtures, and narrow platform adapters—not through premature native code. If a native client is later built, target C++20-or-later with Qt 6 and treat it as a new standalone frontend over the established project semantics rather than as a packaged web application.**
+
+
+### Phase-8 visual coverage/revalidation note — 2026-09-11
+
+The current generic renderer has now been audited across all 65 enterable initial-five contexts plus deterministic stress variants. Presentation-only corrections tighten sparse/terminal layout density and route binary, n-ary, and boundary continuations around unrelated component shells without creating semantic waypoints. Evidence is recorded in `reports/implementation/visual-coverage-initial-five.json`. Phase 8 remains open until a fresh pinned post-change TypeScript/Vitest/Vite/Chromium-Firefox-WebKit/accessibility run passes because shared layout/routing code changed after the previous user-confirmed validation.
+
+E2E regression rule: use exact accessible-name matching for short generic actions. The shared `enterAction(page)` helper uses `getByRole('button', {name: 'Enter', exact: true})`; do not reintroduce loose `Enter` role-name matching, which can collide with labels such as `Data-center network`.

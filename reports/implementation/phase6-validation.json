@@ -21,13 +21,13 @@
         "denseBackplane": "not_required_for_current_initial_five",
         "virtualization": "not_required_for_current_initial_five",
         "accessibility": "anatomy_depictions_create_no_focus_targets_in_all_phase5a_pilot_states",
-        "semanticOutlinePolicy": "provisional_keep_until_pinned_accessibility_matrix; current Chromium probe confirms both SVG targets and semantic-outline buttons are exposed, so duplicate navigation cost must be evaluated in the pinned keyboard/screen-reader gate before consolidation",
+        "semanticOutlinePolicy": "accepted_current_dual_surfaces; retain interactive SVG targets plus semantic-outline companion controls under the project-owner user-confirmed Phase-6 browser/accessibility validation. Revisit only if later Testing produces contrary evidence.",
         "reviewRule": "Re-profile if semantic/presentation visibility materially increases; performance tuning must not alter semantic Expansion Mode, identity, Selection, Navigation, or accessibility targets."
       }
     },
     "systemChromiumAccessibilityProbe": {
       "status": "PARTIAL_PASS",
-      "summary": "Reduced-motion CSS resolves to 0s transition/animation; forced-colors stressed render retains geometric Selection/focus and relationship-family DOM cues; Anatomy creates zero focus targets in all seven frozen pilot states. Chromium AX tree exposes duplicate SVG/semantic-outline targets, so retain-vs-consolidate remains pending the pinned keyboard/screen-reader matrix."
+      "summary": "Historical local Chromium probe: reduced-motion resolved to 0s; forced-colors preserved geometric cues; Anatomy created zero focus targets. The project-owner later confirmed the pinned Phase-6 browser/accessibility matrix passed after Implementation Continued fixes, so the current dual SVG + semantic-outline surfaces are retained."
     },
     "studyPacket": {
       "status": "PREPARED_WITH_PROVISIONAL_IMAGES",

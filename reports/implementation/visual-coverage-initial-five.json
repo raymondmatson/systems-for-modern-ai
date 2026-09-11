@@ -1,0 +1,2482 @@
+{
+  "phase": "8",
+  "date": "2026-09-11",
+  "status": "PASS",
+  "basis": "Exact current Explore view-model/components through the dependency-light JSX adapter plus system-Chromium rendered geometry checks. This does not replace the required post-Phase-8 pinned TypeScript/Vitest/Vite/three-engine Playwright/accessibility rerun.",
+  "fixture": "tests/fixtures/visual-coverage-phase8.json",
+  "compiler": {
+    "path": "/opt/nvm/versions/node/v22.16.0/bin/tsc",
+    "version": "Version 5.8.3"
+  },
+  "enteredContexts": 65,
+  "baselineScenes": 65,
+  "stressScenes": 65,
+  "layoutFamilies": {
+    "assembly": 7,
+    "fabric": 1,
+    "generic": 47,
+    "internal": 2,
+    "rack": 2,
+    "system": 6
+  },
+  "errors": [],
+  "warnings": [],
+  "truncatedLabelContexts": 0,
+  "manualReviewScreenshots": [
+    {
+      "path": "reports/implementation/phase8-coverage-images/nvidia-dgx-h100-superpod__h100-superpod-4su-reference__dgx-h100-node.png",
+      "sha256": "41c4f9c6d781e2dd6500ea10c0d78b9b199726d5b3b927ed677f89bcdb7493f7",
+      "bytes": 243618
+    },
+    {
+      "path": "reports/implementation/phase8-coverage-images/nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-superpod.png",
+      "sha256": "f8ff05746ab0e3d996e848e5d1382d2b50fdbacc698db6e5682897851c74d6de",
+      "bytes": 166357
+    },
+    {
+      "path": "reports/implementation/phase8-coverage-images/nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-bf3.png",
+      "sha256": "3200cbf5ed48c7ca21309564bbf9950b05418feb7f07c4bb3d9fd748f286228c",
+      "bytes": 129675
+    },
+    {
+      "path": "reports/implementation/phase8-coverage-images/nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-nvl72-rack.png",
+      "sha256": "3458d90b2f6b06c9974e40ec0ff926d505c9728003b498525891baac0413e414",
+      "bytes": 250783
+    },
+    {
+      "path": "reports/implementation/phase8-coverage-images/google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-chiplets.png",
+      "sha256": "2ee52c4b3e4222e348a9b33ab4380307ac3d16b0d00de66f0876155d03f32375",
+      "bytes": 131195
+    },
+    {
+      "path": "reports/implementation/phase8-coverage-images/google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-cube.png",
+      "sha256": "353d27834510c11cdb5cd8cc07879632d9631cc89675c0aaea9d7bf04bcaceab",
+      "bytes": 200120
+    },
+    {
+      "path": "reports/implementation/phase8-coverage-images/google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-tpu.png",
+      "sha256": "246f28d6dec92bd801f69f7c5ba13833558414756fa6fbc8a080f8745166019e",
+      "bytes": 104743
+    },
+    {
+      "path": "reports/implementation/phase8-coverage-images/cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3.png",
+      "sha256": "671c4acdea510c4cb3eca8d2a49be02062d35c73d61dcd3c7d216322a9782e3b",
+      "bytes": 184398
+    },
+    {
+      "path": "reports/implementation/phase8-coverage-images/cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3-cs3.png",
+      "sha256": "080ba47a469a242ca3326d7319f8841168c4ded3a15443886e3c6456b6f7b0ee",
+      "bytes": 223349
+    },
+    {
+      "path": "reports/implementation/phase8-coverage-images/cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3-wse3.png",
+      "sha256": "1429c22022125c7fca2b5badc674749e79fef036b0ed39dc80e5915c9c140b3b",
+      "bytes": 112063
+    },
+    {
+      "path": "reports/implementation/phase8-coverage-images/meta-h100-roce-24k__meta-24576-h100-roce__meta-h100-roce.png",
+      "sha256": "19da17aa54dab8609835311e1a496c0b2cccce84b34b112a888e6f84a03535db",
+      "bytes": 141846
+    },
+    {
+      "path": "reports/implementation/phase8-coverage-images/meta-h100-roce-24k__meta-24576-h100-roce__meta-roce-switches.png",
+      "sha256": "8755b1ac00ba37e7f883e7d37fd1ff2b437d3da83be9a021b5cef36fab6652cc",
+      "bytes": 147734
+    }
+  ],
+  "cases": [
+    {
+      "sceneId": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__dgx-h100-node__baseline",
+      "variant": "baseline",
+      "layoutKind": "assembly",
+      "interactiveNodes": 9,
+      "anatomyDepictions": 4,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": {
+        "path": "reports/implementation/phase8-coverage-images/nvidia-dgx-h100-superpod__h100-superpod-4su-reference__dgx-h100-node.png",
+        "sha256": "41c4f9c6d781e2dd6500ea10c0d78b9b199726d5b3b927ed677f89bcdb7493f7",
+        "bytes": 243618
+      },
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__dgx-h100-node__stress",
+      "variant": "stress",
+      "layoutKind": "assembly",
+      "interactiveNodes": 9,
+      "anatomyDepictions": 4,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-bmc__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 3,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-bmc__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 3,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-compute-switches__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 5,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-compute-switches__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 5,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-cpus__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 4,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-cpus__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 4,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-cx7__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 3,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-cx7__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 3,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-gpus__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 4,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-gpus__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 4,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-inband-switches__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 5,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-inband-switches__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 5,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-local-nvme__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 3,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-local-nvme__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 3,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-management__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 5,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-management__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 5,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-nvswitch__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 3,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-nvswitch__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 3,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-oob-switches__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 5,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-oob-switches__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 5,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-os-nvme__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 3,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-os-nvme__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 3,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-storage-cx7__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 3,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-storage-cx7__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 3,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-storage-switches__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 5,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-storage-switches__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 5,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-su__baseline",
+      "variant": "baseline",
+      "layoutKind": "system",
+      "interactiveNodes": 1,
+      "anatomyDepictions": 0,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-su__stress",
+      "variant": "stress",
+      "layoutKind": "system",
+      "interactiveNodes": 1,
+      "anatomyDepictions": 0,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-superpod__baseline",
+      "variant": "baseline",
+      "layoutKind": "system",
+      "interactiveNodes": 7,
+      "anatomyDepictions": 0,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": {
+        "path": "reports/implementation/phase8-coverage-images/nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-superpod.png",
+        "sha256": "f8ff05746ab0e3d996e848e5d1382d2b50fdbacc698db6e5682897851c74d6de",
+        "bytes": 166357
+      },
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-superpod__stress",
+      "variant": "stress",
+      "layoutKind": "system",
+      "interactiveNodes": 7,
+      "anatomyDepictions": 0,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-system-memory__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 2,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-system-memory__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 2,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-bf3__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 5,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": {
+        "path": "reports/implementation/phase8-coverage-images/nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-bf3.png",
+        "sha256": "3200cbf5ed48c7ca21309564bbf9950b05418feb7f07c4bb3d9fd748f286228c",
+        "bytes": 129675
+      },
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-bf3__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 5,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-cache__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 3,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-cache__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 3,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-compute-trays__baseline",
+      "variant": "baseline",
+      "layoutKind": "assembly",
+      "interactiveNodes": 7,
+      "anatomyDepictions": 2,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-compute-trays__stress",
+      "variant": "stress",
+      "layoutKind": "assembly",
+      "interactiveNodes": 7,
+      "anatomyDepictions": 2,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-converged-switches__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 5,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-converged-switches__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 5,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-cooling__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 2,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-cooling__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 2,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-cpus__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 4,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-cpus__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 4,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-cx8__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 3,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-cx8__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 3,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-gpus__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 5,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-gpus__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 5,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-nvl72-rack__baseline",
+      "variant": "baseline",
+      "layoutKind": "rack",
+      "interactiveNodes": 2,
+      "anatomyDepictions": 1,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": {
+        "path": "reports/implementation/phase8-coverage-images/nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-nvl72-rack.png",
+        "sha256": "3458d90b2f6b06c9974e40ec0ff926d505c9728003b498525891baac0413e414",
+        "bytes": 250783
+      },
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-nvl72-rack__stress",
+      "variant": "stress",
+      "layoutKind": "rack",
+      "interactiveNodes": 2,
+      "anatomyDepictions": 1,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-nvswitch__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 3,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-nvswitch__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 3,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-oob-switches__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 5,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-oob-switches__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 5,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-os-nvme__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 3,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-os-nvme__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 3,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-power-shelves__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 2,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-power-shelves__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 2,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-scaleout-switches__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 5,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-scaleout-switches__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 5,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-superpod__baseline",
+      "variant": "baseline",
+      "layoutKind": "system",
+      "interactiveNodes": 7,
+      "anatomyDepictions": 0,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-superpod__stress",
+      "variant": "stress",
+      "layoutKind": "system",
+      "interactiveNodes": 7,
+      "anatomyDepictions": 0,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-switch-trays__baseline",
+      "variant": "baseline",
+      "layoutKind": "assembly",
+      "interactiveNodes": 1,
+      "anatomyDepictions": 2,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-switch-trays__stress",
+      "variant": "stress",
+      "layoutKind": "assembly",
+      "interactiveNodes": 1,
+      "anatomyDepictions": 2,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-system-memory__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 2,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-system-memory__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 2,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-chiplets__baseline",
+      "variant": "baseline",
+      "layoutKind": "assembly",
+      "interactiveNodes": 4,
+      "anatomyDepictions": 1,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": {
+        "path": "reports/implementation/phase8-coverage-images/google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-chiplets.png",
+        "sha256": "2ee52c4b3e4222e348a9b33ab4380307ac3d16b0d00de66f0876155d03f32375",
+        "bytes": 131195
+      },
+      "status": "PASS"
+    },
+    {
+      "sceneId": "google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-chiplets__stress",
+      "variant": "stress",
+      "layoutKind": "assembly",
+      "interactiveNodes": 4,
+      "anatomyDepictions": 1,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-cooling__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 2,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-cooling__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 2,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-cube__baseline",
+      "variant": "baseline",
+      "layoutKind": "fabric",
+      "interactiveNodes": 1,
+      "anatomyDepictions": 0,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": {
+        "path": "reports/implementation/phase8-coverage-images/google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-cube.png",
+        "sha256": "353d27834510c11cdb5cd8cc07879632d9631cc89675c0aaea9d7bf04bcaceab",
+        "bytes": 200120
+      },
+      "status": "PASS"
+    },
+    {
+      "sceneId": "google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-cube__stress",
+      "variant": "stress",
+      "layoutKind": "fabric",
+      "interactiveNodes": 1,
+      "anatomyDepictions": 0,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-dcn__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 2,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-dcn__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 2,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-host__baseline",
+      "variant": "baseline",
+      "layoutKind": "assembly",
+      "interactiveNodes": 3,
+      "anatomyDepictions": 1,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-host__stress",
+      "variant": "stress",
+      "layoutKind": "assembly",
+      "interactiveNodes": 3,
+      "anatomyDepictions": 1,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-host-cpu__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 3,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-host-cpu__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 3,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-host-memory__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 2,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-host-memory__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 2,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-ocs__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 2,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-ocs__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 2,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-superpod__baseline",
+      "variant": "baseline",
+      "layoutKind": "system",
+      "interactiveNodes": 4,
+      "anatomyDepictions": 0,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-superpod__stress",
+      "variant": "stress",
+      "layoutKind": "system",
+      "interactiveNodes": 4,
+      "anatomyDepictions": 0,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-tpu__baseline",
+      "variant": "baseline",
+      "layoutKind": "internal",
+      "interactiveNodes": 1,
+      "anatomyDepictions": 0,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": {
+        "path": "reports/implementation/phase8-coverage-images/google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-tpu.png",
+        "sha256": "246f28d6dec92bd801f69f7c5ba13833558414756fa6fbc8a080f8745166019e",
+        "bytes": 104743
+      },
+      "status": "PASS"
+    },
+    {
+      "sceneId": "google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-tpu__stress",
+      "variant": "stress",
+      "layoutKind": "internal",
+      "interactiveNodes": 1,
+      "anatomyDepictions": 0,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3__baseline",
+      "variant": "baseline",
+      "layoutKind": "system",
+      "interactiveNodes": 5,
+      "anatomyDepictions": 0,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": {
+        "path": "reports/implementation/phase8-coverage-images/cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3.png",
+        "sha256": "671c4acdea510c4cb3eca8d2a49be02062d35c73d61dcd3c7d216322a9782e3b",
+        "bytes": 184398
+      },
+      "status": "PASS"
+    },
+    {
+      "sceneId": "cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3__stress",
+      "variant": "stress",
+      "layoutKind": "system",
+      "interactiveNodes": 5,
+      "anatomyDepictions": 0,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3-ai-cores__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 3,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3-ai-cores__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 3,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3-cs3__baseline",
+      "variant": "baseline",
+      "layoutKind": "assembly",
+      "interactiveNodes": 1,
+      "anatomyDepictions": 4,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": {
+        "path": "reports/implementation/phase8-coverage-images/cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3-cs3.png",
+        "sha256": "080ba47a469a242ca3326d7319f8841168c4ded3a15443886e3c6456b6f7b0ee",
+        "bytes": 223349
+      },
+      "status": "PASS"
+    },
+    {
+      "sceneId": "cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3-cs3__stress",
+      "variant": "stress",
+      "layoutKind": "assembly",
+      "interactiveNodes": 1,
+      "anatomyDepictions": 4,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3-management__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 3,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3-management__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 3,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3-memoryx__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 3,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3-memoryx__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 3,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3-preprocess__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 3,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3-preprocess__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 3,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3-sram__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 2,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3-sram__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 2,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3-swarmx__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 3,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3-swarmx__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 3,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3-wafer-mesh__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 2,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3-wafer-mesh__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 2,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3-wse3__baseline",
+      "variant": "baseline",
+      "layoutKind": "internal",
+      "interactiveNodes": 3,
+      "anatomyDepictions": 0,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": {
+        "path": "reports/implementation/phase8-coverage-images/cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3-wse3.png",
+        "sha256": "1429c22022125c7fca2b5badc674749e79fef036b0ed39dc80e5915c9c140b3b",
+        "bytes": 112063
+      },
+      "status": "PASS"
+    },
+    {
+      "sceneId": "cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3-wse3__stress",
+      "variant": "stress",
+      "layoutKind": "internal",
+      "interactiveNodes": 3,
+      "anatomyDepictions": 0,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "meta-h100-roce-24k__meta-24576-h100-roce__meta-arista-7800__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 4,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "meta-h100-roce-24k__meta-24576-h100-roce__meta-arista-7800__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 4,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "meta-h100-roce-24k__meta-24576-h100-roce__meta-compute-racks__baseline",
+      "variant": "baseline",
+      "layoutKind": "rack",
+      "interactiveNodes": 1,
+      "anatomyDepictions": 0,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "meta-h100-roce-24k__meta-24576-h100-roce__meta-compute-racks__stress",
+      "variant": "stress",
+      "layoutKind": "rack",
+      "interactiveNodes": 1,
+      "anatomyDepictions": 0,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "meta-h100-roce-24k__meta-24576-h100-roce__meta-e1s__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 3,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "meta-h100-roce-24k__meta-24576-h100-roce__meta-e1s__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 3,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "meta-h100-roce-24k__meta-24576-h100-roce__meta-grand-teton__baseline",
+      "variant": "baseline",
+      "layoutKind": "assembly",
+      "interactiveNodes": 1,
+      "anatomyDepictions": 3,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "meta-h100-roce-24k__meta-24576-h100-roce__meta-grand-teton__stress",
+      "variant": "stress",
+      "layoutKind": "assembly",
+      "interactiveNodes": 1,
+      "anatomyDepictions": 3,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "meta-h100-roce-24k__meta-24576-h100-roce__meta-h100-gpus__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 4,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "meta-h100-roce-24k__meta-24576-h100-roce__meta-h100-gpus__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 4,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "meta-h100-roce-24k__meta-24576-h100-roce__meta-h100-roce__baseline",
+      "variant": "baseline",
+      "layoutKind": "system",
+      "interactiveNodes": 3,
+      "anatomyDepictions": 0,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": {
+        "path": "reports/implementation/phase8-coverage-images/meta-h100-roce-24k__meta-24576-h100-roce__meta-h100-roce.png",
+        "sha256": "19da17aa54dab8609835311e1a496c0b2cccce84b34b112a888e6f84a03535db",
+        "bytes": 141846
+      },
+      "status": "PASS"
+    },
+    {
+      "sceneId": "meta-h100-roce-24k__meta-24576-h100-roce__meta-h100-roce__stress",
+      "variant": "stress",
+      "layoutKind": "system",
+      "interactiveNodes": 3,
+      "anatomyDepictions": 0,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "meta-h100-roce-24k__meta-24576-h100-roce__meta-minipack2__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 5,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "meta-h100-roce-24k__meta-24576-h100-roce__meta-minipack2__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 5,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "meta-h100-roce-24k__meta-24576-h100-roce__meta-roce-switches__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 3,
+      "anatomyDepictions": 0,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": {
+        "path": "reports/implementation/phase8-coverage-images/meta-h100-roce-24k__meta-24576-h100-roce__meta-roce-switches.png",
+        "sha256": "8755b1ac00ba37e7f883e7d37fd1ff2b437d3da83be9a021b5cef36fab6652cc",
+        "bytes": 147734
+      },
+      "status": "PASS"
+    },
+    {
+      "sceneId": "meta-h100-roce-24k__meta-24576-h100-roce__meta-roce-switches__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 3,
+      "anatomyDepictions": 0,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "meta-h100-roce-24k__meta-24576-h100-roce__meta-storage-racks__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 1,
+      "anatomyDepictions": 0,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "meta-h100-roce-24k__meta-24576-h100-roce__meta-storage-racks__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 1,
+      "anatomyDepictions": 0,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "meta-h100-roce-24k__meta-24576-h100-roce__meta-wedge400__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 5,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "meta-h100-roce-24k__meta-24576-h100-roce__meta-wedge400__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 0,
+      "anatomyDepictions": 5,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "meta-h100-roce-24k__meta-24576-h100-roce__meta-yv3__baseline",
+      "variant": "baseline",
+      "layoutKind": "generic",
+      "interactiveNodes": 1,
+      "anatomyDepictions": 0,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    },
+    {
+      "sceneId": "meta-h100-roce-24k__meta-24576-h100-roce__meta-yv3__stress",
+      "variant": "stress",
+      "layoutKind": "generic",
+      "interactiveNodes": 1,
+      "anatomyDepictions": 0,
+      "sourceErrors": [],
+      "browser": {
+        "boundaryLabelsInsideSvg": true,
+        "boundaryLabelNodeCollisions": 0,
+        "boundaryLabelCollisions": 0,
+        "truncatedNodeLabels": 0,
+        "anatomyFocusTargets": 0,
+        "topologyFocusTargets": 0
+      },
+      "screenshot": null,
+      "status": "PASS"
+    }
+  ],
+  "decision": {
+    "coverageAudit": "PASS",
+    "semanticChanges": false,
+    "phaseCompletion": "blocked_pending_fresh_pinned_post_change_regression_accessibility_run"
+  }
+}

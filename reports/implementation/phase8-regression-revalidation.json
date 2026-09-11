@@ -1,0 +1,49 @@
+{
+  "phase": "8",
+  "date": "2026-09-11",
+  "status": "PARTIAL_PASS_AWAITING_PINNED_POST_CHANGE_RERUN",
+  "scope": "Post-Phase-8 regression evidence for shared Explore layout/routing corrections",
+  "completedHere": {
+    "visualCoverage": {
+      "status": "PASS",
+      "report": "reports/implementation/visual-coverage-initial-five.json",
+      "summary": "65 enterable initial-five contexts plus 65 deterministic stress variants; zero audit errors/warnings and zero rendered node-label truncation contexts."
+    },
+    "phase7Transfer": {
+      "status": "PASS",
+      "report": "reports/implementation/phase7-transfer-validation.json",
+      "summary": "Ironwood/Cerebras transfer validator passes after shared Phase-8 layout/routing changes."
+    },
+    "canonicalRuntime": {
+      "status": "PASS",
+      "summary": "16 systems / 18 YAML configuration documents; 54 deterministic runtime artifacts; 75/75 branches; 65 entered physical-orientation contexts / 0 errors; 5/5 property fixtures."
+    },
+    "currentRendererBenchmark": {
+      "status": "PASS",
+      "report": "reports/implementation/render-benchmark.json",
+      "summary": "H100 baseline 348 SVG descendants / 16 SVG focus targets; stressed 356 / 16; zero Anatomy focus targets; SVG-first/no-virtualization conclusion unchanged."
+    },
+    "dependencyLightTypeScript": {
+      "status": "PASS",
+      "summary": "Phase-8 modified source and Phase-3/4 regression specs compile with the dependency-light TypeScript harness/shims. This is not the pinned project typecheck/Vitest run."
+    }
+  },
+  "userConfirmedPrePhase8Validation": {
+    "status": "PASS_USER_CONFIRMED",
+    "summary": "The project owner confirmed all checks passed on the refreshed pre-Phase-8 baseline, including the Phase-7 Ironwood E2E tests after the exact Enter-action locator fix. Those dependency-backed tests were not run by this Visual Design handoff."
+  },
+  "remainingGate": {
+    "status": "PENDING_EXTERNAL",
+    "reason": "Phase 8 changes shared src/view-model/layout.ts and src/view-model/connectionVisuals.ts after the most recent user-confirmed pinned test run.",
+    "required": [
+      "pinned TypeScript project typecheck",
+      "Vitest unit/regression suite",
+      "production Vite build",
+      "configured Chromium/Firefox/WebKit Playwright suite",
+      "accessibility/action-parity regression checks"
+    ],
+    "phaseCompletionRule": "Do not mark Phase 8 completed until the fresh post-change pinned regression/accessibility run passes."
+  },
+  "semanticChanges": false,
+  "projectOwnerDecisionRequired": false
+}

@@ -184,11 +184,15 @@ function segmentIntersectsNode(a: RoutePoint, b: RoutePoint, node: RoutingNode, 
   return false;
 }
 
-function routeIntersectsNodes(points: RoutePoint[], blockers: RoutingNode[]): boolean {
+function routeIntersectsNodes(
+  points: RoutePoint[],
+  blockers: RoutingNode[],
+  clearance = 10,
+): boolean {
   for (let index = 1; index < points.length; index += 1) {
     const a = points[index - 1]!;
     const b = points[index]!;
-    if (blockers.some((node) => segmentIntersectsNode(a, b, node))) return true;
+    if (blockers.some((node) => segmentIntersectsNode(a, b, node, clearance))) return true;
   }
   return false;
 }
@@ -201,6 +205,25 @@ function routeLength(points: RoutePoint[]): number {
     length += Math.abs(b.x - a.x) + Math.abs(b.y - a.y);
   }
   return length;
+}
+
+function escapePoint(node: RoutingNode, anchor: RoutePoint, distance = 18): RoutePoint {
+  if (anchor.x === node.x) return {x: anchor.x - distance, y: anchor.y};
+  if (anchor.x === node.x + node.width) return {x: anchor.x + distance, y: anchor.y};
+  if (anchor.y === node.y) return {x: anchor.x, y: anchor.y - distance};
+  if (anchor.y === node.y + node.height) return {x: anchor.x, y: anchor.y + distance};
+  return anchor;
+}
+
+function shortestClearRoute(
+  candidates: RoutePoint[][],
+  blockers: RoutingNode[],
+  clearance = 6,
+): RoutePoint[] {
+  const clear = candidates.filter((candidate) => !routeIntersectsNodes(candidate, blockers, clearance));
+  return (clear.length > 0 ? clear : candidates)
+    .slice()
+    .sort((a, b) => routeLength(a) - routeLength(b))[0]!;
 }
 
 function binaryRoute(
@@ -220,6 +243,8 @@ function binaryRoute(
   const minY = Math.min(...allNodes.map((node) => node.y));
   const maxY = Math.max(...allNodes.map((node) => node.y + node.height));
   const clearance = 24;
+  const startEscape = escapePoint(first, start);
+  const endEscape = escapePoint(second, end);
 
   const midpointCandidate = horizontal
     ? uniquePoints([
@@ -241,26 +266,32 @@ function binaryRoute(
     uniquePoints([start, {x: start.x, y: end.y}, end]),
   ];
 
-  // When the direct orthogonal routes are blocked, detour around the visible
-  // component envelope. These coordinates are presentation-only and never
-  // imply that a modeled connection physically follows this drawn route.
-  if (horizontal) {
-    candidates.push(
-      uniquePoints([start, {x: start.x, y: minY - clearance}, {x: end.x, y: minY - clearance}, end]),
-      uniquePoints([start, {x: start.x, y: maxY + clearance}, {x: end.x, y: maxY + clearance}, end]),
-    );
-  } else {
-    candidates.push(
-      uniquePoints([start, {x: minX - clearance, y: start.y}, {x: minX - clearance, y: end.y}, end]),
-      uniquePoints([start, {x: maxX + clearance, y: start.y}, {x: maxX + clearance, y: end.y}, end]),
-    );
+  // If a simple elbow is blocked, first escape the endpoint card into a row
+  // or column gap, then take a corridor outside the visible node envelope.
+  // These are deterministic presentation routes only; they do not add modeled
+  // waypoints or imply literal cable/path geometry.
+  for (const corridorY of [minY - clearance, maxY + clearance]) {
+    candidates.push(uniquePoints([
+      start,
+      startEscape,
+      {x: startEscape.x, y: corridorY},
+      {x: endEscape.x, y: corridorY},
+      endEscape,
+      end,
+    ]));
+  }
+  for (const corridorX of [minX - clearance, maxX + clearance]) {
+    candidates.push(uniquePoints([
+      start,
+      startEscape,
+      {x: corridorX, y: startEscape.y},
+      {x: corridorX, y: endEscape.y},
+      endEscape,
+      end,
+    ]));
   }
 
-  const clearCandidates = candidates.filter((candidate) => !routeIntersectsNodes(candidate, blockers));
-  const points = (clearCandidates.length > 0 ? clearCandidates : candidates)
-    .slice()
-    .sort((a, b) => routeLength(a) - routeLength(b))[0]!;
-
+  const points = shortestClearRoute(candidates, blockers);
   const visual = directionalityVisual(directionality);
   return [{
     id: `${first.id}--${second.id}`,
@@ -273,22 +304,40 @@ function binaryRoute(
   }];
 }
 
+interface RoutingRow {
+  centerY: number;
+  nodes: RoutingNode[];
+}
+
+function routingRows(nodes: RoutingNode[]): RoutingRow[] {
+  const rows: RoutingRow[] = [];
+  for (const node of [...nodes].sort((a, b) => center(a).y - center(b).y || a.x - b.x)) {
+    const cy = center(node).y;
+    const row = rows.find((candidate) => Math.abs(candidate.centerY - cy) <= 12);
+    if (row) {
+      row.nodes.push(node);
+      row.centerY = row.nodes.reduce((sum, item) => sum + center(item).y, 0) / row.nodes.length;
+    } else {
+      rows.push({centerY: cy, nodes: [node]});
+    }
+  }
+  return rows;
+}
+
 function naryRoutes(
   nodes: RoutingNode[],
+  allNodes: RoutingNode[],
   directionality: ConnectionDirectionality,
 ): ConnectionRoute[] {
-  const minX = Math.min(...nodes.map((node) => node.x));
-  const maxX = Math.max(...nodes.map((node) => node.x + node.width));
-  const minY = Math.min(...nodes.map((node) => node.y));
-  const maxY = Math.max(...nodes.map((node) => node.y + node.height));
-  const spreadX = maxX - minX;
-  const spreadY = maxY - minY;
-  const horizontalTrunk = spreadX >= spreadY;
+  const rows = routingRows(nodes);
   const direction = directionalityVisual(directionality);
 
-  if (horizontalTrunk) {
-    const trunkY = minY - 18;
-    const anchors = nodes.map((node) => ({node, point: {x: center(node).x, y: node.y}}));
+  // A single visual row retains the compact top-trunk grammar used by the
+  // existing pilot scenes.
+  if (rows.length === 1) {
+    const row = rows[0]!;
+    const trunkY = Math.min(...row.nodes.map((node) => node.y)) - 18;
+    const anchors = row.nodes.map((node) => ({node, point: {x: center(node).x, y: node.y}}));
     const trunkStartX = Math.min(...anchors.map(({point}) => point.x));
     const trunkEndX = Math.max(...anchors.map(({point}) => point.x));
     const branches = anchors.map(({node, point}, index) => ({
@@ -315,32 +364,53 @@ function naryRoutes(
     ];
   }
 
-  const trunkX = maxX + 18;
-  const anchors = nodes.map((node) => ({node, point: {x: node.x + node.width, y: center(node).y}}));
-  const trunkStartY = Math.min(...anchors.map(({point}) => point.y));
-  const trunkEndY = Math.max(...anchors.map(({point}) => point.y));
-  const branches = anchors.map(({node, point}, index) => ({
-    id: `branch-${node.id}`,
-    points: uniquePoints([point, {x: trunkX, y: point.y}]),
-    endpointNodeId: node.id,
-    endpointMarkerAtStart: true,
+  // Multi-row n-ary relationships use one side bus plus a row bus above each
+  // participating row. The side bus sits outside the full visible-node
+  // envelope, so branches do not cut through unrelated cards merely because
+  // the participating endpoints span multiple rows.
+  const sideX = Math.max(...allNodes.map((node) => node.x + node.width)) + 24;
+  const rowBusYs = rows.map((row) => Math.min(...row.nodes.map((node) => node.y)) - 16);
+  const routes: ConnectionRoute[] = [{
+    id: 'side-trunk',
+    points: [
+      {x: sideX, y: Math.min(...rowBusYs)},
+      {x: sideX, y: Math.max(...rowBusYs)},
+    ],
+    endpointMarkerAtStart: false,
     endpointMarkerAtEnd: false,
-    arrowAtStart: direction === 'bidirectional' || (direction === 'forward' && index > 0),
-    arrowAtEnd: direction === 'bidirectional' && index === 0,
-    trunk: false,
-  } satisfies ConnectionRoute));
-  return [
-    {
-      id: 'trunk',
-      points: [{x: trunkX, y: trunkStartY}, {x: trunkX, y: trunkEndY}],
+    arrowAtStart: false,
+    arrowAtEnd: false,
+    trunk: true,
+  }];
+  let endpointIndex = 0;
+  rows.forEach((row, rowIndex) => {
+    const rowBusY = rowBusYs[rowIndex]!;
+    const minAnchorX = Math.min(...row.nodes.map((node) => center(node).x));
+    routes.push({
+      id: `row-trunk-${rowIndex}`,
+      points: [{x: minAnchorX, y: rowBusY}, {x: sideX, y: rowBusY}],
       endpointMarkerAtStart: false,
       endpointMarkerAtEnd: false,
       arrowAtStart: false,
       arrowAtEnd: false,
       trunk: true,
-    },
-    ...branches,
-  ];
+    });
+    for (const node of row.nodes) {
+      const point = {x: center(node).x, y: node.y};
+      routes.push({
+        id: `branch-${node.id}`,
+        points: uniquePoints([point, {x: point.x, y: rowBusY}]),
+        endpointNodeId: node.id,
+        endpointMarkerAtStart: true,
+        endpointMarkerAtEnd: false,
+        arrowAtStart: direction === 'bidirectional' || (direction === 'forward' && endpointIndex > 0),
+        arrowAtEnd: direction === 'bidirectional' && endpointIndex === 0,
+        trunk: false,
+      });
+      endpointIndex += 1;
+    }
+  });
+  return routes;
 }
 
 export function buildConnectionRoutes(
@@ -354,7 +424,7 @@ export function buildConnectionRoutes(
     .filter((node): node is RoutingNode => Boolean(node));
   if (nodes.length < 2) return [];
   if (nodes.length === 2) return binaryRoute(nodes[0]!, nodes[1]!, allNodes, directionality);
-  return naryRoutes(nodes, directionality);
+  return naryRoutes(nodes, allNodes, directionality);
 }
 
 function stableHash(value: string): number {
@@ -398,26 +468,64 @@ export function buildBoundaryRoute({
   const boundaryX = side === 'right' ? enclosure.x + enclosure.width : enclosure.x;
   const boundaryPoint = {x: boundaryX, y: boundaryY};
   const inward = side === 'right' ? -1 : 1;
-  const stubInsidePoint = {x: boundaryX + inward * 34, y: boundaryY};
+  const gutterInsidePoint = {x: boundaryX + inward * 14, y: boundaryY};
   const labelPoint = {x: boundaryX - inward * 12, y: boundaryY - 7};
-  const targetPoint = node ? rectAnchor(node, boundaryPoint) : stubInsidePoint;
-  const routePoints = side === 'right'
-    ? uniquePoints([
-        targetPoint,
-        {x: Math.max(targetPoint.x + 18, boundaryX - 34), y: targetPoint.y},
-        {x: boundaryX - 34, y: boundaryY},
-        boundaryPoint,
-      ])
-    : uniquePoints([
-        targetPoint,
-        {x: Math.min(targetPoint.x - 18, boundaryX + 34), y: targetPoint.y},
-        {x: boundaryX + 34, y: boundaryY},
-        boundaryPoint,
-      ]);
-
   const visual = directionalityVisual(directionality);
   const arrowAtStart = visual === 'bidirectional' || (visual === 'forward' && visibleEndpointIsTarget);
   const arrowAtEnd = visual === 'bidirectional' || (visual === 'forward' && visibleEndpointIsSource);
+
+  // When the modeled endpoint is the current enclosure itself (rather than a
+  // visible child), keep the continuation stub in the enclosure gutter. A
+  // longer inward line can otherwise cross an unrelated child and imply a
+  // semantic attachment that does not exist.
+  if (!node) {
+    return {
+      side,
+      boundaryPoint,
+      insidePoint: gutterInsidePoint,
+      labelPoint,
+      labelAnchor: side === 'right' ? 'start' : 'end',
+      routes: [{
+        id: `boundary-${connectionId}`,
+        points: [gutterInsidePoint, boundaryPoint],
+        endpointMarkerAtStart: false,
+        endpointMarkerAtEnd: true,
+        arrowAtStart,
+        arrowAtEnd,
+        trunk: false,
+      }],
+      externalEndpointLabels,
+    };
+  }
+
+  const targetPoint = rectAnchor(node, boundaryPoint);
+  const targetEscape = escapePoint(node, targetPoint, 18);
+  const nearBoundaryX = boundaryX + inward * 18;
+  const blockers = allNodes.filter((candidate) => candidate.id !== node.id);
+  const minY = allNodes.length ? Math.min(...allNodes.map((candidate) => candidate.y)) : usableTop;
+  const maxY = allNodes.length
+    ? Math.max(...allNodes.map((candidate) => candidate.y + candidate.height))
+    : usableBottom;
+  const candidates: RoutePoint[][] = [
+    uniquePoints([
+      targetPoint,
+      targetEscape,
+      {x: nearBoundaryX, y: targetEscape.y},
+      {x: nearBoundaryX, y: boundaryY},
+      boundaryPoint,
+    ]),
+  ];
+  for (const corridorY of [node.y - 16, node.y + node.height + 16, minY - 20, maxY + 20]) {
+    candidates.push(uniquePoints([
+      targetPoint,
+      targetEscape,
+      {x: targetEscape.x, y: corridorY},
+      {x: nearBoundaryX, y: corridorY},
+      {x: nearBoundaryX, y: boundaryY},
+      boundaryPoint,
+    ]));
+  }
+  const routePoints = shortestClearRoute(candidates, blockers, 4);
 
   return {
     side,
@@ -429,7 +537,7 @@ export function buildBoundaryRoute({
       id: `boundary-${connectionId}`,
       points: routePoints,
       endpointNodeId: visibleNodeId,
-      endpointMarkerAtStart: Boolean(node),
+      endpointMarkerAtStart: true,
       endpointMarkerAtEnd: true,
       arrowAtStart,
       arrowAtEnd,

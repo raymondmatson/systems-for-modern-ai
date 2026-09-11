@@ -1,6 +1,6 @@
 # Phase 7A moderated comprehension protocol
 
-**Status:** READY FOR MODERATED HUMAN SESSIONS — sessions have not been run in this handoff.  
+**Status:** HISTORICAL PROTOCOL — Phase 7A is closed by project-owner user-confirmed external validation; no moderated participant dataset was run or supplied in this handoff.  
 **Date prepared:** 2026-09-10  
 **Owner:** Testing  
 **Gate:** Phase 7A — comprehension validation after Phase 7 transfer approval
@@ -139,4 +139,4 @@ Record participant/session ID, task ID, answer classification (correct/partial/i
 
 ## Gate rule
 
-Phase 7A passes only after moderated **human** evidence satisfies the plan's exit criteria or Testing documents and resolves/elevates a failure according to the plan. Automated validation, assistant review, and this protocol-readiness artifact do not by themselves pass Phase 7A.
+This protocol remains the intended method for future direct comprehension studies. For the current project state, Phase 7A is closed by explicit project-owner confirmation of external validation, recorded separately in `reports/testing/phase7a-user-confirmed-validation.json`. This handoff does not infer participant metrics that were not supplied.

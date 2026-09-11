@@ -1,0 +1,2351 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Phase 8 exhaustive initial-five baseline/stress visual coverage fixture generated from current runtime enterability.",
+  "enteredContextCount": 65,
+  "scenes": [
+    {
+      "id": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__dgx-h100-node__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-h100-superpod.json",
+      "configurationId": "h100-superpod-4su-reference",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "aggregateId": "dgx-h100-node",
+        "path": [
+          "dgx-h100-node"
+        ]
+      },
+      "auditEntityId": "dgx-h100-node"
+    },
+    {
+      "id": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__dgx-h100-node__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-h100-superpod.json",
+      "configurationId": "h100-superpod-4su-reference",
+      "scenarioId": "backend-fabric-bottleneck",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "aggregateId": "dgx-h100-node",
+        "path": [
+          "dgx-h100-node"
+        ]
+      },
+      "auditEntityId": "dgx-h100-node",
+      "selection": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "aggregateId": "dgx-h100-node",
+        "path": [
+          "dgx-h100-node",
+          "h100-gpus"
+        ]
+      },
+      "preview": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "aggregateId": "dgx-h100-node",
+        "path": [
+          "dgx-h100-node",
+          "h100-gpus"
+        ]
+      }
+    },
+    {
+      "id": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-bmc__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-h100-superpod.json",
+      "configurationId": "h100-superpod-4su-reference",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "aggregateId": "dgx-h100-node",
+        "path": [
+          "dgx-h100-node",
+          "h100-bmc"
+        ]
+      },
+      "auditEntityId": "h100-bmc"
+    },
+    {
+      "id": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-bmc__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-h100-superpod.json",
+      "configurationId": "h100-superpod-4su-reference",
+      "scenarioId": "backend-fabric-bottleneck",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "aggregateId": "dgx-h100-node",
+        "path": [
+          "dgx-h100-node",
+          "h100-bmc"
+        ]
+      },
+      "auditEntityId": "h100-bmc"
+    },
+    {
+      "id": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-compute-switches__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-h100-superpod.json",
+      "configurationId": "h100-superpod-4su-reference",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "entityId": "h100-compute-switches"
+      },
+      "auditEntityId": "h100-compute-switches"
+    },
+    {
+      "id": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-compute-switches__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-h100-superpod.json",
+      "configurationId": "h100-superpod-4su-reference",
+      "scenarioId": "backend-fabric-bottleneck",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "entityId": "h100-compute-switches"
+      },
+      "auditEntityId": "h100-compute-switches"
+    },
+    {
+      "id": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-cpus__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-h100-superpod.json",
+      "configurationId": "h100-superpod-4su-reference",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "aggregateId": "dgx-h100-node",
+        "path": [
+          "dgx-h100-node",
+          "h100-cpus"
+        ]
+      },
+      "auditEntityId": "h100-cpus"
+    },
+    {
+      "id": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-cpus__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-h100-superpod.json",
+      "configurationId": "h100-superpod-4su-reference",
+      "scenarioId": "backend-fabric-bottleneck",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "aggregateId": "dgx-h100-node",
+        "path": [
+          "dgx-h100-node",
+          "h100-cpus"
+        ]
+      },
+      "auditEntityId": "h100-cpus"
+    },
+    {
+      "id": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-cx7__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-h100-superpod.json",
+      "configurationId": "h100-superpod-4su-reference",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "aggregateId": "dgx-h100-node",
+        "path": [
+          "dgx-h100-node",
+          "h100-cx7"
+        ]
+      },
+      "auditEntityId": "h100-cx7"
+    },
+    {
+      "id": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-cx7__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-h100-superpod.json",
+      "configurationId": "h100-superpod-4su-reference",
+      "scenarioId": "backend-fabric-bottleneck",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "aggregateId": "dgx-h100-node",
+        "path": [
+          "dgx-h100-node",
+          "h100-cx7"
+        ]
+      },
+      "auditEntityId": "h100-cx7"
+    },
+    {
+      "id": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-gpus__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-h100-superpod.json",
+      "configurationId": "h100-superpod-4su-reference",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "aggregateId": "dgx-h100-node",
+        "path": [
+          "dgx-h100-node",
+          "h100-gpus"
+        ]
+      },
+      "auditEntityId": "h100-gpus"
+    },
+    {
+      "id": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-gpus__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-h100-superpod.json",
+      "configurationId": "h100-superpod-4su-reference",
+      "scenarioId": "backend-fabric-bottleneck",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "aggregateId": "dgx-h100-node",
+        "path": [
+          "dgx-h100-node",
+          "h100-gpus"
+        ]
+      },
+      "auditEntityId": "h100-gpus"
+    },
+    {
+      "id": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-inband-switches__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-h100-superpod.json",
+      "configurationId": "h100-superpod-4su-reference",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "entityId": "h100-inband-switches"
+      },
+      "auditEntityId": "h100-inband-switches"
+    },
+    {
+      "id": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-inband-switches__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-h100-superpod.json",
+      "configurationId": "h100-superpod-4su-reference",
+      "scenarioId": "backend-fabric-bottleneck",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "entityId": "h100-inband-switches"
+      },
+      "auditEntityId": "h100-inband-switches"
+    },
+    {
+      "id": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-local-nvme__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-h100-superpod.json",
+      "configurationId": "h100-superpod-4su-reference",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "aggregateId": "dgx-h100-node",
+        "path": [
+          "dgx-h100-node",
+          "h100-local-nvme"
+        ]
+      },
+      "auditEntityId": "h100-local-nvme"
+    },
+    {
+      "id": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-local-nvme__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-h100-superpod.json",
+      "configurationId": "h100-superpod-4su-reference",
+      "scenarioId": "backend-fabric-bottleneck",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "aggregateId": "dgx-h100-node",
+        "path": [
+          "dgx-h100-node",
+          "h100-local-nvme"
+        ]
+      },
+      "auditEntityId": "h100-local-nvme"
+    },
+    {
+      "id": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-management__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-h100-superpod.json",
+      "configurationId": "h100-superpod-4su-reference",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "entityId": "h100-management"
+      },
+      "auditEntityId": "h100-management"
+    },
+    {
+      "id": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-management__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-h100-superpod.json",
+      "configurationId": "h100-superpod-4su-reference",
+      "scenarioId": "backend-fabric-bottleneck",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "entityId": "h100-management"
+      },
+      "auditEntityId": "h100-management"
+    },
+    {
+      "id": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-nvswitch__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-h100-superpod.json",
+      "configurationId": "h100-superpod-4su-reference",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "aggregateId": "dgx-h100-node",
+        "path": [
+          "dgx-h100-node",
+          "h100-nvswitch"
+        ]
+      },
+      "auditEntityId": "h100-nvswitch"
+    },
+    {
+      "id": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-nvswitch__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-h100-superpod.json",
+      "configurationId": "h100-superpod-4su-reference",
+      "scenarioId": "backend-fabric-bottleneck",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "aggregateId": "dgx-h100-node",
+        "path": [
+          "dgx-h100-node",
+          "h100-nvswitch"
+        ]
+      },
+      "auditEntityId": "h100-nvswitch"
+    },
+    {
+      "id": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-oob-switches__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-h100-superpod.json",
+      "configurationId": "h100-superpod-4su-reference",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "entityId": "h100-oob-switches"
+      },
+      "auditEntityId": "h100-oob-switches"
+    },
+    {
+      "id": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-oob-switches__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-h100-superpod.json",
+      "configurationId": "h100-superpod-4su-reference",
+      "scenarioId": "backend-fabric-bottleneck",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "entityId": "h100-oob-switches"
+      },
+      "auditEntityId": "h100-oob-switches"
+    },
+    {
+      "id": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-os-nvme__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-h100-superpod.json",
+      "configurationId": "h100-superpod-4su-reference",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "aggregateId": "dgx-h100-node",
+        "path": [
+          "dgx-h100-node",
+          "h100-os-nvme"
+        ]
+      },
+      "auditEntityId": "h100-os-nvme"
+    },
+    {
+      "id": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-os-nvme__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-h100-superpod.json",
+      "configurationId": "h100-superpod-4su-reference",
+      "scenarioId": "backend-fabric-bottleneck",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "aggregateId": "dgx-h100-node",
+        "path": [
+          "dgx-h100-node",
+          "h100-os-nvme"
+        ]
+      },
+      "auditEntityId": "h100-os-nvme"
+    },
+    {
+      "id": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-storage-cx7__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-h100-superpod.json",
+      "configurationId": "h100-superpod-4su-reference",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "aggregateId": "dgx-h100-node",
+        "path": [
+          "dgx-h100-node",
+          "h100-storage-cx7"
+        ]
+      },
+      "auditEntityId": "h100-storage-cx7"
+    },
+    {
+      "id": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-storage-cx7__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-h100-superpod.json",
+      "configurationId": "h100-superpod-4su-reference",
+      "scenarioId": "backend-fabric-bottleneck",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "aggregateId": "dgx-h100-node",
+        "path": [
+          "dgx-h100-node",
+          "h100-storage-cx7"
+        ]
+      },
+      "auditEntityId": "h100-storage-cx7"
+    },
+    {
+      "id": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-storage-switches__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-h100-superpod.json",
+      "configurationId": "h100-superpod-4su-reference",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "entityId": "h100-storage-switches"
+      },
+      "auditEntityId": "h100-storage-switches"
+    },
+    {
+      "id": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-storage-switches__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-h100-superpod.json",
+      "configurationId": "h100-superpod-4su-reference",
+      "scenarioId": "backend-fabric-bottleneck",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "entityId": "h100-storage-switches"
+      },
+      "auditEntityId": "h100-storage-switches"
+    },
+    {
+      "id": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-su__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-h100-superpod.json",
+      "configurationId": "h100-superpod-4su-reference",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "entityId": "h100-su"
+      },
+      "auditEntityId": "h100-su"
+    },
+    {
+      "id": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-su__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-h100-superpod.json",
+      "configurationId": "h100-superpod-4su-reference",
+      "scenarioId": "backend-fabric-bottleneck",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "entityId": "h100-su"
+      },
+      "auditEntityId": "h100-su",
+      "selection": {
+        "kind": "entity",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "entityId": "dgx-h100-node"
+      },
+      "preview": {
+        "kind": "entity",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "entityId": "dgx-h100-node"
+      }
+    },
+    {
+      "id": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-superpod__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-h100-superpod.json",
+      "configurationId": "h100-superpod-4su-reference",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "entityId": "h100-superpod"
+      },
+      "auditEntityId": "h100-superpod"
+    },
+    {
+      "id": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-superpod__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-h100-superpod.json",
+      "configurationId": "h100-superpod-4su-reference",
+      "scenarioId": "backend-fabric-bottleneck",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "entityId": "h100-superpod"
+      },
+      "auditEntityId": "h100-superpod",
+      "selection": {
+        "kind": "entity",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "entityId": "h100-su"
+      },
+      "preview": {
+        "kind": "entity",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "entityId": "h100-su"
+      }
+    },
+    {
+      "id": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-system-memory__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-h100-superpod.json",
+      "configurationId": "h100-superpod-4su-reference",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "aggregateId": "dgx-h100-node",
+        "path": [
+          "dgx-h100-node",
+          "h100-system-memory"
+        ]
+      },
+      "auditEntityId": "h100-system-memory"
+    },
+    {
+      "id": "nvidia-dgx-h100-superpod__h100-superpod-4su-reference__h100-system-memory__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-h100-superpod.json",
+      "configurationId": "h100-superpod-4su-reference",
+      "scenarioId": "backend-fabric-bottleneck",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-h100-superpod",
+        "configurationId": "h100-superpod-4su-reference",
+        "aggregateId": "dgx-h100-node",
+        "path": [
+          "dgx-h100-node",
+          "h100-system-memory"
+        ]
+      },
+      "auditEntityId": "h100-system-memory"
+    },
+    {
+      "id": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-bf3__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-gb300-nvl72-superpod.json",
+      "configurationId": "gb300-nvl72-superpod-reference",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "aggregateId": "gb300-compute-trays",
+        "path": [
+          "gb300-compute-trays",
+          "gb300-bf3"
+        ]
+      },
+      "auditEntityId": "gb300-bf3"
+    },
+    {
+      "id": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-bf3__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-gb300-nvl72-superpod.json",
+      "configurationId": "gb300-nvl72-superpod-reference",
+      "scenarioId": "east-west-compute-plane-degradation",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "aggregateId": "gb300-compute-trays",
+        "path": [
+          "gb300-compute-trays",
+          "gb300-bf3"
+        ]
+      },
+      "auditEntityId": "gb300-bf3"
+    },
+    {
+      "id": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-cache__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-gb300-nvl72-superpod.json",
+      "configurationId": "gb300-nvl72-superpod-reference",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "aggregateId": "gb300-compute-trays",
+        "path": [
+          "gb300-compute-trays",
+          "gb300-cache"
+        ]
+      },
+      "auditEntityId": "gb300-cache"
+    },
+    {
+      "id": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-cache__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-gb300-nvl72-superpod.json",
+      "configurationId": "gb300-nvl72-superpod-reference",
+      "scenarioId": "east-west-compute-plane-degradation",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "aggregateId": "gb300-compute-trays",
+        "path": [
+          "gb300-compute-trays",
+          "gb300-cache"
+        ]
+      },
+      "auditEntityId": "gb300-cache"
+    },
+    {
+      "id": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-compute-trays__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-gb300-nvl72-superpod.json",
+      "configurationId": "gb300-nvl72-superpod-reference",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "aggregateId": "gb300-compute-trays",
+        "path": [
+          "gb300-compute-trays"
+        ]
+      },
+      "auditEntityId": "gb300-compute-trays"
+    },
+    {
+      "id": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-compute-trays__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-gb300-nvl72-superpod.json",
+      "configurationId": "gb300-nvl72-superpod-reference",
+      "scenarioId": "east-west-compute-plane-degradation",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "aggregateId": "gb300-compute-trays",
+        "path": [
+          "gb300-compute-trays"
+        ]
+      },
+      "auditEntityId": "gb300-compute-trays",
+      "selection": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "aggregateId": "gb300-compute-trays",
+        "path": [
+          "gb300-compute-trays",
+          "gb300-gpus"
+        ]
+      },
+      "preview": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "aggregateId": "gb300-compute-trays",
+        "path": [
+          "gb300-compute-trays",
+          "gb300-gpus"
+        ]
+      }
+    },
+    {
+      "id": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-converged-switches__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-gb300-nvl72-superpod.json",
+      "configurationId": "gb300-nvl72-superpod-reference",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "entityId": "gb300-converged-switches"
+      },
+      "auditEntityId": "gb300-converged-switches"
+    },
+    {
+      "id": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-converged-switches__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-gb300-nvl72-superpod.json",
+      "configurationId": "gb300-nvl72-superpod-reference",
+      "scenarioId": "east-west-compute-plane-degradation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "entityId": "gb300-converged-switches"
+      },
+      "auditEntityId": "gb300-converged-switches"
+    },
+    {
+      "id": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-cooling__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-gb300-nvl72-superpod.json",
+      "configurationId": "gb300-nvl72-superpod-reference",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "entityId": "gb300-cooling"
+      },
+      "auditEntityId": "gb300-cooling"
+    },
+    {
+      "id": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-cooling__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-gb300-nvl72-superpod.json",
+      "configurationId": "gb300-nvl72-superpod-reference",
+      "scenarioId": "east-west-compute-plane-degradation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "entityId": "gb300-cooling"
+      },
+      "auditEntityId": "gb300-cooling"
+    },
+    {
+      "id": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-cpus__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-gb300-nvl72-superpod.json",
+      "configurationId": "gb300-nvl72-superpod-reference",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "aggregateId": "gb300-compute-trays",
+        "path": [
+          "gb300-compute-trays",
+          "gb300-cpus"
+        ]
+      },
+      "auditEntityId": "gb300-cpus"
+    },
+    {
+      "id": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-cpus__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-gb300-nvl72-superpod.json",
+      "configurationId": "gb300-nvl72-superpod-reference",
+      "scenarioId": "east-west-compute-plane-degradation",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "aggregateId": "gb300-compute-trays",
+        "path": [
+          "gb300-compute-trays",
+          "gb300-cpus"
+        ]
+      },
+      "auditEntityId": "gb300-cpus"
+    },
+    {
+      "id": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-cx8__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-gb300-nvl72-superpod.json",
+      "configurationId": "gb300-nvl72-superpod-reference",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "aggregateId": "gb300-compute-trays",
+        "path": [
+          "gb300-compute-trays",
+          "gb300-cx8"
+        ]
+      },
+      "auditEntityId": "gb300-cx8"
+    },
+    {
+      "id": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-cx8__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-gb300-nvl72-superpod.json",
+      "configurationId": "gb300-nvl72-superpod-reference",
+      "scenarioId": "east-west-compute-plane-degradation",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "aggregateId": "gb300-compute-trays",
+        "path": [
+          "gb300-compute-trays",
+          "gb300-cx8"
+        ]
+      },
+      "auditEntityId": "gb300-cx8"
+    },
+    {
+      "id": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-gpus__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-gb300-nvl72-superpod.json",
+      "configurationId": "gb300-nvl72-superpod-reference",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "aggregateId": "gb300-compute-trays",
+        "path": [
+          "gb300-compute-trays",
+          "gb300-gpus"
+        ]
+      },
+      "auditEntityId": "gb300-gpus"
+    },
+    {
+      "id": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-gpus__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-gb300-nvl72-superpod.json",
+      "configurationId": "gb300-nvl72-superpod-reference",
+      "scenarioId": "east-west-compute-plane-degradation",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "aggregateId": "gb300-compute-trays",
+        "path": [
+          "gb300-compute-trays",
+          "gb300-gpus"
+        ]
+      },
+      "auditEntityId": "gb300-gpus"
+    },
+    {
+      "id": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-nvl72-rack__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-gb300-nvl72-superpod.json",
+      "configurationId": "gb300-nvl72-superpod-reference",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "entityId": "gb300-nvl72-rack"
+      },
+      "auditEntityId": "gb300-nvl72-rack"
+    },
+    {
+      "id": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-nvl72-rack__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-gb300-nvl72-superpod.json",
+      "configurationId": "gb300-nvl72-superpod-reference",
+      "scenarioId": "east-west-compute-plane-degradation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "entityId": "gb300-nvl72-rack"
+      },
+      "auditEntityId": "gb300-nvl72-rack",
+      "selection": {
+        "kind": "entity",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "entityId": "gb300-compute-trays"
+      },
+      "preview": {
+        "kind": "entity",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "entityId": "gb300-compute-trays"
+      }
+    },
+    {
+      "id": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-nvswitch__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-gb300-nvl72-superpod.json",
+      "configurationId": "gb300-nvl72-superpod-reference",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "aggregateId": "gb300-switch-trays",
+        "path": [
+          "gb300-switch-trays",
+          "gb300-nvswitch"
+        ]
+      },
+      "auditEntityId": "gb300-nvswitch"
+    },
+    {
+      "id": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-nvswitch__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-gb300-nvl72-superpod.json",
+      "configurationId": "gb300-nvl72-superpod-reference",
+      "scenarioId": "east-west-compute-plane-degradation",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "aggregateId": "gb300-switch-trays",
+        "path": [
+          "gb300-switch-trays",
+          "gb300-nvswitch"
+        ]
+      },
+      "auditEntityId": "gb300-nvswitch"
+    },
+    {
+      "id": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-oob-switches__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-gb300-nvl72-superpod.json",
+      "configurationId": "gb300-nvl72-superpod-reference",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "entityId": "gb300-oob-switches"
+      },
+      "auditEntityId": "gb300-oob-switches"
+    },
+    {
+      "id": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-oob-switches__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-gb300-nvl72-superpod.json",
+      "configurationId": "gb300-nvl72-superpod-reference",
+      "scenarioId": "east-west-compute-plane-degradation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "entityId": "gb300-oob-switches"
+      },
+      "auditEntityId": "gb300-oob-switches"
+    },
+    {
+      "id": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-os-nvme__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-gb300-nvl72-superpod.json",
+      "configurationId": "gb300-nvl72-superpod-reference",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "aggregateId": "gb300-compute-trays",
+        "path": [
+          "gb300-compute-trays",
+          "gb300-os-nvme"
+        ]
+      },
+      "auditEntityId": "gb300-os-nvme"
+    },
+    {
+      "id": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-os-nvme__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-gb300-nvl72-superpod.json",
+      "configurationId": "gb300-nvl72-superpod-reference",
+      "scenarioId": "east-west-compute-plane-degradation",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "aggregateId": "gb300-compute-trays",
+        "path": [
+          "gb300-compute-trays",
+          "gb300-os-nvme"
+        ]
+      },
+      "auditEntityId": "gb300-os-nvme"
+    },
+    {
+      "id": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-power-shelves__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-gb300-nvl72-superpod.json",
+      "configurationId": "gb300-nvl72-superpod-reference",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "entityId": "gb300-power-shelves"
+      },
+      "auditEntityId": "gb300-power-shelves"
+    },
+    {
+      "id": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-power-shelves__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-gb300-nvl72-superpod.json",
+      "configurationId": "gb300-nvl72-superpod-reference",
+      "scenarioId": "east-west-compute-plane-degradation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "entityId": "gb300-power-shelves"
+      },
+      "auditEntityId": "gb300-power-shelves"
+    },
+    {
+      "id": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-scaleout-switches__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-gb300-nvl72-superpod.json",
+      "configurationId": "gb300-nvl72-superpod-reference",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "entityId": "gb300-scaleout-switches"
+      },
+      "auditEntityId": "gb300-scaleout-switches"
+    },
+    {
+      "id": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-scaleout-switches__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-gb300-nvl72-superpod.json",
+      "configurationId": "gb300-nvl72-superpod-reference",
+      "scenarioId": "east-west-compute-plane-degradation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "entityId": "gb300-scaleout-switches"
+      },
+      "auditEntityId": "gb300-scaleout-switches"
+    },
+    {
+      "id": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-superpod__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-gb300-nvl72-superpod.json",
+      "configurationId": "gb300-nvl72-superpod-reference",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "entityId": "gb300-superpod"
+      },
+      "auditEntityId": "gb300-superpod"
+    },
+    {
+      "id": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-superpod__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-gb300-nvl72-superpod.json",
+      "configurationId": "gb300-nvl72-superpod-reference",
+      "scenarioId": "east-west-compute-plane-degradation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "entityId": "gb300-superpod"
+      },
+      "auditEntityId": "gb300-superpod",
+      "selection": {
+        "kind": "entity",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "entityId": "gb300-nvl72-rack"
+      },
+      "preview": {
+        "kind": "entity",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "entityId": "gb300-nvl72-rack"
+      }
+    },
+    {
+      "id": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-switch-trays__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-gb300-nvl72-superpod.json",
+      "configurationId": "gb300-nvl72-superpod-reference",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "aggregateId": "gb300-switch-trays",
+        "path": [
+          "gb300-switch-trays"
+        ]
+      },
+      "auditEntityId": "gb300-switch-trays"
+    },
+    {
+      "id": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-switch-trays__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-gb300-nvl72-superpod.json",
+      "configurationId": "gb300-nvl72-superpod-reference",
+      "scenarioId": "east-west-compute-plane-degradation",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "aggregateId": "gb300-switch-trays",
+        "path": [
+          "gb300-switch-trays"
+        ]
+      },
+      "auditEntityId": "gb300-switch-trays",
+      "selection": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "aggregateId": "gb300-switch-trays",
+        "path": [
+          "gb300-switch-trays",
+          "gb300-nvswitch"
+        ]
+      },
+      "preview": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "aggregateId": "gb300-switch-trays",
+        "path": [
+          "gb300-switch-trays",
+          "gb300-nvswitch"
+        ]
+      }
+    },
+    {
+      "id": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-system-memory__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-gb300-nvl72-superpod.json",
+      "configurationId": "gb300-nvl72-superpod-reference",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "aggregateId": "gb300-compute-trays",
+        "path": [
+          "gb300-compute-trays",
+          "gb300-system-memory"
+        ]
+      },
+      "auditEntityId": "gb300-system-memory"
+    },
+    {
+      "id": "nvidia-dgx-gb300-nvl72-superpod__gb300-nvl72-superpod-reference__gb300-system-memory__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/nvidia-dgx-gb300-nvl72-superpod.json",
+      "configurationId": "gb300-nvl72-superpod-reference",
+      "scenarioId": "east-west-compute-plane-degradation",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "nvidia-dgx-gb300-nvl72-superpod",
+        "configurationId": "gb300-nvl72-superpod-reference",
+        "aggregateId": "gb300-compute-trays",
+        "path": [
+          "gb300-compute-trays",
+          "gb300-system-memory"
+        ]
+      },
+      "auditEntityId": "gb300-system-memory"
+    },
+    {
+      "id": "google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-chiplets__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/google-tpu7x-ironwood.json",
+      "configurationId": "tpu7x-9216-chip-superpod",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "google-tpu7x-ironwood",
+        "configurationId": "tpu7x-9216-chip-superpod",
+        "aggregateId": "ironwood-tpu",
+        "path": [
+          "ironwood-tpu",
+          "ironwood-chiplets"
+        ]
+      },
+      "auditEntityId": "ironwood-chiplets"
+    },
+    {
+      "id": "google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-chiplets__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/google-tpu7x-ironwood.json",
+      "configurationId": "tpu7x-9216-chip-superpod",
+      "scenarioId": "memory-tier-pressure",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "google-tpu7x-ironwood",
+        "configurationId": "tpu7x-9216-chip-superpod",
+        "aggregateId": "ironwood-tpu",
+        "path": [
+          "ironwood-tpu",
+          "ironwood-chiplets"
+        ]
+      },
+      "auditEntityId": "ironwood-chiplets",
+      "selection": {
+        "kind": "representative_member",
+        "systemId": "google-tpu7x-ironwood",
+        "configurationId": "tpu7x-9216-chip-superpod",
+        "aggregateId": "ironwood-tpu",
+        "path": [
+          "ironwood-tpu",
+          "ironwood-chiplets",
+          "ironwood-tensorcores"
+        ]
+      },
+      "preview": {
+        "kind": "representative_member",
+        "systemId": "google-tpu7x-ironwood",
+        "configurationId": "tpu7x-9216-chip-superpod",
+        "aggregateId": "ironwood-tpu",
+        "path": [
+          "ironwood-tpu",
+          "ironwood-chiplets",
+          "ironwood-tensorcores"
+        ]
+      }
+    },
+    {
+      "id": "google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-cooling__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/google-tpu7x-ironwood.json",
+      "configurationId": "tpu7x-9216-chip-superpod",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "google-tpu7x-ironwood",
+        "configurationId": "tpu7x-9216-chip-superpod",
+        "entityId": "ironwood-cooling"
+      },
+      "auditEntityId": "ironwood-cooling"
+    },
+    {
+      "id": "google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-cooling__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/google-tpu7x-ironwood.json",
+      "configurationId": "tpu7x-9216-chip-superpod",
+      "scenarioId": "memory-tier-pressure",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "google-tpu7x-ironwood",
+        "configurationId": "tpu7x-9216-chip-superpod",
+        "entityId": "ironwood-cooling"
+      },
+      "auditEntityId": "ironwood-cooling"
+    },
+    {
+      "id": "google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-cube__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/google-tpu7x-ironwood.json",
+      "configurationId": "tpu7x-9216-chip-superpod",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "google-tpu7x-ironwood",
+        "configurationId": "tpu7x-9216-chip-superpod",
+        "entityId": "ironwood-cube"
+      },
+      "auditEntityId": "ironwood-cube"
+    },
+    {
+      "id": "google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-cube__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/google-tpu7x-ironwood.json",
+      "configurationId": "tpu7x-9216-chip-superpod",
+      "scenarioId": "memory-tier-pressure",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "google-tpu7x-ironwood",
+        "configurationId": "tpu7x-9216-chip-superpod",
+        "entityId": "ironwood-cube"
+      },
+      "auditEntityId": "ironwood-cube",
+      "selection": {
+        "kind": "entity",
+        "systemId": "google-tpu7x-ironwood",
+        "configurationId": "tpu7x-9216-chip-superpod",
+        "entityId": "ironwood-host"
+      },
+      "preview": {
+        "kind": "entity",
+        "systemId": "google-tpu7x-ironwood",
+        "configurationId": "tpu7x-9216-chip-superpod",
+        "entityId": "ironwood-host"
+      }
+    },
+    {
+      "id": "google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-dcn__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/google-tpu7x-ironwood.json",
+      "configurationId": "tpu7x-9216-chip-superpod",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "google-tpu7x-ironwood",
+        "configurationId": "tpu7x-9216-chip-superpod",
+        "entityId": "ironwood-dcn"
+      },
+      "auditEntityId": "ironwood-dcn"
+    },
+    {
+      "id": "google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-dcn__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/google-tpu7x-ironwood.json",
+      "configurationId": "tpu7x-9216-chip-superpod",
+      "scenarioId": "memory-tier-pressure",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "google-tpu7x-ironwood",
+        "configurationId": "tpu7x-9216-chip-superpod",
+        "entityId": "ironwood-dcn"
+      },
+      "auditEntityId": "ironwood-dcn"
+    },
+    {
+      "id": "google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-host__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/google-tpu7x-ironwood.json",
+      "configurationId": "tpu7x-9216-chip-superpod",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "google-tpu7x-ironwood",
+        "configurationId": "tpu7x-9216-chip-superpod",
+        "entityId": "ironwood-host"
+      },
+      "auditEntityId": "ironwood-host"
+    },
+    {
+      "id": "google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-host__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/google-tpu7x-ironwood.json",
+      "configurationId": "tpu7x-9216-chip-superpod",
+      "scenarioId": "memory-tier-pressure",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "google-tpu7x-ironwood",
+        "configurationId": "tpu7x-9216-chip-superpod",
+        "entityId": "ironwood-host"
+      },
+      "auditEntityId": "ironwood-host",
+      "selection": {
+        "kind": "entity",
+        "systemId": "google-tpu7x-ironwood",
+        "configurationId": "tpu7x-9216-chip-superpod",
+        "entityId": "ironwood-host-cpu"
+      },
+      "preview": {
+        "kind": "entity",
+        "systemId": "google-tpu7x-ironwood",
+        "configurationId": "tpu7x-9216-chip-superpod",
+        "entityId": "ironwood-host-cpu"
+      }
+    },
+    {
+      "id": "google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-host-cpu__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/google-tpu7x-ironwood.json",
+      "configurationId": "tpu7x-9216-chip-superpod",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "google-tpu7x-ironwood",
+        "configurationId": "tpu7x-9216-chip-superpod",
+        "entityId": "ironwood-host-cpu"
+      },
+      "auditEntityId": "ironwood-host-cpu"
+    },
+    {
+      "id": "google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-host-cpu__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/google-tpu7x-ironwood.json",
+      "configurationId": "tpu7x-9216-chip-superpod",
+      "scenarioId": "memory-tier-pressure",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "google-tpu7x-ironwood",
+        "configurationId": "tpu7x-9216-chip-superpod",
+        "entityId": "ironwood-host-cpu"
+      },
+      "auditEntityId": "ironwood-host-cpu"
+    },
+    {
+      "id": "google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-host-memory__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/google-tpu7x-ironwood.json",
+      "configurationId": "tpu7x-9216-chip-superpod",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "google-tpu7x-ironwood",
+        "configurationId": "tpu7x-9216-chip-superpod",
+        "entityId": "ironwood-host-memory"
+      },
+      "auditEntityId": "ironwood-host-memory"
+    },
+    {
+      "id": "google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-host-memory__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/google-tpu7x-ironwood.json",
+      "configurationId": "tpu7x-9216-chip-superpod",
+      "scenarioId": "memory-tier-pressure",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "google-tpu7x-ironwood",
+        "configurationId": "tpu7x-9216-chip-superpod",
+        "entityId": "ironwood-host-memory"
+      },
+      "auditEntityId": "ironwood-host-memory"
+    },
+    {
+      "id": "google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-ocs__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/google-tpu7x-ironwood.json",
+      "configurationId": "tpu7x-9216-chip-superpod",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "google-tpu7x-ironwood",
+        "configurationId": "tpu7x-9216-chip-superpod",
+        "entityId": "ironwood-ocs"
+      },
+      "auditEntityId": "ironwood-ocs"
+    },
+    {
+      "id": "google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-ocs__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/google-tpu7x-ironwood.json",
+      "configurationId": "tpu7x-9216-chip-superpod",
+      "scenarioId": "memory-tier-pressure",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "google-tpu7x-ironwood",
+        "configurationId": "tpu7x-9216-chip-superpod",
+        "entityId": "ironwood-ocs"
+      },
+      "auditEntityId": "ironwood-ocs"
+    },
+    {
+      "id": "google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-superpod__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/google-tpu7x-ironwood.json",
+      "configurationId": "tpu7x-9216-chip-superpod",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "google-tpu7x-ironwood",
+        "configurationId": "tpu7x-9216-chip-superpod",
+        "entityId": "ironwood-superpod"
+      },
+      "auditEntityId": "ironwood-superpod"
+    },
+    {
+      "id": "google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-superpod__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/google-tpu7x-ironwood.json",
+      "configurationId": "tpu7x-9216-chip-superpod",
+      "scenarioId": "memory-tier-pressure",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "google-tpu7x-ironwood",
+        "configurationId": "tpu7x-9216-chip-superpod",
+        "entityId": "ironwood-superpod"
+      },
+      "auditEntityId": "ironwood-superpod",
+      "selection": {
+        "kind": "entity",
+        "systemId": "google-tpu7x-ironwood",
+        "configurationId": "tpu7x-9216-chip-superpod",
+        "entityId": "ironwood-cube"
+      },
+      "preview": {
+        "kind": "entity",
+        "systemId": "google-tpu7x-ironwood",
+        "configurationId": "tpu7x-9216-chip-superpod",
+        "entityId": "ironwood-cube"
+      }
+    },
+    {
+      "id": "google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-tpu__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/google-tpu7x-ironwood.json",
+      "configurationId": "tpu7x-9216-chip-superpod",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "google-tpu7x-ironwood",
+        "configurationId": "tpu7x-9216-chip-superpod",
+        "aggregateId": "ironwood-tpu",
+        "path": [
+          "ironwood-tpu"
+        ]
+      },
+      "auditEntityId": "ironwood-tpu"
+    },
+    {
+      "id": "google-tpu7x-ironwood__tpu7x-9216-chip-superpod__ironwood-tpu__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/google-tpu7x-ironwood.json",
+      "configurationId": "tpu7x-9216-chip-superpod",
+      "scenarioId": "memory-tier-pressure",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "google-tpu7x-ironwood",
+        "configurationId": "tpu7x-9216-chip-superpod",
+        "aggregateId": "ironwood-tpu",
+        "path": [
+          "ironwood-tpu"
+        ]
+      },
+      "auditEntityId": "ironwood-tpu",
+      "selection": {
+        "kind": "representative_member",
+        "systemId": "google-tpu7x-ironwood",
+        "configurationId": "tpu7x-9216-chip-superpod",
+        "aggregateId": "ironwood-tpu",
+        "path": [
+          "ironwood-tpu",
+          "ironwood-chiplets"
+        ]
+      },
+      "preview": {
+        "kind": "representative_member",
+        "systemId": "google-tpu7x-ironwood",
+        "configurationId": "tpu7x-9216-chip-superpod",
+        "aggregateId": "ironwood-tpu",
+        "path": [
+          "ironwood-tpu",
+          "ironwood-chiplets"
+        ]
+      }
+    },
+    {
+      "id": "cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/cerebras-cs3-condor-galaxy3.json",
+      "configurationId": "condor-galaxy-3-64-cs3",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "cerebras-cs3-condor-galaxy3",
+        "configurationId": "condor-galaxy-3-64-cs3",
+        "entityId": "cg3"
+      },
+      "auditEntityId": "cg3"
+    },
+    {
+      "id": "cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/cerebras-cs3-condor-galaxy3.json",
+      "configurationId": "condor-galaxy-3-64-cs3",
+      "scenarioId": "memoryx-weight-stream-pressure",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "cerebras-cs3-condor-galaxy3",
+        "configurationId": "condor-galaxy-3-64-cs3",
+        "entityId": "cg3"
+      },
+      "auditEntityId": "cg3",
+      "selection": {
+        "kind": "entity",
+        "systemId": "cerebras-cs3-condor-galaxy3",
+        "configurationId": "condor-galaxy-3-64-cs3",
+        "entityId": "cg3-cs3"
+      },
+      "preview": {
+        "kind": "entity",
+        "systemId": "cerebras-cs3-condor-galaxy3",
+        "configurationId": "condor-galaxy-3-64-cs3",
+        "entityId": "cg3-cs3"
+      }
+    },
+    {
+      "id": "cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3-ai-cores__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/cerebras-cs3-condor-galaxy3.json",
+      "configurationId": "condor-galaxy-3-64-cs3",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "cerebras-cs3-condor-galaxy3",
+        "configurationId": "condor-galaxy-3-64-cs3",
+        "aggregateId": "cg3-cs3",
+        "path": [
+          "cg3-cs3",
+          "cg3-wse3",
+          "cg3-ai-cores"
+        ]
+      },
+      "auditEntityId": "cg3-ai-cores"
+    },
+    {
+      "id": "cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3-ai-cores__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/cerebras-cs3-condor-galaxy3.json",
+      "configurationId": "condor-galaxy-3-64-cs3",
+      "scenarioId": "memoryx-weight-stream-pressure",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "cerebras-cs3-condor-galaxy3",
+        "configurationId": "condor-galaxy-3-64-cs3",
+        "aggregateId": "cg3-cs3",
+        "path": [
+          "cg3-cs3",
+          "cg3-wse3",
+          "cg3-ai-cores"
+        ]
+      },
+      "auditEntityId": "cg3-ai-cores"
+    },
+    {
+      "id": "cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3-cs3__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/cerebras-cs3-condor-galaxy3.json",
+      "configurationId": "condor-galaxy-3-64-cs3",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "cerebras-cs3-condor-galaxy3",
+        "configurationId": "condor-galaxy-3-64-cs3",
+        "aggregateId": "cg3-cs3",
+        "path": [
+          "cg3-cs3"
+        ]
+      },
+      "auditEntityId": "cg3-cs3"
+    },
+    {
+      "id": "cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3-cs3__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/cerebras-cs3-condor-galaxy3.json",
+      "configurationId": "condor-galaxy-3-64-cs3",
+      "scenarioId": "memoryx-weight-stream-pressure",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "cerebras-cs3-condor-galaxy3",
+        "configurationId": "condor-galaxy-3-64-cs3",
+        "aggregateId": "cg3-cs3",
+        "path": [
+          "cg3-cs3"
+        ]
+      },
+      "auditEntityId": "cg3-cs3",
+      "selection": {
+        "kind": "representative_member",
+        "systemId": "cerebras-cs3-condor-galaxy3",
+        "configurationId": "condor-galaxy-3-64-cs3",
+        "aggregateId": "cg3-cs3",
+        "path": [
+          "cg3-cs3",
+          "cg3-wse3"
+        ]
+      },
+      "preview": {
+        "kind": "representative_member",
+        "systemId": "cerebras-cs3-condor-galaxy3",
+        "configurationId": "condor-galaxy-3-64-cs3",
+        "aggregateId": "cg3-cs3",
+        "path": [
+          "cg3-cs3",
+          "cg3-wse3"
+        ]
+      }
+    },
+    {
+      "id": "cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3-management__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/cerebras-cs3-condor-galaxy3.json",
+      "configurationId": "condor-galaxy-3-64-cs3",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "cerebras-cs3-condor-galaxy3",
+        "configurationId": "condor-galaxy-3-64-cs3",
+        "entityId": "cg3-management"
+      },
+      "auditEntityId": "cg3-management"
+    },
+    {
+      "id": "cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3-management__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/cerebras-cs3-condor-galaxy3.json",
+      "configurationId": "condor-galaxy-3-64-cs3",
+      "scenarioId": "memoryx-weight-stream-pressure",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "cerebras-cs3-condor-galaxy3",
+        "configurationId": "condor-galaxy-3-64-cs3",
+        "entityId": "cg3-management"
+      },
+      "auditEntityId": "cg3-management"
+    },
+    {
+      "id": "cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3-memoryx__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/cerebras-cs3-condor-galaxy3.json",
+      "configurationId": "condor-galaxy-3-64-cs3",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "cerebras-cs3-condor-galaxy3",
+        "configurationId": "condor-galaxy-3-64-cs3",
+        "entityId": "cg3-memoryx"
+      },
+      "auditEntityId": "cg3-memoryx"
+    },
+    {
+      "id": "cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3-memoryx__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/cerebras-cs3-condor-galaxy3.json",
+      "configurationId": "condor-galaxy-3-64-cs3",
+      "scenarioId": "memoryx-weight-stream-pressure",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "cerebras-cs3-condor-galaxy3",
+        "configurationId": "condor-galaxy-3-64-cs3",
+        "entityId": "cg3-memoryx"
+      },
+      "auditEntityId": "cg3-memoryx"
+    },
+    {
+      "id": "cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3-preprocess__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/cerebras-cs3-condor-galaxy3.json",
+      "configurationId": "condor-galaxy-3-64-cs3",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "cerebras-cs3-condor-galaxy3",
+        "configurationId": "condor-galaxy-3-64-cs3",
+        "entityId": "cg3-preprocess"
+      },
+      "auditEntityId": "cg3-preprocess"
+    },
+    {
+      "id": "cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3-preprocess__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/cerebras-cs3-condor-galaxy3.json",
+      "configurationId": "condor-galaxy-3-64-cs3",
+      "scenarioId": "memoryx-weight-stream-pressure",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "cerebras-cs3-condor-galaxy3",
+        "configurationId": "condor-galaxy-3-64-cs3",
+        "entityId": "cg3-preprocess"
+      },
+      "auditEntityId": "cg3-preprocess"
+    },
+    {
+      "id": "cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3-sram__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/cerebras-cs3-condor-galaxy3.json",
+      "configurationId": "condor-galaxy-3-64-cs3",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "cerebras-cs3-condor-galaxy3",
+        "configurationId": "condor-galaxy-3-64-cs3",
+        "aggregateId": "cg3-cs3",
+        "path": [
+          "cg3-cs3",
+          "cg3-wse3",
+          "cg3-sram"
+        ]
+      },
+      "auditEntityId": "cg3-sram"
+    },
+    {
+      "id": "cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3-sram__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/cerebras-cs3-condor-galaxy3.json",
+      "configurationId": "condor-galaxy-3-64-cs3",
+      "scenarioId": "memoryx-weight-stream-pressure",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "cerebras-cs3-condor-galaxy3",
+        "configurationId": "condor-galaxy-3-64-cs3",
+        "aggregateId": "cg3-cs3",
+        "path": [
+          "cg3-cs3",
+          "cg3-wse3",
+          "cg3-sram"
+        ]
+      },
+      "auditEntityId": "cg3-sram"
+    },
+    {
+      "id": "cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3-swarmx__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/cerebras-cs3-condor-galaxy3.json",
+      "configurationId": "condor-galaxy-3-64-cs3",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "cerebras-cs3-condor-galaxy3",
+        "configurationId": "condor-galaxy-3-64-cs3",
+        "entityId": "cg3-swarmx"
+      },
+      "auditEntityId": "cg3-swarmx"
+    },
+    {
+      "id": "cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3-swarmx__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/cerebras-cs3-condor-galaxy3.json",
+      "configurationId": "condor-galaxy-3-64-cs3",
+      "scenarioId": "memoryx-weight-stream-pressure",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "cerebras-cs3-condor-galaxy3",
+        "configurationId": "condor-galaxy-3-64-cs3",
+        "entityId": "cg3-swarmx"
+      },
+      "auditEntityId": "cg3-swarmx"
+    },
+    {
+      "id": "cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3-wafer-mesh__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/cerebras-cs3-condor-galaxy3.json",
+      "configurationId": "condor-galaxy-3-64-cs3",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "cerebras-cs3-condor-galaxy3",
+        "configurationId": "condor-galaxy-3-64-cs3",
+        "aggregateId": "cg3-cs3",
+        "path": [
+          "cg3-cs3",
+          "cg3-wse3",
+          "cg3-wafer-mesh"
+        ]
+      },
+      "auditEntityId": "cg3-wafer-mesh"
+    },
+    {
+      "id": "cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3-wafer-mesh__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/cerebras-cs3-condor-galaxy3.json",
+      "configurationId": "condor-galaxy-3-64-cs3",
+      "scenarioId": "memoryx-weight-stream-pressure",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "cerebras-cs3-condor-galaxy3",
+        "configurationId": "condor-galaxy-3-64-cs3",
+        "aggregateId": "cg3-cs3",
+        "path": [
+          "cg3-cs3",
+          "cg3-wse3",
+          "cg3-wafer-mesh"
+        ]
+      },
+      "auditEntityId": "cg3-wafer-mesh"
+    },
+    {
+      "id": "cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3-wse3__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/cerebras-cs3-condor-galaxy3.json",
+      "configurationId": "condor-galaxy-3-64-cs3",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "cerebras-cs3-condor-galaxy3",
+        "configurationId": "condor-galaxy-3-64-cs3",
+        "aggregateId": "cg3-cs3",
+        "path": [
+          "cg3-cs3",
+          "cg3-wse3"
+        ]
+      },
+      "auditEntityId": "cg3-wse3"
+    },
+    {
+      "id": "cerebras-cs3-condor-galaxy3__condor-galaxy-3-64-cs3__cg3-wse3__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/cerebras-cs3-condor-galaxy3.json",
+      "configurationId": "condor-galaxy-3-64-cs3",
+      "scenarioId": "memoryx-weight-stream-pressure",
+      "structuralLocation": {
+        "kind": "representative_member",
+        "systemId": "cerebras-cs3-condor-galaxy3",
+        "configurationId": "condor-galaxy-3-64-cs3",
+        "aggregateId": "cg3-cs3",
+        "path": [
+          "cg3-cs3",
+          "cg3-wse3"
+        ]
+      },
+      "auditEntityId": "cg3-wse3",
+      "selection": {
+        "kind": "representative_member",
+        "systemId": "cerebras-cs3-condor-galaxy3",
+        "configurationId": "condor-galaxy-3-64-cs3",
+        "aggregateId": "cg3-cs3",
+        "path": [
+          "cg3-cs3",
+          "cg3-wse3",
+          "cg3-ai-cores"
+        ]
+      },
+      "preview": {
+        "kind": "representative_member",
+        "systemId": "cerebras-cs3-condor-galaxy3",
+        "configurationId": "condor-galaxy-3-64-cs3",
+        "aggregateId": "cg3-cs3",
+        "path": [
+          "cg3-cs3",
+          "cg3-wse3",
+          "cg3-ai-cores"
+        ]
+      }
+    },
+    {
+      "id": "meta-h100-roce-24k__meta-24576-h100-roce__meta-arista-7800__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/meta-h100-roce-24k.json",
+      "configurationId": "meta-24576-h100-roce",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "meta-h100-roce-24k",
+        "configurationId": "meta-24576-h100-roce",
+        "entityId": "meta-arista-7800"
+      },
+      "auditEntityId": "meta-arista-7800"
+    },
+    {
+      "id": "meta-h100-roce-24k__meta-24576-h100-roce__meta-arista-7800__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/meta-h100-roce-24k.json",
+      "configurationId": "meta-24576-h100-roce",
+      "scenarioId": "checkpoint-storage-burst",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "meta-h100-roce-24k",
+        "configurationId": "meta-24576-h100-roce",
+        "entityId": "meta-arista-7800"
+      },
+      "auditEntityId": "meta-arista-7800"
+    },
+    {
+      "id": "meta-h100-roce-24k__meta-24576-h100-roce__meta-compute-racks__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/meta-h100-roce-24k.json",
+      "configurationId": "meta-24576-h100-roce",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "meta-h100-roce-24k",
+        "configurationId": "meta-24576-h100-roce",
+        "entityId": "meta-compute-racks"
+      },
+      "auditEntityId": "meta-compute-racks"
+    },
+    {
+      "id": "meta-h100-roce-24k__meta-24576-h100-roce__meta-compute-racks__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/meta-h100-roce-24k.json",
+      "configurationId": "meta-24576-h100-roce",
+      "scenarioId": "checkpoint-storage-burst",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "meta-h100-roce-24k",
+        "configurationId": "meta-24576-h100-roce",
+        "entityId": "meta-compute-racks"
+      },
+      "auditEntityId": "meta-compute-racks",
+      "selection": {
+        "kind": "entity",
+        "systemId": "meta-h100-roce-24k",
+        "configurationId": "meta-24576-h100-roce",
+        "entityId": "meta-grand-teton"
+      },
+      "preview": {
+        "kind": "entity",
+        "systemId": "meta-h100-roce-24k",
+        "configurationId": "meta-24576-h100-roce",
+        "entityId": "meta-grand-teton"
+      }
+    },
+    {
+      "id": "meta-h100-roce-24k__meta-24576-h100-roce__meta-e1s__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/meta-h100-roce-24k.json",
+      "configurationId": "meta-24576-h100-roce",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "meta-h100-roce-24k",
+        "configurationId": "meta-24576-h100-roce",
+        "entityId": "meta-e1s"
+      },
+      "auditEntityId": "meta-e1s"
+    },
+    {
+      "id": "meta-h100-roce-24k__meta-24576-h100-roce__meta-e1s__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/meta-h100-roce-24k.json",
+      "configurationId": "meta-24576-h100-roce",
+      "scenarioId": "checkpoint-storage-burst",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "meta-h100-roce-24k",
+        "configurationId": "meta-24576-h100-roce",
+        "entityId": "meta-e1s"
+      },
+      "auditEntityId": "meta-e1s"
+    },
+    {
+      "id": "meta-h100-roce-24k__meta-24576-h100-roce__meta-grand-teton__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/meta-h100-roce-24k.json",
+      "configurationId": "meta-24576-h100-roce",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "meta-h100-roce-24k",
+        "configurationId": "meta-24576-h100-roce",
+        "entityId": "meta-grand-teton"
+      },
+      "auditEntityId": "meta-grand-teton"
+    },
+    {
+      "id": "meta-h100-roce-24k__meta-24576-h100-roce__meta-grand-teton__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/meta-h100-roce-24k.json",
+      "configurationId": "meta-24576-h100-roce",
+      "scenarioId": "checkpoint-storage-burst",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "meta-h100-roce-24k",
+        "configurationId": "meta-24576-h100-roce",
+        "entityId": "meta-grand-teton"
+      },
+      "auditEntityId": "meta-grand-teton",
+      "selection": {
+        "kind": "entity",
+        "systemId": "meta-h100-roce-24k",
+        "configurationId": "meta-24576-h100-roce",
+        "entityId": "meta-h100-gpus"
+      },
+      "preview": {
+        "kind": "entity",
+        "systemId": "meta-h100-roce-24k",
+        "configurationId": "meta-24576-h100-roce",
+        "entityId": "meta-h100-gpus"
+      }
+    },
+    {
+      "id": "meta-h100-roce-24k__meta-24576-h100-roce__meta-h100-gpus__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/meta-h100-roce-24k.json",
+      "configurationId": "meta-24576-h100-roce",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "meta-h100-roce-24k",
+        "configurationId": "meta-24576-h100-roce",
+        "entityId": "meta-h100-gpus"
+      },
+      "auditEntityId": "meta-h100-gpus"
+    },
+    {
+      "id": "meta-h100-roce-24k__meta-24576-h100-roce__meta-h100-gpus__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/meta-h100-roce-24k.json",
+      "configurationId": "meta-24576-h100-roce",
+      "scenarioId": "checkpoint-storage-burst",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "meta-h100-roce-24k",
+        "configurationId": "meta-24576-h100-roce",
+        "entityId": "meta-h100-gpus"
+      },
+      "auditEntityId": "meta-h100-gpus"
+    },
+    {
+      "id": "meta-h100-roce-24k__meta-24576-h100-roce__meta-h100-roce__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/meta-h100-roce-24k.json",
+      "configurationId": "meta-24576-h100-roce",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "meta-h100-roce-24k",
+        "configurationId": "meta-24576-h100-roce",
+        "entityId": "meta-h100-roce"
+      },
+      "auditEntityId": "meta-h100-roce"
+    },
+    {
+      "id": "meta-h100-roce-24k__meta-24576-h100-roce__meta-h100-roce__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/meta-h100-roce-24k.json",
+      "configurationId": "meta-24576-h100-roce",
+      "scenarioId": "checkpoint-storage-burst",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "meta-h100-roce-24k",
+        "configurationId": "meta-24576-h100-roce",
+        "entityId": "meta-h100-roce"
+      },
+      "auditEntityId": "meta-h100-roce",
+      "selection": {
+        "kind": "entity",
+        "systemId": "meta-h100-roce-24k",
+        "configurationId": "meta-24576-h100-roce",
+        "entityId": "meta-compute-racks"
+      },
+      "preview": {
+        "kind": "entity",
+        "systemId": "meta-h100-roce-24k",
+        "configurationId": "meta-24576-h100-roce",
+        "entityId": "meta-compute-racks"
+      }
+    },
+    {
+      "id": "meta-h100-roce-24k__meta-24576-h100-roce__meta-minipack2__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/meta-h100-roce-24k.json",
+      "configurationId": "meta-24576-h100-roce",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "meta-h100-roce-24k",
+        "configurationId": "meta-24576-h100-roce",
+        "entityId": "meta-minipack2"
+      },
+      "auditEntityId": "meta-minipack2"
+    },
+    {
+      "id": "meta-h100-roce-24k__meta-24576-h100-roce__meta-minipack2__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/meta-h100-roce-24k.json",
+      "configurationId": "meta-24576-h100-roce",
+      "scenarioId": "checkpoint-storage-burst",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "meta-h100-roce-24k",
+        "configurationId": "meta-24576-h100-roce",
+        "entityId": "meta-minipack2"
+      },
+      "auditEntityId": "meta-minipack2"
+    },
+    {
+      "id": "meta-h100-roce-24k__meta-24576-h100-roce__meta-roce-switches__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/meta-h100-roce-24k.json",
+      "configurationId": "meta-24576-h100-roce",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "meta-h100-roce-24k",
+        "configurationId": "meta-24576-h100-roce",
+        "entityId": "meta-roce-switches"
+      },
+      "auditEntityId": "meta-roce-switches"
+    },
+    {
+      "id": "meta-h100-roce-24k__meta-24576-h100-roce__meta-roce-switches__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/meta-h100-roce-24k.json",
+      "configurationId": "meta-24576-h100-roce",
+      "scenarioId": "checkpoint-storage-burst",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "meta-h100-roce-24k",
+        "configurationId": "meta-24576-h100-roce",
+        "entityId": "meta-roce-switches"
+      },
+      "auditEntityId": "meta-roce-switches",
+      "selection": {
+        "kind": "entity",
+        "systemId": "meta-h100-roce-24k",
+        "configurationId": "meta-24576-h100-roce",
+        "entityId": "meta-arista-7800"
+      },
+      "preview": {
+        "kind": "entity",
+        "systemId": "meta-h100-roce-24k",
+        "configurationId": "meta-24576-h100-roce",
+        "entityId": "meta-arista-7800"
+      }
+    },
+    {
+      "id": "meta-h100-roce-24k__meta-24576-h100-roce__meta-storage-racks__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/meta-h100-roce-24k.json",
+      "configurationId": "meta-24576-h100-roce",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "meta-h100-roce-24k",
+        "configurationId": "meta-24576-h100-roce",
+        "entityId": "meta-storage-racks"
+      },
+      "auditEntityId": "meta-storage-racks"
+    },
+    {
+      "id": "meta-h100-roce-24k__meta-24576-h100-roce__meta-storage-racks__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/meta-h100-roce-24k.json",
+      "configurationId": "meta-24576-h100-roce",
+      "scenarioId": "checkpoint-storage-burst",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "meta-h100-roce-24k",
+        "configurationId": "meta-24576-h100-roce",
+        "entityId": "meta-storage-racks"
+      },
+      "auditEntityId": "meta-storage-racks",
+      "selection": {
+        "kind": "entity",
+        "systemId": "meta-h100-roce-24k",
+        "configurationId": "meta-24576-h100-roce",
+        "entityId": "meta-yv3"
+      },
+      "preview": {
+        "kind": "entity",
+        "systemId": "meta-h100-roce-24k",
+        "configurationId": "meta-24576-h100-roce",
+        "entityId": "meta-yv3"
+      }
+    },
+    {
+      "id": "meta-h100-roce-24k__meta-24576-h100-roce__meta-wedge400__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/meta-h100-roce-24k.json",
+      "configurationId": "meta-24576-h100-roce",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "meta-h100-roce-24k",
+        "configurationId": "meta-24576-h100-roce",
+        "entityId": "meta-wedge400"
+      },
+      "auditEntityId": "meta-wedge400"
+    },
+    {
+      "id": "meta-h100-roce-24k__meta-24576-h100-roce__meta-wedge400__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/meta-h100-roce-24k.json",
+      "configurationId": "meta-24576-h100-roce",
+      "scenarioId": "checkpoint-storage-burst",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "meta-h100-roce-24k",
+        "configurationId": "meta-24576-h100-roce",
+        "entityId": "meta-wedge400"
+      },
+      "auditEntityId": "meta-wedge400"
+    },
+    {
+      "id": "meta-h100-roce-24k__meta-24576-h100-roce__meta-yv3__baseline",
+      "variant": "baseline",
+      "systemRuntime": "runtime/generated/systems/meta-h100-roce-24k.json",
+      "configurationId": "meta-24576-h100-roce",
+      "scenarioId": "baseline-normal-operation",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "meta-h100-roce-24k",
+        "configurationId": "meta-24576-h100-roce",
+        "entityId": "meta-yv3"
+      },
+      "auditEntityId": "meta-yv3"
+    },
+    {
+      "id": "meta-h100-roce-24k__meta-24576-h100-roce__meta-yv3__stress",
+      "variant": "stress",
+      "systemRuntime": "runtime/generated/systems/meta-h100-roce-24k.json",
+      "configurationId": "meta-24576-h100-roce",
+      "scenarioId": "checkpoint-storage-burst",
+      "structuralLocation": {
+        "kind": "entity",
+        "systemId": "meta-h100-roce-24k",
+        "configurationId": "meta-24576-h100-roce",
+        "entityId": "meta-yv3"
+      },
+      "auditEntityId": "meta-yv3",
+      "selection": {
+        "kind": "entity",
+        "systemId": "meta-h100-roce-24k",
+        "configurationId": "meta-24576-h100-roce",
+        "entityId": "meta-e1s"
+      },
+      "preview": {
+        "kind": "entity",
+        "systemId": "meta-h100-roce-24k",
+        "configurationId": "meta-24576-h100-roce",
+        "entityId": "meta-e1s"
+      }
+    }
+  ]
+}

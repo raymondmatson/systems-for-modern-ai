@@ -170,8 +170,9 @@ function renderOnce() {
   };
 }
 
+const sampleCount = Math.max(1, Number(process.argv[6] || 25));
 const samples: any[] = [];
-for (let index = 0; index < 25; index += 1) samples.push(renderOnce());
+for (let index = 0; index < sampleCount; index += 1) samples.push(renderOnce());
 const median = (values: number[]) => {
   const sorted = [...values].sort((a, b) => a - b);
   const middle = Math.floor(sorted.length / 2);
@@ -199,5 +200,30 @@ console.log(JSON.stringify({
     width: last.scene.width,
     height: last.scene.height,
     layoutKind: last.scene.layoutKind,
+  },
+  coverage: {
+    nodes: last.scene.nodes.map((node: any) => ({
+      id: node.entity.id, x: node.x, y: node.y, width: node.width, height: node.height,
+      labelTruncated: node.labelTruncated, mediaMode: node.mediaMode,
+      population: node.population?.countLabel ?? null,
+    })),
+    anatomy: last.scene.anatomyDepictions.map((item: any) => ({
+      id: item.depiction.id, x: item.x, y: item.y, width: item.width, height: item.height,
+    })),
+    enclosure: last.scene.enclosure ? {
+      x: last.scene.enclosure.x, y: last.scene.enclosure.y,
+      width: last.scene.enclosure.width, height: last.scene.enclosure.height,
+    } : null,
+    topologyDepictions: last.scene.topologyDepictions?.map((item: any) => ({
+      id: item.id, x: item.bounds.x, y: item.bounds.y, width: item.bounds.width, height: item.bounds.height,
+    })) ?? [],
+    connections: allConnections.map((connection: any) => ({
+      id: connection.id,
+      endpointNodeIds: connection.endpointNodeIds,
+      visibility: connection.visibility,
+      routes: connection.routes.map((route: any) => ({id: route.id, points: route.points})),
+      boundaryRoutes: connection.boundary?.routes?.map((route: any) => ({id: route.id, points: route.points})) ?? [],
+      externalEndpointLabels: connection.boundary?.externalEndpointLabels ?? [],
+    })),
   },
 }));

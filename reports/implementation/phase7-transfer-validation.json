@@ -17,8 +17,8 @@
         "zero-image-fallback"
       ],
       "renderer": {
-        "viewModelMedianMs": 0.272288,
-        "componentSerializeMedianMs": 1.669638,
+        "viewModelMedianMs": 0.171718,
+        "componentSerializeMedianMs": 0.680475,
         "interactiveNodes": 4,
         "anatomyDepictions": 0,
         "canvasConnections": 3,
@@ -48,8 +48,8 @@
       },
       "screenshot": {
         "path": "reports/implementation/phase7-transfer-images/ironwood-root-transfer.png",
-        "sha256": "ea469a9f24f9239b9c942c0b3bc7f86c4a2869c5231a9c8654544cbe1e0bb68e",
-        "bytes": 171984
+        "sha256": "6316d3b5efabc24265f5bf4a2c48704f02506e245742759e91f1f31f66fec9d0",
+        "bytes": 170519
       },
       "errors": [],
       "status": "PASS"
@@ -65,8 +65,8 @@
         "true-boundary-stubs"
       ],
       "renderer": {
-        "viewModelMedianMs": 0.251559,
-        "componentSerializeMedianMs": 2.0414,
+        "viewModelMedianMs": 0.075494,
+        "componentSerializeMedianMs": 0.753826,
         "interactiveNodes": 1,
         "anatomyDepictions": 0,
         "canvasConnections": 0,
@@ -124,8 +124,8 @@
       },
       "screenshot": {
         "path": "reports/implementation/phase7-transfer-images/ironwood-cube-flattened-torus.png",
-        "sha256": "e3cd5933aaccbff1297abe9baa9501d9e0cdcd335a0797d1eaef35b47729aa75",
-        "bytes": 200612
+        "sha256": "ca2785c3bef84724a4ca7ef70b2f91b55c491319abe309509bc0a759a057b72f",
+        "bytes": 200344
       },
       "errors": [],
       "status": "PASS"
@@ -138,8 +138,8 @@
         "zero-image-fallback"
       ],
       "renderer": {
-        "viewModelMedianMs": 0.374286,
-        "componentSerializeMedianMs": 2.182467,
+        "viewModelMedianMs": 0.184328,
+        "componentSerializeMedianMs": 0.863341,
         "interactiveNodes": 5,
         "anatomyDepictions": 0,
         "canvasConnections": 4,
@@ -169,8 +169,8 @@
       },
       "screenshot": {
         "path": "reports/implementation/phase7-transfer-images/cerebras-root-transfer.png",
-        "sha256": "7f7d60237840a64ec6542e5c74d44b922c90b0f36570b7c4a0e23a4bf555beff",
-        "bytes": 182770
+        "sha256": "671c4acdea510c4cb3eca8d2a49be02062d35c73d61dcd3c7d216322a9782e3b",
+        "bytes": 184398
       },
       "errors": [],
       "status": "PASS"
@@ -184,8 +184,8 @@
         "sparse-context-compaction"
       ],
       "renderer": {
-        "viewModelMedianMs": 0.2888,
-        "componentSerializeMedianMs": 2.597354,
+        "viewModelMedianMs": 0.098689,
+        "componentSerializeMedianMs": 0.740816,
         "interactiveNodes": 1,
         "anatomyDepictions": 4,
         "canvasConnections": 0,
@@ -215,8 +215,8 @@
       },
       "screenshot": {
         "path": "reports/implementation/phase7-transfer-images/cerebras-representative-cs3-transfer.png",
-        "sha256": "0c115dff6f9767e4ef0244924b3b5ac5497709d8bf3a3190988164f4f7624659",
-        "bytes": 224527
+        "sha256": "080ba47a469a242ca3326d7319f8841168c4ded3a15443886e3c6456b6f7b0ee",
+        "bytes": 223349
       },
       "errors": [],
       "status": "PASS"
@@ -230,8 +230,8 @@
         "no-literal-core-array"
       ],
       "renderer": {
-        "viewModelMedianMs": 0.368206,
-        "componentSerializeMedianMs": 1.294832,
+        "viewModelMedianMs": 0.142064,
+        "componentSerializeMedianMs": 0.528927,
         "interactiveNodes": 3,
         "anatomyDepictions": 0,
         "canvasConnections": 2,
@@ -261,8 +261,8 @@
       },
       "screenshot": {
         "path": "reports/implementation/phase7-transfer-images/cerebras-representative-wse3-transfer.png",
-        "sha256": "bc1fadf8712b8ac50bc0668cb3c72bb18d6d978c37e42a25f037a1b75aa96b10",
-        "bytes": 111926
+        "sha256": "1429c22022125c7fca2b5badc674749e79fef036b0ed39dc80e5915c9c140b3b",
+        "bytes": 112063
       },
       "errors": [],
       "status": "PASS"
