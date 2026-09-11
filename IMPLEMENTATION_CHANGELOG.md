@@ -1,5 +1,12 @@
 # Implementation Changelog
 
+## 2026-09-10 — Phase 7 Cerebras transfer-test alignment after canonical preprocessing update
+
+- **Issue:** GitHub `npm test` failed only in `visual-design-phase7-transfer.test.ts` because the new Phase-7 root assertion hard-coded an older Cerebras sibling order and the retired `cg3-input` identifier. The current canonical hierarchy, generated runtime, readiness evidence, and Phase-7A protocol consistently use `cg3-preprocess` and order the root children `CS-3 → MemoryX → SwarmX → preprocessing → management`.
+- **Cause:** This is a new stale-test defect introduced during the later Phase-7 work, not a recurrence of the earlier Phase-0/3/4/E2E failures. The test was authored from an older shorthand/assumption instead of the current canonical root `childIds`.
+- **Fix:** Keep the semantic transfer assertion strict while removing the stale assumption: verify rendered Cerebras root-node order exactly matches the canonical runtime root `childIds`, and separately verify the exact required disaggregated component set (`cg3-cs3`, `cg3-memoryx`, `cg3-swarmx`, `cg3-preprocess`, `cg3-management`). No canonical content, runtime generation, layout, or product behavior changed.
+- **Validation:** Full Python canonical/runtime validation passes. A direct current-runtime Phase-7 contract smoke confirms root-order parity, the exact five required root children, no label truncation, and the n-ary MemoryX/SwarmX/CS-3 connection. Pinned Vitest execution remains dependent on the networked CI environment because this source snapshot does not include `node_modules`.
+
 ## 2026-09-10 — Visual Design Phase 6 closure from user-confirmed external validation
 
 - **Change or issue addressed:** The Visual Design Phase-6 handoff had completed its environment-independent benchmark/geometry/study-preparation work but could not run the pinned npm/Vite/Vitest/three-engine Playwright/accessibility gates. The project owner subsequently confirmed that all of those remaining Phase-6 tests and validation gates passed after the Implementation Continued fixes now present in this repository.

@@ -107,13 +107,18 @@ describe('Phase 7 Ironwood/Cerebras transfer contract', () => {
     ]);
     expect(ironwoodRoot.nodes.every((node) => node.labelTruncated === false)).toBe(true);
 
-    expect(cerebrasRoot.nodes.map((node) => node.entity.id)).toEqual([
+    const {configuration: cerebrasConfiguration} = sceneFor('cerebras-root-transfer');
+    const cerebrasRootEntity = cerebrasConfiguration.entities[cerebrasConfiguration.rootEntityId];
+    const cerebrasNodeIds = cerebrasRoot.nodes.map((node) => node.entity.id);
+
+    expect(cerebrasNodeIds).toEqual(cerebrasRootEntity?.childIds ?? []);
+    expect(new Set(cerebrasNodeIds)).toEqual(new Set([
       'cg3-cs3',
-      'cg3-swarmx',
       'cg3-memoryx',
-      'cg3-input',
+      'cg3-swarmx',
+      'cg3-preprocess',
       'cg3-management',
-    ]);
+    ]));
     expect(cerebrasRoot.nodes.every((node) => node.labelTruncated === false)).toBe(true);
     expect(cerebrasRoot.connections.some((connection) => connection.endpointNodeIds.length >= 3)).toBe(true);
   });
